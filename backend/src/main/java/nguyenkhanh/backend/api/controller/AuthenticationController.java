@@ -1,11 +1,11 @@
 package nguyenkhanh.backend.api.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -16,10 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nguyenkhanh.backend.config.security.JwtTokenUtils;
 import nguyenkhanh.backend.entity.ERoles;
-import nguyenkhanh.backend.entity.EUserStatus;
+import nguyenkhanh.backend.entity.EStatus;
 import nguyenkhanh.backend.entity.RoleEntity;
 import nguyenkhanh.backend.entity.UserEntity;
 import nguyenkhanh.backend.entity.UserTypeEntity;
@@ -139,7 +140,7 @@ public class AuthenticationController {
 			userEntity.setPhoneNumber(registerRequest.getPhoneNumber());
 			userEntity.setAvatar(registerRequest.getAvatar());
 			userEntity.setGender(registerRequest.getGender());
-			userEntity.setStatus(EUserStatus.ACTIVE.toString());
+			userEntity.setStatus(EStatus.ACTIVE.toString());
 
 			// Save
 			userServiceImpl.save(userEntity);
@@ -156,20 +157,12 @@ public class AuthenticationController {
 	@PostMapping(path = "/auth/login")
 	public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
 		try {
-			System.out.print(loginRequest.getUsername());
-			System.out.print(loginRequest.getPassword());
 			// Xác thực username password
-			UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
-					loginRequest.getUsername(), loginRequest.getPassword());
-			System.out.print(authRequest.getPrincipal());
-			
-			
-			
-			Authentication authentication = authenticationManager.authenticate(authRequest);
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
 			// Set thông tin authentication vào Security Context
-			SecurityContext securityContext = SecurityContextHolder.getContext();
-			securityContext.setAuthentication(authentication);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			// Tạo token
 			String jwtToken = jwtTokenUtils.generateToken(authentication);
@@ -182,23 +175,34 @@ public class AuthenticationController {
 						"Bad Request", "Error: User not found!"));
 			}
 
-			List<String> roles = userDetailsImpl.getAuthorities().stream().map(role -> role.getAuthority())
-					.collect(Collectors.toList());
+			List<String> roles = new ArrayList<String>();
+			userDetailsImpl.getRoles().forEach(role -> {
+				roles.add(role.getRoleName());
+			});
 
 			return ResponseEntity.ok(new JwtResponse(userDetailsImpl.getId(), userDetailsImpl.getUsername(),
 					userDetailsImpl.getPassword(), userDetailsImpl.getFullName(), userDetailsImpl.getPhoneNumber(),
 					userDetailsImpl.getDateOfBirth(), userDetailsImpl.getAvatar(), userDetailsImpl.getGender(),
-					userDetailsImpl.getStatus(), roles, userDetailsImpl.getUserTypeEntity(), jwtToken));
+					userDetailsImpl.getStatus(), roles, userDetailsImpl.getUserType().getUserTypeName(), jwtToken));
 
 		} catch (DisabledException ex) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
-					"Account is disabled!");
+					"Your account is disabled!");
 			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
 		} catch (BadCredentialsException ex) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
 					"Username or password is incorrect!");
 			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
+		} catch (LockedException ex) {
+			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
+					"Your account is LOCKED!");
+			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
+		} catch (CredentialsExpiredException ex) {
+			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
+					"Your account has not verified email!");
+			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
 		}
+
 	}
 
 	@GetMapping(path = "auth/all")

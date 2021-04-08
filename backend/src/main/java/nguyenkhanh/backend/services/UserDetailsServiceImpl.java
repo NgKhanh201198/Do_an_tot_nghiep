@@ -21,7 +21,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserEntity userEntity = userRepository.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException("The account is not on the system!"));
-		System.out.print(userEntity.getUsername());
 		return UserDetailsImpl.build(userEntity);
 	}
 

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import nguyenkhanh.backend.entity.UserEntity;
-import nguyenkhanh.backend.entity.EUserStatus;
+import nguyenkhanh.backend.entity.EStatus;
 import nguyenkhanh.backend.repository.UserRepository;
 import nguyenkhanh.backend.services.IUserService;
 
@@ -35,7 +35,7 @@ public class UserServiceImpl implements IUserService {
 	public void deletes(long[] ids) {
 		for (long id : ids) {
 			UserEntity oldUser = userRepository.getOne(id);
-			oldUser.setStatus(EUserStatus.INACTIVE.toString());
+			oldUser.setStatus(EStatus.INACTIVE.toString());
 			userRepository.save(oldUser);
 		}
 

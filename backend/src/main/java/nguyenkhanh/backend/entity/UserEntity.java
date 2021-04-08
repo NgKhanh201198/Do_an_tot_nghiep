@@ -71,9 +71,9 @@ public class UserEntity extends BaseEntity {
 	@JsonIgnore
 	private Set<PostEntity> posts = new HashSet<PostEntity>();
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	@JsonIgnore
-	private Set<RegisterLogEntity> registerLog = new HashSet<RegisterLogEntity>();
+//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//	@JsonIgnore
+//	private Set<RegisterLogEntity> registerLog = new HashSet<RegisterLogEntity>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
@@ -183,13 +183,13 @@ public class UserEntity extends BaseEntity {
 		this.posts = posts;
 	}
 
-	public Set<RegisterLogEntity> getRegisterLog() {
-		return registerLog;
-	}
-
-	public void setRegisterLog(Set<RegisterLogEntity> registerLog) {
-		this.registerLog = registerLog;
-	}
+//	public Set<RegisterLogEntity> getRegisterLog() {
+//		return registerLog;
+//	}
+//
+//	public void setRegisterLog(Set<RegisterLogEntity> registerLog) {
+//		this.registerLog = registerLog;
+//	}
 
 	public Set<RoleEntity> getRoles() {
 		return roles;

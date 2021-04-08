@@ -1,5 +1,5 @@
 package nguyenkhanh.backend.entity;
 
-public enum EUserStatus {
+public enum EStatus {
 	ACTIVE, INACTIVE, LOCKED;
 }

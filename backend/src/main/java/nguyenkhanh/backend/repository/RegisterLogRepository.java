@@ -7,5 +7,5 @@ import nguyenkhanh.backend.entity.RegisterLogEntity;
 
 @Repository
 public interface RegisterLogRepository extends JpaRepository<RegisterLogEntity, Long> {
-
+	RegisterLogEntity findByUser(long userid);
 }
