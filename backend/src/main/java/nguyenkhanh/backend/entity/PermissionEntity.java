@@ -30,6 +30,18 @@ public class PermissionEntity extends BaseEntity {
 	@JsonIgnore
 	private Set<RoleEntity> roles;
 
+	public PermissionEntity() {
+		super();
+	}
+
+	public PermissionEntity(Long permissionID, String permissionName, String permissionKey, Set<RoleEntity> roles) {
+		super();
+		this.permissionID = permissionID;
+		this.permissionName = permissionName;
+		this.permissionKey = permissionKey;
+		this.roles = roles;
+	}
+
 	public Long getPermissionID() {
 		return permissionID;
 	}

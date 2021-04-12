@@ -1,6 +1,6 @@
 package nguyenkhanh.backend.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,11 +27,23 @@ public class RegisterLogEntity extends BaseEntity {
 	private String status;
 
 	@Column(name = "date_active")
-	private Date dateActive;
+	private LocalDateTime dateActive;
 
 	@OneToOne
 	@JoinColumn(name = "userid")
 	private UserEntity user;
+
+	public RegisterLogEntity() {
+		super();
+	}
+
+	public RegisterLogEntity(String token, String status, LocalDateTime dateActive, UserEntity user) {
+		super();
+		this.token = token;
+		this.status = status;
+		this.dateActive = dateActive;
+		this.user = user;
+	}
 
 	public Long getID() {
 		return ID;
@@ -57,19 +69,19 @@ public class RegisterLogEntity extends BaseEntity {
 		this.status = status;
 	}
 
-	public Date getDateActive() {
+	public LocalDateTime getDateActive() {
 		return dateActive;
 	}
 
-	public void setDateActive(Date dateActive) {
+	public void setDateActive(LocalDateTime dateActive) {
 		this.dateActive = dateActive;
 	}
 
-	public UserEntity getUserEntity() {
+	public UserEntity getUser() {
 		return user;
 	}
 
-	public void setUserEntity(UserEntity user) {
+	public void setUser(UserEntity user) {
 		this.user = user;
 	}
 

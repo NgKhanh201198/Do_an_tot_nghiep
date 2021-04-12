@@ -11,6 +11,8 @@ public interface IUserService {
 	public List<UserEntity> getUserAll();
 
 	public void update(UserEntity user);
+	
+	public void updateStatus(String username);
 
 	public void deletes(long[] id);
 

@@ -21,6 +21,12 @@ public class UserTypeEntity extends BaseEntity {
 	public UserTypeEntity() {
 	}
 
+	public UserTypeEntity(Long userTypeID, String userTypeName) {
+		super();
+		this.userTypeID = userTypeID;
+		this.userTypeName = userTypeName;
+	}
+
 	public UserTypeEntity(String userTypeName) {
 		this.userTypeName = userTypeName;
 	}

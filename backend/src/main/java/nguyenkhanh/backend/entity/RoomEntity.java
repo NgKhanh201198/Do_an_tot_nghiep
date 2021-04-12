@@ -55,6 +55,27 @@ public class RoomEntity extends BaseEntity {
 	@JsonIgnore
 	Set<BookingRoomEntity> bookingRoom;
 
+	public RoomEntity() {
+		super();
+	}
+
+	public RoomEntity(Long roomID, String roomNumber, String status, String image, String contents,
+			Integer numberOfPeople, Integer roomCost, Integer discount, RoomTypeEntity roomType, HotelEntity hotel,
+			Set<BookingRoomEntity> bookingRoom) {
+		super();
+		this.roomID = roomID;
+		this.roomNumber = roomNumber;
+		this.status = status;
+		this.image = image;
+		this.contents = contents;
+		this.numberOfPeople = numberOfPeople;
+		this.roomCost = roomCost;
+		this.discount = discount;
+		this.roomType = roomType;
+		this.hotel = hotel;
+		this.bookingRoom = bookingRoom;
+	}
+
 	public Long getRoomID() {
 		return roomID;
 	}

@@ -32,6 +32,18 @@ public class RoomTypeEntity extends BaseEntity {
 	@JsonIgnore
 	private Set<RoomEntity> rooms = new HashSet<RoomEntity>();
 
+	public RoomTypeEntity() {
+		super();
+	}
+
+	public RoomTypeEntity(Long roomTypeID, String roomTypeName, String description, Set<RoomEntity> rooms) {
+		super();
+		this.roomTypeID = roomTypeID;
+		this.roomTypeName = roomTypeName;
+		this.description = description;
+		this.rooms = rooms;
+	}
+
 	public Long getRoomTypeID() {
 		return roomTypeID;
 	}

@@ -71,13 +71,33 @@ public class UserEntity extends BaseEntity {
 	@JsonIgnore
 	private Set<PostEntity> posts = new HashSet<PostEntity>();
 
-//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//	@JsonIgnore
-//	private Set<RegisterLogEntity> registerLog = new HashSet<RegisterLogEntity>();
-
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	private Set<RoleEntity> roles = new HashSet<RoleEntity>();
+
+	public UserEntity() {
+		super();
+	}
+
+	public UserEntity(Long userID, String username, String password, String fullName, String phoneNumber,
+			Date dateOfBirth, String avatar, String gender, String status, UserTypeEntity userType,
+			Set<BookingRoomEntity> bookingRoom, Set<HotelEntity> hotels, Set<PostEntity> posts, Set<RoleEntity> roles) {
+		super();
+		this.userID = userID;
+		this.username = username;
+		this.password = password;
+		this.fullName = fullName;
+		this.phoneNumber = phoneNumber;
+		this.dateOfBirth = dateOfBirth;
+		this.avatar = avatar;
+		this.gender = gender;
+		this.status = status;
+		this.userType = userType;
+		this.bookingRoom = bookingRoom;
+		this.hotels = hotels;
+		this.posts = posts;
+		this.roles = roles;
+	}
 
 	public Long getUserID() {
 		return userID;

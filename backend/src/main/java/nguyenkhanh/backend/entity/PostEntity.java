@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "posts")
-public class PostEntity extends BaseEntity{
+public class PostEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "postid")
@@ -25,10 +25,23 @@ public class PostEntity extends BaseEntity{
 
 	@Column(name = "image")
 	private String image;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "userid")
 	private UserEntity user;
+
+	public PostEntity() {
+		super();
+	}
+
+	public PostEntity(Long postID, String title, String contents, String image, UserEntity user) {
+		super();
+		this.postID = postID;
+		this.title = title;
+		this.contents = contents;
+		this.image = image;
+		this.user = user;
+	}
 
 	public Long getPostID() {
 		return postID;

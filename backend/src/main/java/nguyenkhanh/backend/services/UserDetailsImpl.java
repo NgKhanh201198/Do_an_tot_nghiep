@@ -84,22 +84,6 @@ public class UserDetailsImpl implements UserDetails {
 		this.authorities = authorities;
 	}
 
-//	public UserDetailsImpl(Long id, String username, String password, String fullName, String phoneNumber,
-//			Date dateOfBirth, String avatar, String gender, String status,
-//			Collection<? extends GrantedAuthority> authorities) {
-//		super();
-//		this.id = id;
-//		this.username = username;
-//		this.password = password;
-//		this.fullName = fullName;
-//		this.phoneNumber = phoneNumber;
-//		this.dateOfBirth = dateOfBirth;
-//		this.avatar = avatar;
-//		this.gender = gender;
-//		this.status = status;
-//		this.authorities = authorities;
-//	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;

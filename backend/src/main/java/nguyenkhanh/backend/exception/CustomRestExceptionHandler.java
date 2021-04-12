@@ -1,6 +1,7 @@
 package nguyenkhanh.backend.exception;
 
 import java.util.Date;
+import java.util.concurrent.TimeoutException;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -28,7 +29,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler({ NotFoundException.class })
-	public final ResponseEntity<?> exception(NotFoundException exception, WebRequest request) {
+	public final ResponseEntity<?> handleResourceNotFoundException(NotFoundException exception, WebRequest request) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(),
 						exception.getMessage(), request.getDescription(false)));
@@ -54,6 +55,13 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
 				.body(new MessageResponse(new Date(), HttpStatus.EXPECTATION_FAILED.value(), "Expectation Failed",
 						"File too large!", request.getDescription(false)));
+	}
+
+	@ExceptionHandler({ TimeoutException.class })
+	public ResponseEntity<?> handlTimeoutException(TimeoutException exception, WebRequest request) {
+		MessageResponse message = new MessageResponse(new Date(), HttpStatus.REQUEST_TIMEOUT.value(), "Request timeout",
+				exception.getMessage());
+		return new ResponseEntity<>(message, HttpStatus.REQUEST_TIMEOUT);
 	}
 
 	// Validation data

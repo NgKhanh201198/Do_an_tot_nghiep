@@ -27,7 +27,7 @@ public class BookingRoomEntity extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "bookingroomid")
 	private Long bookingRoomID;
-	
+
 	@Column(name = "bookingdate")
 	private Date bookingDate;
 
@@ -54,6 +54,25 @@ public class BookingRoomEntity extends BaseEntity {
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "room_booked", joinColumns = @JoinColumn(name = "bookingroomid"), inverseJoinColumns = @JoinColumn(name = "roomid"))
 	Set<RoomEntity> rooms = new HashSet<RoomEntity>();
+
+	public BookingRoomEntity() {
+		super();
+	}
+
+	public BookingRoomEntity(Long bookingRoomID, Date bookingDate, Date checkInDate, Date checkOutDate,
+			Integer totalNumberOfPeople, Integer totalRoomsBooked, Integer totalCost, UserEntity user,
+			Set<RoomEntity> rooms) {
+		super();
+		this.bookingRoomID = bookingRoomID;
+		this.bookingDate = bookingDate;
+		this.checkInDate = checkInDate;
+		this.checkOutDate = checkOutDate;
+		this.totalNumberOfPeople = totalNumberOfPeople;
+		this.totalRoomsBooked = totalRoomsBooked;
+		this.totalCost = totalCost;
+		this.user = user;
+		this.rooms = rooms;
+	}
 
 	public Long getBookingRoomID() {
 		return bookingRoomID;

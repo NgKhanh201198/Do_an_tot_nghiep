@@ -47,6 +47,23 @@ public class HotelEntity extends BaseEntity {
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
 	private Set<RoomEntity> rooms = new HashSet<RoomEntity>();
 
+	public HotelEntity() {
+		super();
+	}
+
+	public HotelEntity(Long hotelID, String hotelName, String addrees, String image, String email, String phoneNumber,
+			UserEntity user, Set<RoomEntity> rooms) {
+		super();
+		this.hotelID = hotelID;
+		this.hotelName = hotelName;
+		this.addrees = addrees;
+		this.image = image;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.user = user;
+		this.rooms = rooms;
+	}
+
 	public Long getHotelID() {
 		return hotelID;
 	}

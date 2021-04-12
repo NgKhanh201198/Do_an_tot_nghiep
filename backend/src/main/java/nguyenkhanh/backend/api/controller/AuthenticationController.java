@@ -1,16 +1,19 @@
 package nguyenkhanh.backend.api.controller;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
 
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +32,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import nguyenkhanh.backend.config.security.JwtTokenUtils;
 import nguyenkhanh.backend.entity.ERoles;
 import nguyenkhanh.backend.entity.EStatus;
+import nguyenkhanh.backend.entity.RegisterLogEntity;
 import nguyenkhanh.backend.entity.RoleEntity;
 import nguyenkhanh.backend.entity.UserEntity;
 import nguyenkhanh.backend.entity.UserTypeEntity;
+import nguyenkhanh.backend.exception.NotFoundException;
 import nguyenkhanh.backend.request.LoginRequest;
 import nguyenkhanh.backend.request.RegisterRequest;
 import nguyenkhanh.backend.response.JwtResponse;
 import nguyenkhanh.backend.response.MessageResponse;
 import nguyenkhanh.backend.services.UserDetailsImpl;
+import nguyenkhanh.backend.services.impl.RegisterLogServiceImpl;
 import nguyenkhanh.backend.services.impl.RoleServiceImpl;
 import nguyenkhanh.backend.services.impl.UserServiceImpl;
 import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
@@ -57,6 +64,9 @@ public class AuthenticationController {
 	UserTypeServiceImpl userTypeServiceImpl;
 
 	@Autowired
+	RegisterLogServiceImpl registerLogServiceImpl;
+
+	@Autowired
 	RoleServiceImpl roleServiceImpl;
 
 	@Autowired
@@ -67,6 +77,9 @@ public class AuthenticationController {
 
 	@Autowired
 	JwtTokenUtils jwtTokenUtils;
+
+	@Value("${system.baseUrl}")
+	private String BASE_URL;
 
 	@PostMapping(path = "/auth/register")
 	public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest registerRequest) {
@@ -140,7 +153,7 @@ public class AuthenticationController {
 			userEntity.setPhoneNumber(registerRequest.getPhoneNumber());
 			userEntity.setAvatar(registerRequest.getAvatar());
 			userEntity.setGender(registerRequest.getGender());
-			userEntity.setStatus(EStatus.ACTIVE.toString());
+			userEntity.setStatus(EStatus.INACTIVE.toString());
 
 			// Save
 			userServiceImpl.save(userEntity);
@@ -205,9 +218,34 @@ public class AuthenticationController {
 
 	}
 
-	@GetMapping(path = "auth/all")
-	public ResponseEntity<MessageResponse> all() {
-		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Registered successfully!"));
+	@GetMapping(path = "auth/verifyEmail")
+	public ResponseEntity<?> verifyEmail(@RequestParam(required = false) String token) {
+
+		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
+				.orElseThrow(() -> new NotFoundException("Token not found"));
+
+		LocalDateTime dateActive = registerLogEntity.getDateActive();
+
+		try {
+			if (dateActive.isBefore(LocalDateTime.now())
+					&& registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString())) {
+				throw new TimeoutException("Your token has expired.");
+			}
+		} catch (TimeoutException exception) {
+			MessageResponse message = new MessageResponse(new Date(), HttpStatus.REQUEST_TIMEOUT.value(),
+					"Request timeout", exception.getMessage());
+			return new ResponseEntity<>(message, HttpStatus.REQUEST_TIMEOUT);
+		}
+
+		if (registerLogServiceImpl.getStatus(token).equals(EStatus.ACTIVE.toString())) {
+			return ResponseEntity
+					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Your account has been confirmed!"));
+		} else {
+			registerLogServiceImpl.updateStatus(token);
+			userServiceImpl.updateStatus(registerLogEntity.getUser().getUsername());
+			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
+					"Verified email address. Sign in to continue."));
+		}
 	}
 
 }

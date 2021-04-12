@@ -27,6 +27,20 @@ public class BookingRateEntity extends BaseEntity {
 	@Column(name = "citizenidentification")
 	private String citizenIdentification;
 
+	public BookingRateEntity() {
+		super();
+	}
+
+	public BookingRateEntity(Long bookRateID, String userName, String email, String contents,
+			String citizenIdentification) {
+		super();
+		this.bookRateID = bookRateID;
+		this.userName = userName;
+		this.email = email;
+		this.contents = contents;
+		this.citizenIdentification = citizenIdentification;
+	}
+
 	public Long getBookRateID() {
 		return bookRateID;
 	}

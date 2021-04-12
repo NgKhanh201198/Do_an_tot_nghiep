@@ -39,6 +39,20 @@ public class RoleEntity extends BaseEntity {
 	@JoinTable(name = "role_permission", joinColumns = @JoinColumn(name = "roleid"), inverseJoinColumns = @JoinColumn(name = "permissionid"))
 	private Set<PermissionEntity> permissions = new HashSet<PermissionEntity>();
 
+	public RoleEntity() {
+		super();
+	}
+
+	public RoleEntity(Long roleID, String roleName, String status, Set<UserEntity> user,
+			Set<PermissionEntity> permissions) {
+		super();
+		this.roleID = roleID;
+		this.roleName = roleName;
+		this.status = status;
+		this.user = user;
+		this.permissions = permissions;
+	}
+
 	public Long getRoleID() {
 		return roleID;
 	}
