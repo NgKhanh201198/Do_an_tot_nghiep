@@ -15,8 +15,8 @@ public class UserTypeServiceImpl implements IUserTypeService {
 	UserTypeRepository userTypeRepository;
 
 	@Override
-	public Optional<UserTypeEntity> finByUserTypeName(String userTypeName) {
-		return userTypeRepository.findByUserTypeName(userTypeName);
+	public Optional<UserTypeEntity> findByKeyName(String keyName) {
+		return userTypeRepository.findByKeyName(keyName);
 	}
 
 }

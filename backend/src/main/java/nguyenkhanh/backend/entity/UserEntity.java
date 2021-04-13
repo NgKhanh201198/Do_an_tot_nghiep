@@ -81,7 +81,7 @@ public class UserEntity extends BaseEntity {
 
 	public UserEntity(Long userID, String username, String password, String fullName, String phoneNumber,
 			Date dateOfBirth, String avatar, String gender, String status, UserTypeEntity userType,
-			Set<BookingRoomEntity> bookingRoom, Set<HotelEntity> hotels, Set<PostEntity> posts, Set<RoleEntity> roles) {
+			Set<RoleEntity> roles) {
 		super();
 		this.userID = userID;
 		this.username = username;
@@ -93,9 +93,6 @@ public class UserEntity extends BaseEntity {
 		this.gender = gender;
 		this.status = status;
 		this.userType = userType;
-		this.bookingRoom = bookingRoom;
-		this.hotels = hotels;
-		this.posts = posts;
 		this.roles = roles;
 	}
 
@@ -202,14 +199,6 @@ public class UserEntity extends BaseEntity {
 	public void setPosts(Set<PostEntity> posts) {
 		this.posts = posts;
 	}
-
-//	public Set<RegisterLogEntity> getRegisterLog() {
-//		return registerLog;
-//	}
-//
-//	public void setRegisterLog(Set<RegisterLogEntity> registerLog) {
-//		this.registerLog = registerLog;
-//	}
 
 	public Set<RoleEntity> getRoles() {
 		return roles;

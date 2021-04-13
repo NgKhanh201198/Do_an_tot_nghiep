@@ -18,13 +18,17 @@ public class UserTypeEntity extends BaseEntity {
 	@Column(name = "usertypename")
 	private String userTypeName;
 
+	@Column(name = "keyname")
+	private String keyName;
+
 	public UserTypeEntity() {
 	}
 
-	public UserTypeEntity(Long userTypeID, String userTypeName) {
+	public UserTypeEntity(Long userTypeID, String userTypeName, String keyName) {
 		super();
 		this.userTypeID = userTypeID;
 		this.userTypeName = userTypeName;
+		this.keyName = keyName;
 	}
 
 	public UserTypeEntity(String userTypeName) {
@@ -45,6 +49,14 @@ public class UserTypeEntity extends BaseEntity {
 
 	public void setUserTypeName(String userTypeName) {
 		this.userTypeName = userTypeName;
+	}
+
+	public String getKeyName() {
+		return keyName;
+	}
+
+	public void setKeyName(String keyName) {
+		this.keyName = keyName;
 	}
 
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -35,16 +36,29 @@ public class JwtTokenUtils {
 				.signWith(SignatureAlgorithm.HS512, JWT_SECRETKEY).compact();
 	}
 
+	private Claims getAllClaimsFromToken(String token) {
+		return Jwts.parser().setSigningKey(JWT_SECRETKEY).parseClaimsJws(token).getBody();
+	}
+
 	// Lấy username từ jwt
 	public String getUsernameFromJWT(String token) {
-		return Jwts.parser().setSigningKey(JWT_SECRETKEY).parseClaimsJws(token).getBody().getSubject();
+		return getAllClaimsFromToken(token).getSubject();
+	}
+
+	public Date getExpirationDateFromToken(String token) {
+		return getAllClaimsFromToken(token).getExpiration();
+	}
+
+	private boolean isTokenExpired(String token) {
+		final Date expiration = getExpirationDateFromToken(token);
+		return expiration.before(new Date());
 	}
 
 	// Kiểm tra token
-	public boolean validateJwtToken(String authToken) {
+	public boolean validateJwtToken(String token) {
 		try {
-			Jwts.parser().setSigningKey(JWT_SECRETKEY).parseClaimsJws(authToken);
-			return true;
+			if (isTokenExpired(token))
+				return true;
 		} catch (SignatureException e) {
 			logger.error("Invalid JWT signature: {}", e.getMessage());
 		} catch (MalformedJwtException e) {

@@ -5,5 +5,5 @@ import java.util.Optional;
 import nguyenkhanh.backend.entity.UserTypeEntity;
 
 public interface IUserTypeService {
-	Optional<UserTypeEntity> finByUserTypeName(String userTypeName);
+	Optional<UserTypeEntity> findByKeyName(String keyName);
 }

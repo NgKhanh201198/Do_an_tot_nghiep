@@ -9,7 +9,7 @@ import nguyenkhanh.backend.entity.UserTypeEntity;
 
 @Repository
 public interface UserTypeRepository extends JpaRepository<UserTypeEntity, Long> {
-	Optional<UserTypeEntity> findByUserTypeName(String userTypeName);
+	Optional<UserTypeEntity> findByKeyName(String keyName);
 
 	UserTypeEntity findByUserTypeID(long id);
 }

@@ -1,4 +1,4 @@
-	package nguyenkhanh.backend.config;
+package nguyenkhanh.backend.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -61,12 +61,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-				.and().exceptionHandling().accessDeniedHandler(customAccessDeniedHandler()).and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.antMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js")
-				.permitAll().antMatchers("/api/auth/**").permitAll().antMatchers("/api/**").permitAll().anyRequest()
-				.authenticated();
+		http.cors().and()
+			.csrf().disable()
+			.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+			.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler()).and()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+			.authorizeRequests()
+			.antMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
+			.antMatchers("/api/auth/**").permitAll()
+			.antMatchers("/api/**").permitAll();
+//			.anyRequest().authenticated();
 
 		// Thêm một lớp Filter kiểm tra jwt
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

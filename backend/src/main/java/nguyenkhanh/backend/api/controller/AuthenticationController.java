@@ -13,7 +13,6 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,9 +77,6 @@ public class AuthenticationController {
 	@Autowired
 	JwtTokenUtils jwtTokenUtils;
 
-	@Value("${system.baseUrl}")
-	private String BASE_URL;
-
 	@PostMapping(path = "/auth/register")
 	public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest registerRequest) {
 
@@ -113,38 +109,14 @@ public class AuthenticationController {
 			}
 
 			// Set User type
-			UserTypeEntity userTypeEntity = userTypeServiceImpl.finByUserTypeName(registerRequest.getUserType())
+			UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName(registerRequest.getUserType())
 					.orElseThrow(() -> new UsernameNotFoundException("User type not found!"));
 			userEntity.setUserType(userTypeEntity);
 
-			// Get Roles
-			Set<String> roles = registerRequest.getRoles();
 			Set<RoleEntity> roleEntity = new HashSet<RoleEntity>();
-			if (roles == null) {
-				RoleEntity userRole = roleServiceImpl.finByRoleName(ERoles.CUSTOMER.toString())
-						.orElseThrow(() -> new UsernameNotFoundException("Role is not found"));
-				roleEntity.add(userRole);
-			} else {
-				roles.forEach(role -> {
-					switch (role) {
-					case "MANAGER":
-						RoleEntity managerRole = roleServiceImpl.finByRoleName(ERoles.MANAGER.toString())
-								.orElseThrow(() -> new UsernameNotFoundException("Role is not found"));
-						roleEntity.add(managerRole);
-						break;
-					case "ADMIN":
-						RoleEntity adminRole = roleServiceImpl.finByRoleName(ERoles.ADMIN.toString())
-								.orElseThrow(() -> new UsernameNotFoundException("Role is not found"));
-						roleEntity.add(adminRole);
-						break;
-					default:
-						RoleEntity userRole = roleServiceImpl.finByRoleName(ERoles.CUSTOMER.toString())
-								.orElseThrow(() -> new UsernameNotFoundException("Role is not found"));
-						roleEntity.add(userRole);
-					}
-				});
-			}
-
+			RoleEntity userRole = roleServiceImpl.finByRoleName(ERoles.CUSTOMER.toString())
+					.orElseThrow(() -> new UsernameNotFoundException("Role is not found"));
+			roleEntity.add(userRole);
 			userEntity.setRoles(roleEntity);
 
 			userEntity.setFullName(registerRequest.getFullName());
@@ -161,7 +133,6 @@ public class AuthenticationController {
 			return ResponseEntity
 					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Registered successfully!"));
 		} catch (DataAccessException ex) {
-//			System.out.println(ex.getLocalizedMessage());
 			return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 					"Bad Request", "Account is already in use. Please try other account!"));
 		}
@@ -200,7 +171,7 @@ public class AuthenticationController {
 
 		} catch (DisabledException ex) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
-					"Your account is disabled!");
+					"Your account is not activated!");
 			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
 		} catch (BadCredentialsException ex) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
@@ -233,7 +204,7 @@ public class AuthenticationController {
 			}
 		} catch (TimeoutException exception) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.REQUEST_TIMEOUT.value(),
-					"Request timeout", exception.getMessage());
+					HttpStatus.REQUEST_TIMEOUT.name(), exception.getMessage());
 			return new ResponseEntity<>(message, HttpStatus.REQUEST_TIMEOUT);
 		}
 

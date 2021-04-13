@@ -42,6 +42,13 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 						"Did not find the ID you requested", request.getDescription(false)));
 	}
 
+	@ExceptionHandler({ BadRequestException.class })
+	public ResponseEntity<?> handleBadRequestException(BadRequestException exception, WebRequest request) {
+		MessageResponse message = new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+				HttpStatus.BAD_REQUEST.name(), exception.getMessage(), request.getDescription(false));
+		return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+	}
+	
 	// Kiem tra du lieu co ton tai khong
 	@ExceptionHandler({ UsernameNotFoundException.class })
 	public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException exception, WebRequest request) {

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,15 +16,11 @@ import nguyenkhanh.backend.entity.BookingRoomEntity;
 import nguyenkhanh.backend.entity.EStatus;
 import nguyenkhanh.backend.entity.HotelEntity;
 import nguyenkhanh.backend.entity.PostEntity;
-import nguyenkhanh.backend.entity.RegisterLogEntity;
 import nguyenkhanh.backend.entity.RoleEntity;
 import nguyenkhanh.backend.entity.UserEntity;
 import nguyenkhanh.backend.entity.UserTypeEntity;
-import nguyenkhanh.backend.services.impl.RegisterLogServiceImpl;
 
 public class UserDetailsImpl implements UserDetails {
-	@Autowired
-	RegisterLogServiceImpl registerLogServiceImpl;
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,7 +34,6 @@ public class UserDetailsImpl implements UserDetails {
 	private String avatar;
 	private String gender;
 	private String status;
-//	@JsonIgnore
 	private UserTypeEntity userType;
 	@JsonIgnore
 	private Set<BookingRoomEntity> bookingRoom;
@@ -47,7 +41,6 @@ public class UserDetailsImpl implements UserDetails {
 	private Set<HotelEntity> hotels;
 	@JsonIgnore
 	private Set<PostEntity> posts;
-//	@JsonIgnore
 	private Set<RoleEntity> roles;
 
 	private Collection<? extends GrantedAuthority> authorities;
@@ -111,12 +104,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		RegisterLogEntity registerLogEntity = registerLogServiceImpl.findByUser(this.id);
-
-		if (registerLogEntity.getStatus().equals(EStatus.ACTIVE.toString())) {
-			return true;
-		}
-		return !(registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString()));
+		return true;
 	}
 
 	@Override
