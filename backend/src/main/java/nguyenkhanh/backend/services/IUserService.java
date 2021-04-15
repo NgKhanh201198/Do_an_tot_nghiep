@@ -1,6 +1,7 @@
 package nguyenkhanh.backend.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import nguyenkhanh.backend.dto.UserDTO;
 import nguyenkhanh.backend.entity.UserEntity;
@@ -9,7 +10,11 @@ public interface IUserService {
 
 	public void save(UserEntity user);
 
+	public void resetPassword(UserEntity user);
+
 	public UserDTO getOneUser(long id);
+
+	public Optional<UserEntity> findByUsername(String username);
 
 	public List<UserEntity> getUserAll();
 

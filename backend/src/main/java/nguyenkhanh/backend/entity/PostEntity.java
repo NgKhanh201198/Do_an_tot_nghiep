@@ -15,7 +15,7 @@ public class PostEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "postid")
-	private Long postID;
+	private Long id;
 
 	@Column(name = "title")
 	private String title;
@@ -34,21 +34,28 @@ public class PostEntity extends BaseEntity {
 		super();
 	}
 
-	public PostEntity(Long postID, String title, String contents, String image, UserEntity user) {
+	public PostEntity(String title, String contents, String image, UserEntity user) {
 		super();
-		this.postID = postID;
 		this.title = title;
 		this.contents = contents;
 		this.image = image;
 		this.user = user;
 	}
 
-	public Long getPostID() {
-		return postID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setPostID(Long postID) {
-		this.postID = postID;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
 	}
 
 	public String getTitle() {

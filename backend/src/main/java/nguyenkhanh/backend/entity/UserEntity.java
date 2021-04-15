@@ -28,7 +28,7 @@ public class UserEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "userid")
-	private Long userID;
+	private Long id;
 
 	@Column(name = "email")
 	private String username;
@@ -55,7 +55,7 @@ public class UserEntity extends BaseEntity {
 	private String status;
 
 	@OneToOne
-	@JoinColumn(name = "usertypeid")
+	@JoinColumn(name = "id")
 	private UserTypeEntity userType;
 
 //	CascadeType.ALL Khi 1 xóa user -> dữ liệu theo user sẽ bị xóa 
@@ -79,11 +79,9 @@ public class UserEntity extends BaseEntity {
 		super();
 	}
 
-	public UserEntity(Long userID, String username, String password, String fullName, String phoneNumber,
-			Date dateOfBirth, String avatar, String gender, String status, UserTypeEntity userType,
-			Set<RoleEntity> roles) {
+	public UserEntity(String username, String password, String fullName, String phoneNumber, Date dateOfBirth,
+			String avatar, String gender, String status, UserTypeEntity userType, Set<RoleEntity> roles) {
 		super();
-		this.userID = userID;
 		this.username = username;
 		this.password = password;
 		this.fullName = fullName;
@@ -96,12 +94,12 @@ public class UserEntity extends BaseEntity {
 		this.roles = roles;
 	}
 
-	public Long getUserID() {
-		return userID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setUserID(Long userID) {
-		this.userID = userID;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getFullName() {

@@ -13,7 +13,7 @@ public class TemplateEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "templateid")
-	private Long templateID;
+	private Long id;
 
 	@Column(name = "descriptions")
 	private String descriptions;
@@ -25,19 +25,26 @@ public class TemplateEntity {
 		super();
 	}
 
-	public TemplateEntity(Long templateID, String descriptions, String contents) {
+	public TemplateEntity(String descriptions, String contents) {
 		super();
-		this.templateID = templateID;
 		this.descriptions = descriptions;
 		this.contents = contents;
 	}
 
-	public Long getTemplateID() {
-		return templateID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setTemplateID(Long templateID) {
-		this.templateID = templateID;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getDescriptions() {
+		return descriptions;
+	}
+
+	public void setDescriptions(String descriptions) {
+		this.descriptions = descriptions;
 	}
 
 	public String getDescription() {

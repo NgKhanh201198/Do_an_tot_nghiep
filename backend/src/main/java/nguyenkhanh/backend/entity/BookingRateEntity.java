@@ -13,7 +13,7 @@ public class BookingRateEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "bookrateid")
-	private Long bookRateID;
+	private Long id;
 
 	@Column(name = "username")
 	private String userName;
@@ -31,22 +31,20 @@ public class BookingRateEntity extends BaseEntity {
 		super();
 	}
 
-	public BookingRateEntity(Long bookRateID, String userName, String email, String contents,
-			String citizenIdentification) {
+	public BookingRateEntity(String userName, String email, String contents, String citizenIdentification) {
 		super();
-		this.bookRateID = bookRateID;
 		this.userName = userName;
 		this.email = email;
 		this.contents = contents;
 		this.citizenIdentification = citizenIdentification;
 	}
 
-	public Long getBookRateID() {
-		return bookRateID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setBookRateID(Long bookRateID) {
-		this.bookRateID = bookRateID;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getUserName() {

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class JwtResponse {
 
-	private Long userID;
+	private Long id;
 	private String email;
 	private String password;
 	private String fullName;
@@ -19,12 +19,10 @@ public class JwtResponse {
 	private String token;
 	private String type = "Bearer";
 
-	public JwtResponse(Long userID, String email, String password, String fullName, String phoneNumber,
-			Date dateOfBirth, String avatar, String gender, String status, List<String> roles, String userType,
-			String token) {
-		this.userID = userID;
+	public JwtResponse(Long id, String email, String fullName, String phoneNumber, Date dateOfBirth, String avatar,
+			String gender, String status, List<String> roles, String userType, String token) {
+		this.id = id;
 		this.email = email;
-		this.password = password;
 		this.fullName = fullName;
 		this.phoneNumber = phoneNumber;
 		this.dateOfBirth = dateOfBirth;
@@ -36,12 +34,12 @@ public class JwtResponse {
 		this.token = token;
 	}
 
-	public Long getUserID() {
-		return userID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setUserID(Long userID) {
-		this.userID = userID;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getEmail() {

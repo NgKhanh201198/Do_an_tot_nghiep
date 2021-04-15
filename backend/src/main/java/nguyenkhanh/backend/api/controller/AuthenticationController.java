@@ -165,9 +165,9 @@ public class AuthenticationController {
 			});
 
 			return ResponseEntity.ok(new JwtResponse(userDetailsImpl.getId(), userDetailsImpl.getUsername(),
-					userDetailsImpl.getPassword(), userDetailsImpl.getFullName(), userDetailsImpl.getPhoneNumber(),
-					userDetailsImpl.getDateOfBirth(), userDetailsImpl.getAvatar(), userDetailsImpl.getGender(),
-					userDetailsImpl.getStatus(), roles, userDetailsImpl.getUserType().getUserTypeName(), jwtToken));
+					userDetailsImpl.getFullName(), userDetailsImpl.getPhoneNumber(), userDetailsImpl.getDateOfBirth(),
+					userDetailsImpl.getAvatar(), userDetailsImpl.getGender(), userDetailsImpl.getStatus(), roles,
+					userDetailsImpl.getUserType().getUserTypeName(), jwtToken));
 
 		} catch (DisabledException ex) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
@@ -190,22 +190,16 @@ public class AuthenticationController {
 	}
 
 	@GetMapping(path = "auth/verifyEmail")
-	public ResponseEntity<?> verifyEmail(@RequestParam(required = false) String token) {
+	public ResponseEntity<?> verifyEmail(@RequestParam(required = false) String token) throws TimeoutException {
 
 		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
 				.orElseThrow(() -> new NotFoundException("Token not found"));
 
 		LocalDateTime dateActive = registerLogEntity.getDateActive();
 
-		try {
-			if (dateActive.isBefore(LocalDateTime.now())
-					&& registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString())) {
-				throw new TimeoutException("Your token has expired.");
-			}
-		} catch (TimeoutException exception) {
-			MessageResponse message = new MessageResponse(new Date(), HttpStatus.REQUEST_TIMEOUT.value(),
-					HttpStatus.REQUEST_TIMEOUT.name(), exception.getMessage());
-			return new ResponseEntity<>(message, HttpStatus.REQUEST_TIMEOUT);
+		if (dateActive.isBefore(LocalDateTime.now())
+				&& registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString())) {
+			throw new TimeoutException("Your token has expired.");
 		}
 
 		if (registerLogServiceImpl.getStatus(token).equals(EStatus.ACTIVE.toString())) {
@@ -214,7 +208,7 @@ public class AuthenticationController {
 		} else {
 			registerLogServiceImpl.updateStatus(token);
 			userServiceImpl.updateStatus(registerLogEntity.getUser().getUsername());
-			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
+			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.CONTINUE.value(),
 					"Verified email address. Sign in to continue."));
 		}
 	}

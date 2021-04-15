@@ -20,7 +20,7 @@ public class RoomTypeEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "roomtypeid")
-	private Long roomTypeID;
+	private Long id;
 
 	@Column(name = "roomtypename")
 	private String roomTypeName;
@@ -36,20 +36,27 @@ public class RoomTypeEntity extends BaseEntity {
 		super();
 	}
 
-	public RoomTypeEntity(Long roomTypeID, String roomTypeName, String description, Set<RoomEntity> rooms) {
+	public RoomTypeEntity(String roomTypeName, String description, Set<RoomEntity> rooms) {
 		super();
-		this.roomTypeID = roomTypeID;
 		this.roomTypeName = roomTypeName;
 		this.description = description;
 		this.rooms = rooms;
 	}
 
-	public Long getRoomTypeID() {
-		return roomTypeID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setRoomTypeID(Long roomTypeID) {
-		this.roomTypeID = roomTypeID;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Set<RoomEntity> getRooms() {
+		return rooms;
+	}
+
+	public void setRooms(Set<RoomEntity> rooms) {
+		this.rooms = rooms;
 	}
 
 	public String getRoomTypeName() {

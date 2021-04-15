@@ -23,7 +23,7 @@ public class RoleEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "roleid")
-	private Long roleID;
+	private Long id;
 
 	@Column(name = "rolename")
 	private String roleName;
@@ -43,22 +43,20 @@ public class RoleEntity extends BaseEntity {
 		super();
 	}
 
-	public RoleEntity(Long roleID, String roleName, String status, Set<UserEntity> user,
-			Set<PermissionEntity> permissions) {
+	public RoleEntity(String roleName, String status, Set<UserEntity> user, Set<PermissionEntity> permissions) {
 		super();
-		this.roleID = roleID;
 		this.roleName = roleName;
 		this.status = status;
 		this.user = user;
 		this.permissions = permissions;
 	}
 
-	public Long getRoleID() {
-		return roleID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setRoleID(Long roleID) {
-		this.roleID = roleID;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getRoleName() {

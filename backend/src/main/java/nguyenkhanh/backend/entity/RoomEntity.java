@@ -20,7 +20,7 @@ public class RoomEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "roomid")
-	private Long roomID;
+	private Long id;
 
 	@Column(name = "roomnumber")
 	private String roomNumber;
@@ -53,17 +53,16 @@ public class RoomEntity extends BaseEntity {
 
 	@ManyToMany(mappedBy = "rooms")
 	@JsonIgnore
-	Set<BookingRoomEntity> bookingRoom;
+	private Set<BookingRoomEntity> bookingRoom;
 
 	public RoomEntity() {
 		super();
 	}
 
-	public RoomEntity(Long roomID, String roomNumber, String status, String image, String contents,
-			Integer numberOfPeople, Integer roomCost, Integer discount, RoomTypeEntity roomType, HotelEntity hotel,
+	public RoomEntity(String roomNumber, String status, String image, String contents, Integer numberOfPeople,
+			Integer roomCost, Integer discount, RoomTypeEntity roomType, HotelEntity hotel,
 			Set<BookingRoomEntity> bookingRoom) {
 		super();
-		this.roomID = roomID;
 		this.roomNumber = roomNumber;
 		this.status = status;
 		this.image = image;
@@ -76,12 +75,36 @@ public class RoomEntity extends BaseEntity {
 		this.bookingRoom = bookingRoom;
 	}
 
-	public Long getRoomID() {
-		return roomID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setRoomID(Long roomID) {
-		this.roomID = roomID;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public RoomTypeEntity getRoomType() {
+		return roomType;
+	}
+
+	public void setRoomType(RoomTypeEntity roomType) {
+		this.roomType = roomType;
+	}
+
+	public HotelEntity getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(HotelEntity hotel) {
+		this.hotel = hotel;
+	}
+
+	public Set<BookingRoomEntity> getBookingRoom() {
+		return bookingRoom;
+	}
+
+	public void setBookingRoom(Set<BookingRoomEntity> bookingRoom) {
+		this.bookingRoom = bookingRoom;
 	}
 
 	public String getRoomNumber() {

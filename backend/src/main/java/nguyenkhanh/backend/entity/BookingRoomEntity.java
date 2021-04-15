@@ -26,7 +26,7 @@ public class BookingRoomEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "bookingroomid")
-	private Long bookingRoomID;
+	private Long id;
 
 	@Column(name = "bookingdate")
 	private Date bookingDate;
@@ -53,17 +53,16 @@ public class BookingRoomEntity extends BaseEntity {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "room_booked", joinColumns = @JoinColumn(name = "bookingroomid"), inverseJoinColumns = @JoinColumn(name = "roomid"))
-	Set<RoomEntity> rooms = new HashSet<RoomEntity>();
+	private Set<RoomEntity> rooms = new HashSet<RoomEntity>();
 
 	public BookingRoomEntity() {
 		super();
 	}
 
-	public BookingRoomEntity(Long bookingRoomID, Date bookingDate, Date checkInDate, Date checkOutDate,
+	public BookingRoomEntity(Date bookingDate, Date checkInDate, Date checkOutDate,
 			Integer totalNumberOfPeople, Integer totalRoomsBooked, Integer totalCost, UserEntity user,
 			Set<RoomEntity> rooms) {
 		super();
-		this.bookingRoomID = bookingRoomID;
 		this.bookingDate = bookingDate;
 		this.checkInDate = checkInDate;
 		this.checkOutDate = checkOutDate;
@@ -74,12 +73,28 @@ public class BookingRoomEntity extends BaseEntity {
 		this.rooms = rooms;
 	}
 
-	public Long getBookingRoomID() {
-		return bookingRoomID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setBookingRoomID(Long bookingRoomID) {
-		this.bookingRoomID = bookingRoomID;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
+	public Set<RoomEntity> getRooms() {
+		return rooms;
+	}
+
+	public void setRooms(Set<RoomEntity> rooms) {
+		this.rooms = rooms;
 	}
 
 	public Date getBookingDate() {

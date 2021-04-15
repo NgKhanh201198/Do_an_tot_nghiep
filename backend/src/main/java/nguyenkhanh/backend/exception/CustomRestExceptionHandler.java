@@ -48,7 +48,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 				HttpStatus.BAD_REQUEST.name(), exception.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	// Kiem tra du lieu co ton tai khong
 	@ExceptionHandler({ UsernameNotFoundException.class })
 	public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException exception, WebRequest request) {
@@ -66,8 +66,8 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler({ TimeoutException.class })
 	public ResponseEntity<?> handlTimeoutException(TimeoutException exception, WebRequest request) {
-		MessageResponse message = new MessageResponse(new Date(), HttpStatus.REQUEST_TIMEOUT.value(), "Request timeout",
-				exception.getMessage());
+		MessageResponse message = new MessageResponse(new Date(), HttpStatus.REQUEST_TIMEOUT.value(),
+				HttpStatus.REQUEST_TIMEOUT.name(), exception.getMessage());
 		return new ResponseEntity<>(message, HttpStatus.REQUEST_TIMEOUT);
 	}
 

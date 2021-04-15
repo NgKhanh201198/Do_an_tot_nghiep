@@ -13,7 +13,7 @@ public class UserTypeEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "usertypeid")
-	private Long userTypeID;
+	private Long id;
 
 	@Column(name = "usertypename")
 	private String userTypeName;
@@ -24,23 +24,22 @@ public class UserTypeEntity extends BaseEntity {
 	public UserTypeEntity() {
 	}
 
-	public UserTypeEntity(Long userTypeID, String userTypeName, String keyName) {
+	public UserTypeEntity(String userTypeName, String keyName) {
 		super();
-		this.userTypeID = userTypeID;
 		this.userTypeName = userTypeName;
 		this.keyName = keyName;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public UserTypeEntity(String userTypeName) {
 		this.userTypeName = userTypeName;
-	}
-
-	public Long getUserTypeID() {
-		return userTypeID;
-	}
-
-	public void setUserTypeID(Long userTypeID) {
-		this.userTypeID = userTypeID;
 	}
 
 	public String getUserTypeName() {

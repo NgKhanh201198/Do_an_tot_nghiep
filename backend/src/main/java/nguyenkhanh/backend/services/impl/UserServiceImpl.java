@@ -2,6 +2,7 @@ package nguyenkhanh.backend.services.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public void save(UserEntity user) {
 		userRepository.save(user);
+
 		String token = UUID.randomUUID().toString();
 
 		RegisterLogEntity registerLogEntity = new RegisterLogEntity(token, EStatus.INACTIVE.toString(),
@@ -53,7 +55,22 @@ public class UserServiceImpl implements IUserService {
 
 		String link = BASE_URL + "api/auth/verifyEmail?token=" + token;
 
-		sendEmailService.sendEMail(user.getUsername(), buildEmail(user.getFullName(), link));
+		sendEmailService.sendConfirmEmail(user.getUsername(), buildVerifyEmail(user.getFullName(), link));
+	}
+
+	@Override
+	public void resetPassword(UserEntity user) {
+		String token = UUID.randomUUID().toString();
+
+		RegisterLogEntity registerLogEntity = new RegisterLogEntity(token, EStatus.INACTIVE.toString(),
+				LocalDateTime.now().plusSeconds(DATE_EXPIED), user);
+		registerLogServiceImpl.save(registerLogEntity);
+
+//		String link = BASE_URL + "api/user/updatePassword?token=" + token;
+
+		String link = "http://localhost:4200/";
+
+		sendEmailService.sendResetPassword(user.getUsername(), buildResetPassword(user.getFullName(), link));
 	}
 
 	@Override
@@ -63,7 +80,7 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public void update(UserEntity user) {
-		userRepository.updateUser(user.getUserID(), user.getFullName(), user.getPhoneNumber(), user.getDateOfBirth(),
+		userRepository.updateUser(user.getId(), user.getFullName(), user.getPhoneNumber(), user.getDateOfBirth(),
 				user.getGender());
 	}
 
@@ -90,10 +107,19 @@ public class UserServiceImpl implements IUserService {
 		return userRepository.existsByPhoneNumber(phoneNumber);
 	}
 
-	public final String buildEmail(String username, String link) {
+	public final String buildVerifyEmail(String username, String link) {
 		String htmlSendEmail, s1, s2;
 		s1 = templateRepository.findById(1l).getContents();
-		s2 = s1.replace("emailVerificationLink", link);
+		s2 = s1.replace("hrefLink", link);
+		htmlSendEmail = s2.replace("username", username);
+
+		return htmlSendEmail;
+	}
+
+	public final String buildResetPassword(String username, String link) {
+		String htmlSendEmail, s1, s2;
+		s1 = templateRepository.findById(2l).getContents();
+		s2 = s1.replace("hrefLink", link);
 		htmlSendEmail = s2.replace("username", username);
 
 		return htmlSendEmail;
@@ -118,5 +144,10 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public void updateAvatar(long id, String avatar) {
 		userRepository.updateImageUser(id, avatar);
+	}
+
+	@Override
+	public Optional<UserEntity> findByUsername(String username) {
+		return userRepository.findByUsername(username);
 	}
 }

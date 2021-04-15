@@ -1,9 +1,11 @@
 package nguyenkhanh.backend.api.controller;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeoutException;
 
 import javax.validation.Valid;
 
@@ -16,9 +18,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,16 +30,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import nguyenkhanh.backend.config.security.JwtTokenUtils;
 import nguyenkhanh.backend.dto.UserDTO;
+import nguyenkhanh.backend.entity.EStatus;
+import nguyenkhanh.backend.entity.RegisterLogEntity;
 import nguyenkhanh.backend.entity.UserEntity;
 import nguyenkhanh.backend.exception.BadRequestException;
+import nguyenkhanh.backend.exception.NotFoundException;
 import nguyenkhanh.backend.response.MessageResponse;
 import nguyenkhanh.backend.services.UploadFileService;
+import nguyenkhanh.backend.services.impl.RegisterLogServiceImpl;
 import nguyenkhanh.backend.services.impl.RoleServiceImpl;
 import nguyenkhanh.backend.services.impl.UserServiceImpl;
 import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
@@ -61,6 +65,9 @@ public class UserController {
 
 	@Autowired
 	JwtTokenUtils jwtTokenUtils;
+
+	@Autowired
+	RegisterLogServiceImpl registerLogServiceImpl;
 
 	@GetMapping("/user")
 //	@PreAuthorize("hasRole('GetUserAll')")
@@ -100,7 +107,7 @@ public class UserController {
 					e.printStackTrace();
 				}
 
-				userEntity.setUserID(id);
+				userEntity.setId(id);
 				userEntity.setFullName(userDTO.getFullName());
 				userEntity.setPhoneNumber(userDTO.getPhoneNumber());
 				userEntity.setGender(userDTO.getGender());
@@ -118,23 +125,47 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/user/updatePassword/{id}")
-	public ResponseEntity<?> updatePassword(@PathVariable("id") long id, @RequestBody @Valid String token) {
+	@PostMapping("/user/resetPassword")
+	public ResponseEntity<?> resetPassword(@RequestParam("email") String email) {
 
-		try {
-			if (!(jwtTokenUtils.validateJwtToken(token))) {
-				throw new ExpiredJwtException(null, null, "ss");
-			}
-			// xu ly
+		UserEntity userEntity = userServiceImpl.findByUsername(email)
+				.orElseThrow(() -> new UsernameNotFoundException("The account is not on the system!"));
 
-			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
-					"TOken het han!");
-			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
-		} catch (ExpiredJwtException e) {
-			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
-					"TOken het han!");
-			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
+		userServiceImpl.resetPassword(userEntity);
+
+		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
+				"We have sent an email. Please check email to reset password!"));
+
+	}
+
+	@GetMapping("/user/updatePassword")
+	public ResponseEntity<?> updatePassword(@RequestParam(required = false) String token) throws TimeoutException {
+
+		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
+				.orElseThrow(() -> new NotFoundException("Token not found"));
+
+		LocalDateTime dateActive = registerLogEntity.getDateActive();
+
+		if (dateActive.isBefore(LocalDateTime.now())
+				&& registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString())) {
+			throw new TimeoutException("Your token has expired.");
 		}
+
+		// ---------------------
+
+		if (registerLogServiceImpl.getStatus(token).equals(EStatus.ACTIVE.toString())) {
+			return ResponseEntity
+					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Your account has been confirmed!"));
+		} else {
+			registerLogServiceImpl.updateStatus(token);
+			userServiceImpl.updateStatus(registerLogEntity.getUser().getUsername());
+			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
+					"Verified email address. Sign in to continue."));
+		}
+	}
+
+	@PostMapping("/user/savePassword")
+	public void savePassword() {
 	}
 
 	@PutMapping("/user/updateAvatar/{id}")

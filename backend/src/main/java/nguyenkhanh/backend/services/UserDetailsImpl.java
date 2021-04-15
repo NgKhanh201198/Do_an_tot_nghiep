@@ -53,7 +53,7 @@ public class UserDetailsImpl implements UserDetails {
 			});
 		});
 
-		return new UserDetailsImpl(userEntity.getUserID(), userEntity.getUsername(), userEntity.getPassword(),
+		return new UserDetailsImpl(userEntity.getId(), userEntity.getUsername(), userEntity.getPassword(),
 				userEntity.getFullName(), userEntity.getPhoneNumber(), userEntity.getDateOfBirth(),
 				userEntity.getAvatar(), userEntity.getGender(), userEntity.getStatus(), userEntity.getUserType(),
 				userEntity.getRoles(), authorities);

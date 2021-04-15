@@ -22,7 +22,7 @@ public class HotelEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "hotelid")
-	private Long hotelID;
+	private Long id;
 
 	@Column(name = "hotelname")
 	private String hotelName;
@@ -51,10 +51,9 @@ public class HotelEntity extends BaseEntity {
 		super();
 	}
 
-	public HotelEntity(Long hotelID, String hotelName, String addrees, String image, String email, String phoneNumber,
+	public HotelEntity(String hotelName, String addrees, String image, String email, String phoneNumber,
 			UserEntity user, Set<RoomEntity> rooms) {
 		super();
-		this.hotelID = hotelID;
 		this.hotelName = hotelName;
 		this.addrees = addrees;
 		this.image = image;
@@ -64,12 +63,28 @@ public class HotelEntity extends BaseEntity {
 		this.rooms = rooms;
 	}
 
-	public Long getHotelID() {
-		return hotelID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setHotelID(Long hotelID) {
-		this.hotelID = hotelID;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
+	public Set<RoomEntity> getRooms() {
+		return rooms;
+	}
+
+	public void setRooms(Set<RoomEntity> rooms) {
+		this.rooms = rooms;
 	}
 
 	public String getHotelName() {

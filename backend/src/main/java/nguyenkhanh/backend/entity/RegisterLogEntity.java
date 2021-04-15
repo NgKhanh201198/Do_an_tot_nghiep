@@ -18,7 +18,7 @@ public class RegisterLogEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Long ID;
+	private Long id;
 
 	@Column(name = "token")
 	private String token;
@@ -45,12 +45,12 @@ public class RegisterLogEntity extends BaseEntity {
 		this.user = user;
 	}
 
-	public Long getID() {
-		return ID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setID(Long iD) {
-		ID = iD;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getToken() {

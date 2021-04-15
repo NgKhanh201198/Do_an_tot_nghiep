@@ -18,7 +18,7 @@ public class PermissionEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "permissionid")
-	private Long permissionID;
+	private Long id;
 
 	@Column(name = "permissionname")
 	private String permissionName;
@@ -34,20 +34,19 @@ public class PermissionEntity extends BaseEntity {
 		super();
 	}
 
-	public PermissionEntity(Long permissionID, String permissionName, String permissionKey, Set<RoleEntity> roles) {
+	public PermissionEntity(String permissionName, String permissionKey, Set<RoleEntity> roles) {
 		super();
-		this.permissionID = permissionID;
 		this.permissionName = permissionName;
 		this.permissionKey = permissionKey;
 		this.roles = roles;
 	}
 
-	public Long getPermissionID() {
-		return permissionID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setPermissionID(Long permissionID) {
-		this.permissionID = permissionID;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getPermissionName() {

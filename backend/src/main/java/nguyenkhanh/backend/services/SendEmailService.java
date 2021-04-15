@@ -15,18 +15,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class SendEmailService {
 	private final static Logger LOGGER = LoggerFactory.getLogger(SendEmailService.class);
-	
+
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-	public void sendEMail(String to, String content) {
+	public void sendResetPassword(String to, String content) {
+		sendEMail(to, "Reset Password", content);
+	}
+
+	public void sendConfirmEmail(String to, String content) {
+		sendEMail(to, "Confirm your email", content);
+	}
+
+	public void sendEMail(String to, String title, String content) {
 		try {
 			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
 					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
-			helper.setSubject("Confirm your email");
-			helper.setFrom("khanhnv.pro@gmail.com");
+			helper.setSubject(title);
+//			helper.setFrom("khanhnv.pro@gmail.com");
+			helper.setFrom("MySystem@gmail.com");
 			helper.setTo(to);
 			helper.setText(content, true);
 
