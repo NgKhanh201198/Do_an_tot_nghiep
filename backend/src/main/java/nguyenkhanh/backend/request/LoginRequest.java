@@ -1,12 +1,17 @@
 package nguyenkhanh.backend.request;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import nguyenkhanh.backend.api.validation.EmailFormat;
+
 public class LoginRequest {
-//	@NotBlank(message = "{Email.NotBlank}")
-//	@EmailFormat(message = "{Email.EmailFormat}")
+	@NotBlank(message = "{Email.NotBlank}")
+	@EmailFormat(message = "{Email.EmailFormat}")
 	private String username;
 
-//	@NotBlank(message = "{Password.NotBlank}")
-//	@Size(min = 8, max = 20, message = "{Password.Size}")
+	@NotBlank(message = "{Password.NotBlank}")
+	@Size(min = 8, max = 20, message = "{Password.Size}")
 	private String password;
 
 	public LoginRequest() {

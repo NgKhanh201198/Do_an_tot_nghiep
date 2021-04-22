@@ -75,7 +75,7 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public List<UserEntity> getUserAll() {
-		return userRepository.findAll(Sort.by(Sort.Direction.ASC, "userID"));
+		return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
 	}
 
 	@Override

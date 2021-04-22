@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -164,10 +165,13 @@ public class AuthenticationController {
 				roles.add(role.getRoleName());
 			});
 
+			List<String> permissions = userDetailsImpl.getAuthorities().stream()
+					.map(permission -> permission.getAuthority()).collect(Collectors.toList());
+
 			return ResponseEntity.ok(new JwtResponse(userDetailsImpl.getId(), userDetailsImpl.getUsername(),
 					userDetailsImpl.getFullName(), userDetailsImpl.getPhoneNumber(), userDetailsImpl.getDateOfBirth(),
 					userDetailsImpl.getAvatar(), userDetailsImpl.getGender(), userDetailsImpl.getStatus(), roles,
-					userDetailsImpl.getUserType().getUserTypeName(), jwtToken));
+					permissions, userDetailsImpl.getUserType().getUserTypeName(), jwtToken));
 
 		} catch (DisabledException ex) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",

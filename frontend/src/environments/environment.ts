@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   isLogger: true,
-  baseUrlServe: "http://localhost:8080/"
+  baseUrlServer: "http://localhost:8080/"
 };
 
 /*

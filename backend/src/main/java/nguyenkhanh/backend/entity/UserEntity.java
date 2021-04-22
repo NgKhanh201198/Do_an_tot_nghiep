@@ -55,7 +55,7 @@ public class UserEntity extends BaseEntity {
 	private String status;
 
 	@OneToOne
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "usertypeid")
 	private UserTypeEntity userType;
 
 //	CascadeType.ALL Khi 1 xóa user -> dữ liệu theo user sẽ bị xóa 

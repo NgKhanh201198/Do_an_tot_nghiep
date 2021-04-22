@@ -27,17 +27,17 @@ public class RegisterRequest extends BaseEntity {
 	@PhoneNumberFormat(message = "{PhoneNumber.PhoneNumberFormat}")
 	private String phoneNumber;
 
-	@NotBlank(message = "{DateOfBirth.NotBlank}")
+//	@NotBlank(message = "{DateOfBirth.NotBlank}")
 	private String dateOfBirth;
 
 	private String avatar;
 
-	@NotBlank(message = "{Gender.NotBlank}")
+//	@NotBlank(message = "{Gender.NotBlank}")
 	private String gender;
 
 	private String status;
 
-	@NotBlank(message = "{UserType.NotBlank}")
+//	@NotBlank(message = "{UserType.NotBlank}")
 	private String userType;
 
 	private Set<String> roles;

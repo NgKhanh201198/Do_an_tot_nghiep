@@ -7,7 +7,6 @@ public class JwtResponse {
 
 	private Long id;
 	private String email;
-	private String password;
 	private String fullName;
 	private String phoneNumber;
 	private Date dateOfBirth;
@@ -15,12 +14,18 @@ public class JwtResponse {
 	private String gender;
 	private String status;
 	private List<String> roles;
-	private String userType;
+	private List<String> permissions;
+	private String userTypeName;
 	private String token;
 	private String type = "Bearer";
 
+	public JwtResponse() {
+		super();
+	}
+
 	public JwtResponse(Long id, String email, String fullName, String phoneNumber, Date dateOfBirth, String avatar,
-			String gender, String status, List<String> roles, String userType, String token) {
+			String gender, String status, List<String> roles, List<String> permissions, String userTypeName,
+			String token) {
 		this.id = id;
 		this.email = email;
 		this.fullName = fullName;
@@ -30,7 +35,23 @@ public class JwtResponse {
 		this.gender = gender;
 		this.status = status;
 		this.roles = roles;
-		this.userType = userType;
+		this.permissions = permissions;
+		this.userTypeName = userTypeName;
+		this.token = token;
+	}
+
+	public JwtResponse(Long id, String email, String fullName, String phoneNumber,Date dateOfBirth, String avatar, String gender,
+			String status, List<String> roles,List<String> permissions, String token) {
+		this.id = id;
+		this.email = email;
+		this.fullName = fullName;
+		this.phoneNumber = phoneNumber;
+		this.dateOfBirth = dateOfBirth;
+		this.avatar = avatar;
+		this.gender = gender;
+		this.status = status;
+		this.roles = roles;
+		this.permissions = permissions;
 		this.token = token;
 	}
 
@@ -48,14 +69,6 @@ public class JwtResponse {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getFullName() {
@@ -114,12 +127,20 @@ public class JwtResponse {
 		this.roles = roles;
 	}
 
-	public String getUserType() {
-		return userType;
+	public List<String> getPermissions() {
+		return permissions;
 	}
 
-	public void setUserType(String userType) {
-		this.userType = userType;
+	public void setPermissions(List<String> permissions) {
+		this.permissions = permissions;
+	}
+
+	public String getUserTypeName() {
+		return userTypeName;
+	}
+
+	public void setUserTypeName(String userTypeName) {
+		this.userTypeName = userTypeName;
 	}
 
 	public String getToken() {

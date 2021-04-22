@@ -68,6 +68,11 @@ public class UserController {
 
 	@Autowired
 	RegisterLogServiceImpl registerLogServiceImpl;
+	
+	@PostMapping("/user")
+	public ResponseEntity<?> createUser() {
+		return new ResponseEntity<>("create", HttpStatus.OK);
+	} 
 
 	@GetMapping("/user")
 //	@PreAuthorize("hasRole('GetUserAll')")

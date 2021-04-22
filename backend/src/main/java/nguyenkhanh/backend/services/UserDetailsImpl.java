@@ -35,12 +35,14 @@ public class UserDetailsImpl implements UserDetails {
 	private String gender;
 	private String status;
 	private UserTypeEntity userType;
+
 	@JsonIgnore
 	private Set<BookingRoomEntity> bookingRoom;
 	@JsonIgnore
 	private Set<HotelEntity> hotels;
 	@JsonIgnore
 	private Set<PostEntity> posts;
+
 	private Set<RoleEntity> roles;
 
 	private Collection<? extends GrantedAuthority> authorities;
@@ -142,10 +144,6 @@ public class UserDetailsImpl implements UserDetails {
 
 	public String getStatus() {
 		return status;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	public UserTypeEntity getUserType() {

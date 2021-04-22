@@ -25,7 +25,6 @@ public class UserTypeEntity extends BaseEntity {
 	}
 
 	public UserTypeEntity(String userTypeName, String keyName) {
-		super();
 		this.userTypeName = userTypeName;
 		this.keyName = keyName;
 	}
@@ -36,10 +35,6 @@ public class UserTypeEntity extends BaseEntity {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public UserTypeEntity(String userTypeName) {
-		this.userTypeName = userTypeName;
 	}
 
 	public String getUserTypeName() {
