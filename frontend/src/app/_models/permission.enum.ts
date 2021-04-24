@@ -1,5 +1,5 @@
 export enum Permission {
-    ADMIN_HOME = "admin_home",
+    ADMIN_PAGE = "admin_page",
 
     CREATE_ACCOUNT = "create_account",
     LIST_ACCOUNT = "list_account",

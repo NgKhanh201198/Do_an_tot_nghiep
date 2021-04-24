@@ -1,0 +1,43 @@
+<header>
+    <app-header-top></app-header-top>
+</header>
+<main class="main">
+    <div class="container">
+        <div class="col-md-6 offset-md-3" style="padding: 100px 0px;">
+            <div class="card badge-link">
+                <h1 class="card-header text-center">Đăng nhập</h1>
+                <div class="card-body">
+                    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Địa chỉ email</mat-label>
+                                <input formControlName="username" #username matInput class="input-height" type="text">
+                                <mat-icon matSuffix>email</mat-icon>
+                                <!-- <mat-hint align="end">{{username.value.length}} /18</mat-hint> -->
+                                <mat-error *ngIf="formValid.username.invalid">{{getUserErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Mật khẩu</mat-label>
+                                <input formControlName="password" #password matInput maxlength="18" [type]="hide ? 'password' : 'text'" class="input-height">
+                                <div mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" style="cursor: pointer;">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </div>
+                                <mat-hint align="end">{{password.value.length}} /18</mat-hint>
+                                <mat-error *ngIf="formValid.password.invalid">{{getPasswordErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <button [disabled]="loading" class="btn btn-primary btn-block">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Đăng nhập
+                        </button>
+                        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+                    </form>
+                    <div class="text-right mt-3">
+                        Bạn chưa có tài khoản? <a [routerLink]="['/register']">Đăng ký</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

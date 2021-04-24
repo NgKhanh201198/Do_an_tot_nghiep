@@ -1,18 +1,14 @@
 package nguyenkhanh.backend.api.controller;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -36,10 +32,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import nguyenkhanh.backend.config.security.JwtTokenUtils;
-import nguyenkhanh.backend.entity.ERoles;
 import nguyenkhanh.backend.entity.EStatus;
 import nguyenkhanh.backend.entity.RegisterLogEntity;
-import nguyenkhanh.backend.entity.RoleEntity;
 import nguyenkhanh.backend.entity.UserEntity;
 import nguyenkhanh.backend.entity.UserTypeEntity;
 import nguyenkhanh.backend.exception.NotFoundException;
@@ -86,12 +80,12 @@ public class AuthenticationController {
 				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 						HttpStatus.BAD_REQUEST.name(), "Email is exist already! Please try other email!"));
 			}
-			if (userServiceImpl.isUserExitsByPhoneNumber(registerRequest.getPhoneNumber())) {
-				return ResponseEntity.badRequest()
-						.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-								HttpStatus.BAD_REQUEST.name(),
-								"Phone number is exist already! Please try other Phone number!"));
-			}
+//			if (userServiceImpl.isUserExitsByPhoneNumber(registerRequest.getPhoneNumber())) {
+//				return ResponseEntity.badRequest()
+//						.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+//								HttpStatus.BAD_REQUEST.name(),
+//								"Phone number is exist already! Please try other Phone number!"));
+//			}
 			if (registerRequest.getPassword() == null) {
 				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 						HttpStatus.BAD_REQUEST.name(), "Password mustn't be null value!"));
@@ -100,32 +94,33 @@ public class AuthenticationController {
 			UserEntity userEntity = new UserEntity();
 
 			// Set DateOfBirth
-			String dateOfBirth = registerRequest.getDateOfBirth();
-			Date date;
-			try {
-				date = DateUtils.parseDate(dateOfBirth, new String[] { "dd/MM/yyyy", "yyyy/MM/dd HH:mm:ss" });
-				userEntity.setDateOfBirth(date);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+//			String dateOfBirth = registerRequest.getDateOfBirth();
+//			Date date;
+//			try {
+//				date = DateUtils.parseDate(dateOfBirth, new String[] { "dd/MM/yyyy", "yyyy/MM/dd HH:mm:ss" });
+//				userEntity.setDateOfBirth(date);
+//			} catch (ParseException e) {
+//				e.printStackTrace();
+//			}
 
-			// Set User type
-			UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName(registerRequest.getUserType())
+//			 Set User type
+			UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName("customer")
 					.orElseThrow(() -> new UsernameNotFoundException("User type not found!"));
 			userEntity.setUserType(userTypeEntity);
 
-			Set<RoleEntity> roleEntity = new HashSet<RoleEntity>();
-			RoleEntity userRole = roleServiceImpl.finByRoleName(ERoles.CUSTOMER.toString())
-					.orElseThrow(() -> new UsernameNotFoundException("Role is not found"));
-			roleEntity.add(userRole);
-			userEntity.setRoles(roleEntity);
+//			Set<RoleEntity> roleEntity = new HashSet<RoleEntity>();
+//			RoleEntity userRole = roleServiceImpl.finByRoleName(ERoles.CUSTOMER.toString())
+//					.orElseThrow(() -> new UsernameNotFoundException("Role is not found"));
+//			roleEntity.add(userRole);
+//			userEntity.setRoles(roleEntity);
 
 			userEntity.setFullName(registerRequest.getFullName());
 			userEntity.setUsername(registerRequest.getUsername());
 			userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-			userEntity.setPhoneNumber(registerRequest.getPhoneNumber());
-			userEntity.setAvatar(registerRequest.getAvatar());
-			userEntity.setGender(registerRequest.getGender());
+			
+//			userEntity.setPhoneNumber(registerRequest.getPhoneNumber());
+//			userEntity.setAvatar(registerRequest.getAvatar());
+//			userEntity.setGender(registerRequest.getGender());
 			userEntity.setStatus(EStatus.INACTIVE.toString());
 
 			// Save

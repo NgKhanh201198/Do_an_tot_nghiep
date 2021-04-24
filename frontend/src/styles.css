@@ -5,8 +5,13 @@
     font-size: 1em;
 }
 
-.nav-2 {
+.nav-top,
+.nav-bottom {
     background-color: #202020;
+}
+
+.nav-top {
+    padding: 15px 10px;
 }
 
 .username {
@@ -77,10 +82,9 @@ input.search-date:focus {
     line-height: 24px;
 }
 
-.img-hotel {
+.img-city {
     height: 270px;
     width: auto;
-    background-image: url(assets/customs/images/banner.jpg);
     background-size: cover;
     margin-bottom: 15px;
 }
@@ -99,6 +103,14 @@ input.search-date:focus {
 
 .login-register {
     margin-right: 5%;
+}
+
+.build-drop-menu {
+    background: #fff;
+    left: -40px;
+    border-radius: 2px;
+    overflow: hidden;
+    z-index: 100;
 }
 
 @media only screen and (min-width: 1025px) {
@@ -154,4 +166,14 @@ input.search-date:focus {
 
 .owl-dot {
     outline: none !important;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }

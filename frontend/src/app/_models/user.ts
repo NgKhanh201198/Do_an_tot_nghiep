@@ -2,16 +2,17 @@ import { Permission } from "./permission.enum";
 import { Role } from "./role.enum";
 
 export class User {
-    id: number;
-    email: string;
-    phoneNumber: string;
-    dateOfBirth: any;
     avatar: string;
+    dateOfBirth: any;
+    email: string;
+    fullName: string;
     gender: string;
-    status: string;
-    roles: Role[];
+    id: number;
     permissions: Permission[];
+    phoneNumber: string;
+    roles: Role[];
+    status: string;
+    token?: string;
+    type: string;
     userType: string;
-    accessToken?: string;
-    typeToken: string;
 }

@@ -93,6 +93,14 @@ public class UserEntity extends BaseEntity {
 		this.userType = userType;
 		this.roles = roles;
 	}
+	public UserEntity(String username, String password, String fullName, String status, UserTypeEntity userType) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.fullName = fullName;
+		this.status = status;
+		this.userType = userType;
+	}
 
 	public Long getId() {
 		return id;

@@ -1,5 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -7,6 +8,7 @@ import { User } from '../_models/user';
 
 
 const API_LOGIN = `${environment.baseUrlServer}` + 'api/auth/login';
+const API_REGISTER = `${environment.baseUrlServer}` + 'api/auth/register';
 const TOKEN_KEY = 'TOKEN';
 const USER_KEY = 'CURRENT_USER';
 const httpOptions = {
@@ -20,34 +22,13 @@ export class AuthenticationService {
     private currentUserSubject: BehaviorSubject<User>;
     public currentUser: Observable<User>;
 
-    constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+    constructor(private http: HttpClient, private router: Router) {
+        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(window.sessionStorage.getItem(USER_KEY)));
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    login(username: string, password: string) {
-        return this.http.post<any>(API_LOGIN, { username, password }, httpOptions)
-            .pipe(
-                map((user: any) => {
-                    this.storeToken(user.accessToken);
-                    this.storeUser(user);
-                    this.currentUserSubject.next(user);
-                    return user;
-                }),
-                catchError((error) => {
-                    return throwError(error);
-                })
-
-            );
-    }
-
-    logout() {
-        window.sessionStorage.clear();
-        this.currentUserSubject.next(null);
-    }
-
-    public get currentUserValue(): User {
-        return this.currentUserSubject.value;
+    handleError(error: HttpErrorResponse) {
+        return throwError(error);
     }
 
     public storeToken(token: string) {
@@ -63,6 +44,37 @@ export class AuthenticationService {
     }
     public getUser(): any {
         return JSON.parse(window.sessionStorage.getItem(USER_KEY));
+    }
+
+    public get currentUserValue(): User {
+        return this.currentUserSubject.value;
+    }
+
+    login(username: any, password: any): Observable<any> {
+        return this.http.post(API_LOGIN, { username, password }, httpOptions)
+            .pipe(
+                map((user: any) => {
+                    this.storeToken(user.token);
+                    this.storeUser(user);
+                    this.currentUserSubject.next(user);
+                    return user;
+                }),
+                catchError((error) => {
+                    return throwError(error);
+                })
+            );
+    }
+
+    logout() {
+        window.sessionStorage.clear();
+        this.currentUserSubject.next(null);
+    }
+
+    register(data: any): Observable<any> {
+        return this.http.post(API_REGISTER, data, httpOptions)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     isLoggedIn(): Boolean {

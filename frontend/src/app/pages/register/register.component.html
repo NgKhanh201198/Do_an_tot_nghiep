@@ -1,0 +1,63 @@
+<header>
+    <app-header-top></app-header-top>
+</header>
+<main role="main">
+    <div class="container">
+        <div class="col-md-6 offset-md-3" style="margin-top: 50px;">
+            <div class="card badge-link">
+                <h1 class="card-header text-center">Đăng ký</h1>
+                <div class="card-body">
+                    <form #myForm="ngForm" [formGroup]="formData" (ngSubmit)="onSubmit();">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Họ và tên</mat-label>
+                                <input formControlName="fullName" #fullName matInput maxlength="100" class="input-height" type="text">
+                                <mat-icon matSuffix>person</mat-icon>
+                                <mat-hint align="end">{{fullName.value.length}} / 100</mat-hint>
+                                <mat-error *ngIf="formValid.fullName.invalid">{{getFullnameErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Địa chỉ email</mat-label>
+                                <input formControlName="username" #username matInput class="input-height" type="email">
+                                <mat-icon matSuffix>email</mat-icon>
+                                <mat-error *ngIf="formValid.username.invalid">{{getEmailErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Nhập mật khẩu</mat-label>
+                                <input formControlName="password" #password matInput maxlength="18" [type]="hide ? 'password' : 'text'" class="input-height">
+                                <div mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" style="cursor: pointer;">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </div>
+                                <mat-hint align="end">{{password.value.length}} / 18</mat-hint>
+                                <mat-error *ngIf="formValid.password.invalid">{{getPasswordErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <!-- <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Nhập lại mật khẩu</mat-label>
+                                <input formControlName="password" #password matInput maxlength="18" [type]="hide ? 'password' : 'text'" class="input-height">
+                                <div mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" style="cursor: pointer;">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </div>
+                                <mat-hint align="end">{{password.value.length}} / 18</mat-hint>
+                                <mat-error *ngIf="formValid.password.invalid">{{getPasswordErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div> -->
+                        <button [disabled]="formData.invalid" class="btn btn-primary btn-block">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Đăng ký
+                        </button>
+                        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+                    </form>
+                    <div class="text-right mt-3">Bạn đã có tài khoản? <a [routerLink]="['/log-in']">Đăng nhập</a></div>
+                </div>
+            </div>
+        </div>
+        <!-- <div [ngClass]="{ 'hienra': success }" class="alert tb">
+            <i class="fas fa-check" style="color: green; font-size: 1.25em;"></i>&nbsp;{{success}}
+        </div> -->
+    </div>
+</main>
