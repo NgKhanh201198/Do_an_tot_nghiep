@@ -8,15 +8,17 @@ import nguyenkhanh.backend.entity.UserEntity;
 
 public interface IUserService {
 
+	public Optional<UserEntity> findByUsername(String username);
+
 	public void save(UserEntity user);
 
 	public void resetPassword(UserEntity user);
 
-	public UserDTO getOneUser(long id);
-
-	public Optional<UserEntity> findByUsername(String username);
-
 	public List<UserEntity> getUserAll();
+
+	public UserDTO getOneUser(long id);
+	
+	public UserEntity getUserById(long id);
 
 	public void update(UserEntity user);
 

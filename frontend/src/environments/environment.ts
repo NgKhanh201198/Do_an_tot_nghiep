@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  isLogger: false,
+  isLogger: true,
   baseUrlServer: "http://localhost:8080/"
 };
 

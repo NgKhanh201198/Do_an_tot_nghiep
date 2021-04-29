@@ -8,7 +8,6 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-//@EnableTransactionManagement
 public class AppConfig implements WebMvcConfigurer {
 	@Bean
 	public MessageSource messageSource() {

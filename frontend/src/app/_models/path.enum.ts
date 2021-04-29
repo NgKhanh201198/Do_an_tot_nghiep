@@ -1,9 +1,15 @@
 export enum Path {
-    HOME = '',
+
+    //Pages
+    HOME = 'home',
     ADMIN_PAGE = 'admin-page',
     LOGIN = 'log-in',
     REGISTER = 'register',
-    PROFILE = 'profile',
+    PROFILE = 'user-profile',
+    CHANGEPASSWORD = 'user-change-password',
+    BOOKINGROOM = 'user-bookingroom',
+    HOTEL = 'hotel',
+    POST = 'post',
 
 
     //  admin page

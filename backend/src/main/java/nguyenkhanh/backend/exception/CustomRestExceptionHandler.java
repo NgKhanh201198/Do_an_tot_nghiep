@@ -25,7 +25,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 	public final ResponseEntity<?> exception(Exception exception) {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body(new MessageResponse(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
-						HttpStatus.INTERNAL_SERVER_ERROR.name(), "Server error, please try again!"));
+						HttpStatus.INTERNAL_SERVER_ERROR.name(), "Lỗi máy chủ, vui lòng thử lại!"));
 	}
 
 	@ExceptionHandler({ NotFoundException.class })
@@ -39,7 +39,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException exception, WebRequest request) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), exception.getMessage(),
-						"Did not find the ID you requested", request.getDescription(false)));
+						"Không tìm thấy ID bạn yêu cầu", request.getDescription(false)));
 	}
 
 	@ExceptionHandler({ BadRequestException.class })
@@ -61,7 +61,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> handleMaxSizeException(MaxUploadSizeExceededException exc, WebRequest request) {
 		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
 				.body(new MessageResponse(new Date(), HttpStatus.EXPECTATION_FAILED.value(), "Expectation Failed",
-						"File too large!", request.getDescription(false)));
+						"Tệp tên quá lớn!", request.getDescription(false)));
 	}
 
 	@ExceptionHandler({ TimeoutException.class })

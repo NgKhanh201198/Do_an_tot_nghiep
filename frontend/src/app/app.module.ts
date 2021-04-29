@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 //Component
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './pages/home/home.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ProfileComponent } from './pages/profile/profile.component';
@@ -66,6 +66,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatSliderModule } from '@angular/material/slider'; 
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { BookingRoomComponent } from './pages/booking-room/booking-room.component';
+import { NavProfileComponent } from './pages/nav-profile/nav-profile.component';
+import { HotelComponent } from './pages/hotel/hotel.component';
+import { PostComponent } from './pages/post/post.component';
 
 @NgModule({
     declarations: [
@@ -106,7 +112,12 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         UpdateCustomerComponent,
         HeaderTopComponent,
         HeaderBottomComponent,
-        FooterComponent
+        FooterComponent,
+        ChangePasswordComponent,
+        BookingRoomComponent,
+        NavProfileComponent,
+        HotelComponent,
+        PostComponent
     ],
     imports: [
         BrowserModule,
@@ -115,6 +126,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         ReactiveFormsModule,
         HttpClientModule,
         BrowserAnimationsModule,
+        CarouselModule,
 
         MatIconModule,
         MatInputModule,

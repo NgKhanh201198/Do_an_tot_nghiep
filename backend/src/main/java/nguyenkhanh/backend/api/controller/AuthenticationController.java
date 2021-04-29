@@ -3,7 +3,9 @@ package nguyenkhanh.backend.api.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
@@ -32,8 +34,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import nguyenkhanh.backend.config.security.JwtTokenUtils;
+import nguyenkhanh.backend.entity.ERoles;
 import nguyenkhanh.backend.entity.EStatus;
 import nguyenkhanh.backend.entity.RegisterLogEntity;
+import nguyenkhanh.backend.entity.RoleEntity;
 import nguyenkhanh.backend.entity.UserEntity;
 import nguyenkhanh.backend.entity.UserTypeEntity;
 import nguyenkhanh.backend.exception.NotFoundException;
@@ -78,7 +82,7 @@ public class AuthenticationController {
 		try {
 			if (userServiceImpl.isUserExitsByUsername(registerRequest.getUsername())) {
 				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.name(), "Email is exist already! Please try other email!"));
+						HttpStatus.BAD_REQUEST.name(), "Email này đã được sử dụng, vui lòng thử email khác!"));
 			}
 //			if (userServiceImpl.isUserExitsByPhoneNumber(registerRequest.getPhoneNumber())) {
 //				return ResponseEntity.badRequest()
@@ -88,7 +92,7 @@ public class AuthenticationController {
 //			}
 			if (registerRequest.getPassword() == null) {
 				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.name(), "Password mustn't be null value!"));
+						HttpStatus.BAD_REQUEST.name(), "Mật khẩu không được để trống!"));
 			}
 
 			UserEntity userEntity = new UserEntity();
@@ -105,19 +109,19 @@ public class AuthenticationController {
 
 //			 Set User type
 			UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName("customer")
-					.orElseThrow(() -> new UsernameNotFoundException("User type not found!"));
+					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại người dùng!"));
 			userEntity.setUserType(userTypeEntity);
 
-//			Set<RoleEntity> roleEntity = new HashSet<RoleEntity>();
-//			RoleEntity userRole = roleServiceImpl.finByRoleName(ERoles.CUSTOMER.toString())
-//					.orElseThrow(() -> new UsernameNotFoundException("Role is not found"));
-//			roleEntity.add(userRole);
-//			userEntity.setRoles(roleEntity);
+			Set<RoleEntity> roleEntity = new HashSet<RoleEntity>();
+			RoleEntity userRole = roleServiceImpl.finByRoleName(ERoles.CUSTOMER.toString())
+					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy quyền này"));
+			roleEntity.add(userRole);
+			userEntity.setRoles(roleEntity);
 
 			userEntity.setFullName(registerRequest.getFullName());
 			userEntity.setUsername(registerRequest.getUsername());
 			userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-			
+
 //			userEntity.setPhoneNumber(registerRequest.getPhoneNumber());
 //			userEntity.setAvatar(registerRequest.getAvatar());
 //			userEntity.setGender(registerRequest.getGender());
@@ -126,11 +130,10 @@ public class AuthenticationController {
 			// Save
 			userServiceImpl.save(userEntity);
 
-			return ResponseEntity
-					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Registered successfully!"));
+			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Đăng ký thành công!"));
 		} catch (DataAccessException ex) {
 			return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-					"Bad Request", "Account is already in use. Please try other account!"));
+					"Bad Request", "Tài khoản đã được sử dụng. Vui lòng thử tài khoản khác!"));
 		}
 	}
 
@@ -152,7 +155,7 @@ public class AuthenticationController {
 
 			if (userDetailsImpl == null) {
 				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-						"Bad Request", "Error: User not found!"));
+						"Bad Request", "Không tìm thấy người dùng!"));
 			}
 
 			List<String> roles = new ArrayList<String>();
@@ -168,21 +171,21 @@ public class AuthenticationController {
 					userDetailsImpl.getAvatar(), userDetailsImpl.getGender(), userDetailsImpl.getStatus(), roles,
 					permissions, userDetailsImpl.getUserType().getUserTypeName(), jwtToken));
 
-		} catch (DisabledException ex) {
-			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
-					"Your account is not activated!");
-			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
 		} catch (BadCredentialsException ex) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
-					"Username or password is incorrect!");
+					"Địa chỉ email hoặc mật khẩu của bạn không chính xác!");
+			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
+		} catch (DisabledException ex) {
+			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
+					"Tài khoản của bạn chưa được kích hoạt!");
 			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
 		} catch (LockedException ex) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
-					"Your account is LOCKED!");
+					"Tài khoản của bạn đã bị khóa!");
 			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
 		} catch (CredentialsExpiredException ex) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), "Unauthorized",
-					"Your account has not verified email!");
+					"Tài khoản của bạn chưa xác minh email!");
 			return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
 		}
 
@@ -192,23 +195,23 @@ public class AuthenticationController {
 	public ResponseEntity<?> verifyEmail(@RequestParam(required = false) String token) throws TimeoutException {
 
 		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
-				.orElseThrow(() -> new NotFoundException("Token not found"));
+				.orElseThrow(() -> new NotFoundException("Không tìm thấy token"));
 
 		LocalDateTime dateActive = registerLogEntity.getDateActive();
 
 		if (dateActive.isBefore(LocalDateTime.now())
 				&& registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString())) {
-			throw new TimeoutException("Your token has expired.");
+			throw new TimeoutException("Token của bạn đã hết hạn.");
 		}
 
 		if (registerLogServiceImpl.getStatus(token).equals(EStatus.ACTIVE.toString())) {
 			return ResponseEntity
-					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Your account has been confirmed!"));
+					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Tài khoản của bạn đã được xác nhận!"));
 		} else {
 			registerLogServiceImpl.updateStatus(token);
 			userServiceImpl.updateStatus(registerLogEntity.getUser().getUsername());
 			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.CONTINUE.value(),
-					"Verified email address. Sign in to continue."));
+					"Địa chỉ email đã được xác minh. Đăng nhập để tiếp tục."));
 		}
 	}
 

@@ -150,4 +150,9 @@ public class UserServiceImpl implements IUserService {
 	public Optional<UserEntity> findByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
+
+	@Override
+	public UserEntity getUserById(long id) {
+		return userRepository.findById(id);
+	}
 }

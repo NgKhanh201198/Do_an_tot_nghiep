@@ -1,21 +1,23 @@
 package nguyenkhanh.backend.dto;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import nguyenkhanh.backend.api.validation.FullNameFormat;
 import nguyenkhanh.backend.api.validation.PhoneNumberFormat;
 import nguyenkhanh.backend.entity.UserTypeEntity;
 
-@SuppressWarnings("unused")
+
 public class UserDTO {
 	private String username;
 
 	private String password;
 
+	@NotNull(message = "Name cannot be null")
 	@NotBlank(message = "{FullName.NotBlank}")
 	@Size(min = 3, max = 25, message = "{FullName.Size}")
+	@FullNameFormat(message = "{FullName.Format}")
 	private String fullName;
 
 	@NotBlank(message = "{PhoneNumber.NotBlank}")

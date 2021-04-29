@@ -1,11 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { AuthenticationateGuard } from './_helpers/authenticationate.guard';
 import { Path } from './_models/path.enum';
 import { Permission } from './_models/permission.enum';
+import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { BookingRoomComponent } from './pages/booking-room/booking-room.component';
+import { PostComponent } from './pages/post/post.component';
+import { HotelComponent } from './pages/hotel/hotel.component';
 
 const routes: Routes = [
     {
@@ -15,6 +20,7 @@ const routes: Routes = [
     {
         path: Path.ADMIN_PAGE,
         loadChildren: () => import('./admin/admin.module').then(module => module.AdminModule),
+        canActivate:[AuthenticationateGuard],
         data: { permission: Permission.ADMIN_PAGE }
     },
     {
@@ -26,10 +32,28 @@ const routes: Routes = [
         component: RegisterComponent
     },
     {
-        path: Path.PROFILE,
-        component: ProfileComponent
+        path: Path.CHANGEPASSWORD,
+        component: ChangePasswordComponent
     },
-    { path: '**', redirectTo: '' }
+    {
+        path: Path.BOOKINGROOM,
+        component: BookingRoomComponent
+    },
+    {
+        path: Path.HOTEL,
+        component: HotelComponent
+    },
+    {
+        path: Path.POST,
+        component: PostComponent
+    },
+    {
+        path: Path.PROFILE,
+        component: ProfileComponent,
+        canActivate:[AuthenticationateGuard],
+        data: { permission: Permission.PROFILE }
+    },
+    { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

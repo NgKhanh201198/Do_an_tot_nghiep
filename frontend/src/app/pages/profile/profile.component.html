@@ -1,1 +1,145 @@
-<p>profile works!</p>
+<header>
+    <app-header-top></app-header-top>
+</header>
+
+<div class="my-container">
+    <div class="row">
+        <div class="col-lg-3 col-md-8 col-12">
+            <app-nav-profile></app-nav-profile>
+        </div>
+        <div class="col-sm-6" [ngClass]="{ 'd-none': !onupdateAvatar }">
+            <div class="upload-avatar">
+                <form>
+                    <div class="row container m-0">
+                        <div class="col-sm-4">
+                            <div style="background-color: black; border-radius: 50%; width: 96%; height: 105%;" *ngIf="!imgURL"></div>
+                            <img class="img-fluid" style="border-radius: 50%; width: 96%; height: 105%;" [src]="imgURL" *ngIf="imgURL">
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="col-sm-12 p-0">
+                                <h5>Chọn ảnh để tải lên</h5>
+                            </div>
+                            <div class="col-sm-12">
+                                <input #uploadFile class="input-upload border border-primary p-1" type="file" (change)="onSelectFile($event)">
+                            </div>
+                            <div class="col-sm-12 pt-3">
+                                <button class="btn btn-primary float-right rounded-0 mr-3 pl-3 pr-3">Lưu</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+                    <div *ngIf="success" class="alert alert-success mt-3 mb-0">{{success}}</div>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-8 col-12" [ngClass]="{ 'd-none': onupdateAvatar }">
+            <div class="my-avatar">
+                <img *ngIf="avatar" class="card-img-top border border-primary rounded-circle" [src]="avatar" alt="Card image cap">
+                <img *ngIf="!avatar" class="card-img-top border border-primary rounded-circle" src="../../../assets/customs/images/user.png" alt="Card image cap">
+                <div class="update-avatar" (click)="updateAvatar()">
+                    <mat-icon>add_a_photo</mat-icon>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-8 col-12" [ngClass]="{ 'd-none': onupdateAvatar }">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-9 col-12">
+                            <h1 class="h1-profile">Thông tin cá nhân</h1>
+                        </div>
+                        <div class="col-sm-3 col-12 pt-2 btn-edit">
+                            <button id="update" class="btn btn-block btn-outline-primary" (click)="update()" [ngClass]="{ 'd-none': onupdate }">Chỉnh sửa</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <form [formGroup]="formUpdate" (ngSubmit)="onUpdate()">
+                        <div class="border-top">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="my-setting">
+                                        <div class="pt-2">Địa chỉ email</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="my-setting">
+                                        <input type="text" value="{{email}}" class="form-control border-0 bg-white shadow-none" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-top">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="my-setting">
+                                        <div class="pt-2">Họ và tên</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="my-setting">
+                                        <input type="text" formControlName="fullName" class="form-control" [ngClass]="{ 'border-0 bg-white shadow-none': !onupdate }" [readonly]="!onupdate" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-top">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="my-setting">
+                                        <div class="pt-2">Số điện thoại</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="my-setting">
+                                        <input type="text" formControlName="phoneNumber" class="form-control" [ngClass]="{ 'border-0 bg-white shadow-none': !onupdate }" [readonly]="!onupdate" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-top">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="my-setting">
+                                        <div class="pt-2">Ngày sinh</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="my-setting">
+                                        <input type="date" data-date-format="DD MMMM YYYY" formControlName="dateOfBirth" class="form-control" [ngClass]="{ 'border-0 bg-white shadow-none': !onupdate }" [readonly]="!onupdate" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-top">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="my-setting">
+                                        <div class="pt-2">Giới tính</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="my-setting my-select">
+                                        <select class="form-control bg-white" formControlName="gender" [ngClass]="{ 'border-0 shadow-none': !onupdate }" [attr.disabled]="disabled">
+                                            <option value="Nam" >Nam</option>
+                                            <option value="Nu" >Nữ</option>
+                                        </select>
+                                        <div [hidden]="onupdate" style="position: absolute;top: 0px;right: 0px;background: white;width: 30%;height: 100%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="error" class="text-danger mb-3 mb-0">{{error}}</div>
+                        <button class="btn btn-primary btn-block" [ngClass]="{ 'd-none': !onupdate }">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Lưu lại
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div [ngClass]="{ 'show': success }" class="alert thongbao">
+            <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
+            <div class="noidung-thongbao">Updated successfully!</div>
+        </div>
+    </div>
+</div>

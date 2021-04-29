@@ -14,7 +14,7 @@ import javax.validation.Payload;
 @Target({ ElementType.TYPE, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EmailFormat {
-	String message() default "Invalid format";
+	String message() default "Định dạng không hợp lệ";
 
 	String pattern() default "";
 

@@ -68,17 +68,29 @@ public class UserController {
 
 	@Autowired
 	RegisterLogServiceImpl registerLogServiceImpl;
-	
+
 	@PostMapping("/user")
 	public ResponseEntity<?> createUser() {
 		return new ResponseEntity<>("create", HttpStatus.OK);
-	} 
+	}
 
 	@GetMapping("/user")
 //	@PreAuthorize("hasRole('GetUserAll')")
 	public ResponseEntity<?> listUser() {
 		List<UserEntity> userEntity = userServiceImpl.getUserAll();
 		return new ResponseEntity<List<UserEntity>>(userEntity, HttpStatus.OK);
+	}
+
+	@GetMapping("/user/{id}")
+	public ResponseEntity<?> getUserById(@Valid @PathVariable("id") long id) {
+		if (userServiceImpl.isUserExitsById(id) == false) {
+			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
+					"Not found ID = " + id);
+			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+		} else {
+			UserEntity user = userServiceImpl.getUserById(id);
+			return new ResponseEntity<UserEntity>(user, HttpStatus.OK);
+		}
 	}
 
 	@PutMapping("/user/{id}")
@@ -97,7 +109,7 @@ public class UserController {
 					return ResponseEntity.badRequest()
 							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 									HttpStatus.BAD_REQUEST.name(),
-									"Phone number is exist already! Please try other Phone number!"));
+									"Số điện thoại được sử dụng! Vui lòng thử số điện thoại khác!"));
 				}
 
 				UserEntity userEntity = new UserEntity();
@@ -106,7 +118,7 @@ public class UserController {
 				String dateOfBirth = userDTO.getDateOfBirth();
 				Date date;
 				try {
-					date = DateUtils.parseDate(dateOfBirth, new String[] { "dd/MM/yyyy", "yyyy/MM/dd HH:mm:ss" });
+					date = DateUtils.parseDate(dateOfBirth, new String[] { "yyyy-MM-dd", "dd-MM-yyyy" });
 					userEntity.setDateOfBirth(date);
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -120,13 +132,13 @@ public class UserController {
 				userServiceImpl.update(userEntity);
 
 				return ResponseEntity
-						.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Updated successfully!"));
+						.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
 			}
 		} catch (Exception ex) {
 			System.out.println(ex.getLocalizedMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), "Bad Request",
-							"Account is already in use. Please try other account!"));
+							"Tài khoản này đã được sử dụng! Vui lòng thử tài khoản khác"));
 		}
 	}
 
@@ -134,12 +146,12 @@ public class UserController {
 	public ResponseEntity<?> resetPassword(@RequestParam("email") String email) {
 
 		UserEntity userEntity = userServiceImpl.findByUsername(email)
-				.orElseThrow(() -> new UsernameNotFoundException("The account is not on the system!"));
+				.orElseThrow(() -> new UsernameNotFoundException("Tài khoản không tồn tại trên hệ thống!"));
 
 		userServiceImpl.resetPassword(userEntity);
 
 		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
-				"We have sent an email. Please check email to reset password!"));
+				"Chúng tôi đã gửi một xác nhận đến email của bạn. Vui lòng kiểm tra email để đặt lại mật khẩu!"));
 
 	}
 
@@ -147,25 +159,25 @@ public class UserController {
 	public ResponseEntity<?> updatePassword(@RequestParam(required = false) String token) throws TimeoutException {
 
 		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
-				.orElseThrow(() -> new NotFoundException("Token not found"));
+				.orElseThrow(() -> new NotFoundException("Không tìm thấy Token"));
 
 		LocalDateTime dateActive = registerLogEntity.getDateActive();
 
 		if (dateActive.isBefore(LocalDateTime.now())
 				&& registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString())) {
-			throw new TimeoutException("Your token has expired.");
+			throw new TimeoutException("Token của bạn đã hết hạn.");
 		}
 
 		// ---------------------
 
 		if (registerLogServiceImpl.getStatus(token).equals(EStatus.ACTIVE.toString())) {
 			return ResponseEntity
-					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Your account has been confirmed!"));
+					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Tài khoản của bạn đã được xác nhận!"));
 		} else {
 			registerLogServiceImpl.updateStatus(token);
 			userServiceImpl.updateStatus(registerLogEntity.getUser().getUsername());
 			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
-					"Verified email address. Sign in to continue."));
+					"Địa chỉ email đã được xác minh. Đăng nhập để tiếp tục."));
 		}
 	}
 
@@ -180,7 +192,7 @@ public class UserController {
 			String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
 
 			if (!ArrayUtils.contains(allowedMimeTypes, file.getContentType().toLowerCase())) {
-				throw new BadRequestException("Invalid file, valid files include: jpg, png, gif");
+				throw new BadRequestException("Tệp không hợp lệ, các tệp hợp lệ bao gồm: .jpg, .png, .gif");
 			}
 			String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
 					file.getOriginalFilename().length());
@@ -191,7 +203,7 @@ public class UserController {
 			uploadFileService.save(file, uuidImage);
 			userServiceImpl.updateAvatar(id, avatar);
 
-			message = "Uploaded the file successfully: " + file.getOriginalFilename();
+			message = "Đã tải tệp '" + file.getOriginalFilename() + "' lên thành công.";
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new MessageResponse(new Date(), HttpStatus.OK.value(), message));
 		} catch (BadRequestException ex) {

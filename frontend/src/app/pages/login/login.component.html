@@ -13,7 +13,6 @@
                                 <mat-label>Địa chỉ email</mat-label>
                                 <input formControlName="username" #username matInput class="input-height" type="text">
                                 <mat-icon matSuffix>email</mat-icon>
-                                <!-- <mat-hint align="end">{{username.value.length}} /18</mat-hint> -->
                                 <mat-error *ngIf="formValid.username.invalid">{{getUserErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>

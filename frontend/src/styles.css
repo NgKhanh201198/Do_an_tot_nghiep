@@ -34,15 +34,10 @@
 
 .my-container {
     background-color: #fff;
-    padding: 16px 0;
+    padding: 16px 20px;
     width: 1140px;
     max-width: 100%;
     margin: 0 auto;
-}
-
-.my-avatar {
-    border: 1px solid gray;
-    width: 250px;
 }
 
 input.search-city:focus,
@@ -89,10 +84,6 @@ input.search-date:focus {
     margin-bottom: 15px;
 }
 
-.avatar {
-    margin-top: 20%;
-}
-
 .logo {
     margin-left: 15%;
     letter-spacing: 5px;
@@ -111,6 +102,140 @@ input.search-date:focus {
     border-radius: 2px;
     overflow: hidden;
     z-index: 100;
+}
+
+.dropdown-menu.show {
+    margin-left: -52px;
+}
+
+.build-drop-menu a mat-icon {
+    margin-right: 10px;
+}
+
+.build-drop-menu a {
+    display: flex;
+    overflow: hidden;
+    padding: .35rem 1.35rem;
+}
+
+.thongbao {
+    position: fixed;
+    right: 50px;
+    bottom: 10px;
+    width: auto;
+    background-color: rgb(170 220 170 / 1);
+    border: 1px solid rgb(50 220 50 / 1);
+    border-radius: 3px;
+    z-index: 9999;
+    transition: 5s;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.icon-thongbao {
+    color: green;
+    font-size: 2.25em;
+    float: left;
+    position: relative;
+    top: -5px;
+    left: -25px;
+    padding: 0px 18px;
+}
+
+.noidung-thongbao {
+    float: left;
+}
+
+.thongbao.show {
+    animation: active 3s forwards;
+}
+
+@keyframes active {
+    0% {
+        transform: translateX(350px);
+        opacity: 0;
+    }
+    30% {
+        transform: translateX(0px);
+        opacity: 1;
+        visibility: visible;
+    }
+    75% {
+        transform: translateX(0px);
+        opacity: 1;
+        visibility: visible;
+    }
+    100% {
+        transform: translateX(350px);
+    }
+}
+
+.copy {
+    background-color: #202020;
+    padding: 20px 0px;
+}
+
+.nav-profile {
+    max-width: 100%;
+    padding: 0;
+    border: 1px solid #e6e6e6;
+}
+
+.li-profile:after {
+    content: " ";
+    height: 0px;
+    margin: 0 16px;
+    display: block;
+    border: 1px #e6e6e6;
+    border-style: solid solid none;
+}
+
+.nav-profile li a {
+    display: flex;
+    color: #333;
+    overflow: hidden;
+    padding: 16px;
+}
+
+a.nav-link.active-now {
+    color: blue !important;
+}
+
+mat-icon.incon-profile {
+    margin-right: 10px;
+}
+
+.h1-profile {
+    padding: 5px 0px 12px 12px;
+}
+
+.my-avatar {
+    position: relative;
+}
+
+.update-avatar {
+    position: absolute;
+    bottom: 0px;
+    right: 25px;
+    font-size: 30px;
+    padding: 4px 15px;
+    text-align: center;
+    border-radius: 50% !important;
+    cursor: pointer;
+    background-color: #a9a9a9;
+    opacity: 0.7;
+}
+
+.upload-avatar {
+    border: 1px solid gray;
+    padding-top: 20px;
+    background-color: white;
+    height: 175px;
+}
+
+input.input-upload {
+    margin-left: -14px;
+    width: 100%;
 }
 
 @media only screen and (min-width: 1025px) {
@@ -154,26 +279,7 @@ input.search-date:focus {
     .img-hotel {
         height: 200px;
     }
-}
-
-.copy {
-    background-color: #202020;
-    padding: 20px 0px;
-}
-
-
-/* carosel */
-
-.owl-dot {
-    outline: none !important;
-}
-
-html,
-body {
-    height: 100%;
-}
-
-body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    .btn-edit {
+        padding-bottom: 10px;
+    }
 }

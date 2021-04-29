@@ -1,0 +1,22 @@
+<div class="nav-profile">
+    <ul class="nav flex-column">
+        <li class="nav-item li-profile">
+            <a class="nav-link" [routerLink]="[ '', 'user-profile' ]" [routerLinkActive]="['active-now']">
+                <mat-icon class="incon-profile">account_circle</mat-icon>
+                <div class="title-nav">Thông tin cá nhân</div>
+            </a>
+        </li>
+        <li class="nav-item li-profile">
+            <a class="nav-link" [routerLink]="[ '', 'user-bookingroom' ]" [routerLinkActive]="['active-now']">
+                <mat-icon class="incon-profile">library_books</mat-icon>
+                <div class="title-nav">Đơn đặt phòng</div>
+            </a>
+        </li>
+        <li class="nav-item li-profile">
+            <a class="nav-link" [routerLink]="[ '', 'user-change-password' ]" [routerLinkActive]="['active-now']">
+                <mat-icon class="incon-profile"> vpn_key</mat-icon>
+                <div class="title-nav">Đổi mật khẩu</div>
+            </a>
+        </li>
+    </ul>
+</div>
