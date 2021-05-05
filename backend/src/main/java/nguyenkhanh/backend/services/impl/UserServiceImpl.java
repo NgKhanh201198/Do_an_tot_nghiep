@@ -66,9 +66,7 @@ public class UserServiceImpl implements IUserService {
 				LocalDateTime.now().plusSeconds(DATE_EXPIED), user);
 		registerLogServiceImpl.save(registerLogEntity);
 
-//		String link = BASE_URL + "api/user/updatePassword?token=" + token;
-
-		String link = "http://localhost:4200/";
+		String link = "http://localhost:4200/user-reset-password?token=" + token;
 
 		sendEmailService.sendResetPassword(user.getUsername(), buildResetPassword(user.getFullName(), link));
 	}
@@ -154,5 +152,10 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public UserEntity getUserById(long id) {
 		return userRepository.findById(id);
+	}
+
+	@Override
+	public void savePassword(long id, String newPassword) {		
+		userRepository.savePassword(id, newPassword);
 	}
 }

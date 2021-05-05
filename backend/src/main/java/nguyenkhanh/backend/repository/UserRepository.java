@@ -37,4 +37,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	@Modifying
 	@Query("UPDATE UserEntity u " + "SET u.avatar = ?2" + " WHERE u.id = ?1")
 	public int updateImageUser(long id, String avatar);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE UserEntity u " + "SET u.password = ?2" + " WHERE u.id = ?1")
+	public int savePassword(long id, String newPassword);
 }

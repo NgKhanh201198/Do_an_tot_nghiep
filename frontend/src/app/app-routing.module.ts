@@ -11,6 +11,8 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
 import { BookingRoomComponent } from './pages/booking-room/booking-room.component';
 import { PostComponent } from './pages/post/post.component';
 import { HotelComponent } from './pages/hotel/hotel.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
 const routes: Routes = [
     {
@@ -34,6 +36,14 @@ const routes: Routes = [
     {
         path: Path.CHANGEPASSWORD,
         component: ChangePasswordComponent
+    },
+    {
+        path: Path.RESETPASSWORD,
+        component: ResetPasswordComponent
+    },
+    {
+        path: Path.FORGOTPASSWORD,
+        component: ForgotPasswordComponent
     },
     {
         path: Path.BOOKINGROOM,

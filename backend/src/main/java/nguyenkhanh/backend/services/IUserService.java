@@ -12,12 +12,14 @@ public interface IUserService {
 
 	public void save(UserEntity user);
 
+	public void savePassword(long id, String password);
+
 	public void resetPassword(UserEntity user);
 
 	public List<UserEntity> getUserAll();
 
 	public UserDTO getOneUser(long id);
-	
+
 	public UserEntity getUserById(long id);
 
 	public void update(UserEntity user);

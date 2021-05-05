@@ -3,6 +3,39 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 
+
+//Module
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatSliderModule } from '@angular/material/slider'; 
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { CarouselModule } from 'ngx-owl-carousel-o';
+
+//Service
+import { UserService } from './_services/user.service';
+import { HotelService } from './_services/hotel.service';
+import { RoomTypeService } from './_services/room-type.service';
+import { RoomService } from './_services/room.service';
+import { PostService } from './_services/post.service';
+import { BookingrateService } from './_services/bookingrate.service';
+import { BookingRoomService } from './_services/booking-room.service';
+import { AuthenticationService } from './_services/authentication.service';
+import { JwtInterceptor } from './_helpers/jwt.interceptor';
+import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LoggerService } from './_services/logger.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 //Component
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -35,43 +68,13 @@ import { UpdateRoomTypeComponent } from './admin/roomType/update-room-type/updat
 import { ListCustomerComponent } from './admin/customer/list-customer/list-customer.component';
 import { CreateCustomerComponent } from './admin/customer/create-customer/create-customer.component';
 import { UpdateCustomerComponent } from './admin/customer/update-customer/update-customer.component';
-
-//Service
-import { UserService } from './_services/user.service';
-import { HotelService } from './_services/hotel.service';
-import { RoomTypeService } from './_services/room-type.service';
-import { RoomService } from './_services/room.service';
-import { PostService } from './_services/post.service';
-import { BookingrateService } from './_services/bookingrate.service';
-import { BookingRoomService } from './_services/booking-room.service';
-import { AuthenticationService } from './_services/authentication.service';
-import { JwtInterceptor } from './_helpers/jwt.interceptor';
-import { ErrorInterceptor } from './_helpers/error.interceptor';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { LoggerService } from './_services/logger.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-//Module
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatCardModule } from '@angular/material/card';
-import { MatSelectModule } from '@angular/material/select';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatTableModule } from '@angular/material/table';
-import { MatSliderModule } from '@angular/material/slider'; 
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { CarouselModule } from 'ngx-owl-carousel-o';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { BookingRoomComponent } from './pages/booking-room/booking-room.component';
 import { NavProfileComponent } from './pages/nav-profile/nav-profile.component';
 import { HotelComponent } from './pages/hotel/hotel.component';
 import { PostComponent } from './pages/post/post.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
 @NgModule({
     declarations: [
@@ -110,6 +113,7 @@ import { PostComponent } from './pages/post/post.component';
         CreateCustomerComponent,
         ListCustomerComponent,
         UpdateCustomerComponent,
+        
         HeaderTopComponent,
         HeaderBottomComponent,
         FooterComponent,
@@ -117,7 +121,9 @@ import { PostComponent } from './pages/post/post.component';
         BookingRoomComponent,
         NavProfileComponent,
         HotelComponent,
-        PostComponent
+        PostComponent,
+        ResetPasswordComponent,
+        ForgotPasswordComponent
     ],
     imports: [
         BrowserModule,

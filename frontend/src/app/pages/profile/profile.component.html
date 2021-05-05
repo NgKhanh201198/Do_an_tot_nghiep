@@ -7,41 +7,16 @@
         <div class="col-lg-3 col-md-8 col-12">
             <app-nav-profile></app-nav-profile>
         </div>
-        <div class="col-sm-6" [ngClass]="{ 'd-none': !onupdateAvatar }">
-            <div class="upload-avatar">
-                <form>
-                    <div class="row container m-0">
-                        <div class="col-sm-4">
-                            <div style="background-color: black; border-radius: 50%; width: 96%; height: 105%;" *ngIf="!imgURL"></div>
-                            <img class="img-fluid" style="border-radius: 50%; width: 96%; height: 105%;" [src]="imgURL" *ngIf="imgURL">
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="col-sm-12 p-0">
-                                <h5>Chọn ảnh để tải lên</h5>
-                            </div>
-                            <div class="col-sm-12">
-                                <input #uploadFile class="input-upload border border-primary p-1" type="file" (change)="onSelectFile($event)">
-                            </div>
-                            <div class="col-sm-12 pt-3">
-                                <button class="btn btn-primary float-right rounded-0 mr-3 pl-3 pr-3">Lưu</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
-                    <div *ngIf="success" class="alert alert-success mt-3 mb-0">{{success}}</div>
-                </form>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-8 col-12" [ngClass]="{ 'd-none': onupdateAvatar }">
+        <div class="col-lg-3 col-md-8 col-12 mt-3">
             <div class="my-avatar">
                 <img *ngIf="avatar" class="card-img-top border border-primary rounded-circle" [src]="avatar" alt="Card image cap">
-                <img *ngIf="!avatar" class="card-img-top border border-primary rounded-circle" src="../../../assets/customs/images/user.png" alt="Card image cap">
-                <div class="update-avatar" (click)="updateAvatar()">
+                <img *ngIf="!avatar" class="card-img-top border border-primary rounded-circle" [src]="avatarDefault" alt="Card image cap">
+                <div class="update-avatar" (click)="showForm()">
                     <mat-icon>add_a_photo</mat-icon>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-8 col-12" [ngClass]="{ 'd-none': onupdateAvatar }">
+        <div class="col-lg-6 col-md-8 col-12 mt-3">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="row">
@@ -129,7 +104,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div *ngIf="error" class="text-danger mb-3 mb-0">{{error}}</div>
+                        <div *ngIf="error" class="error-profile">
+                            <mat-icon>error_outline</mat-icon>
+                            <span>{{error}}</span>
+                        </div>
                         <button class="btn btn-primary btn-block" [ngClass]="{ 'd-none': !onupdate }">
                             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Lưu lại
                         </button>
@@ -139,7 +117,43 @@
         </div>
         <div [ngClass]="{ 'show': success }" class="alert thongbao">
             <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
-            <div class="noidung-thongbao">Updated successfully!</div>
+            <div class="noidung-thongbao">{{success}}</div>
+        </div>
+    </div>
+</div>
+<div class="my-upload" [ngClass]="{ 'd-none': !onupdateAvatar }">
+    <div class="row justify-content-md-center">
+        <div class="col-lg-6 col-md-8 form-upload">
+            <div class="upload-avatar">
+                <div class="close-upload" (click)="closeForm()">
+                    <i class="bi bi-x"></i>
+                </div>
+                <form [formGroup]="formUpdate" (ngSubmit)="updateAvatar()">
+                    <div class="row container m-0">
+                        <div class="col-sm-4 col-12">
+                            <div class="img-avatar-default" *ngIf="!imgURL"><i class="bi bi-card-image"></i></div>
+                            <div class="img-avatar" *ngIf="imgURL">
+                                <img class="img-upload" [src]="imgURL">
+                            </div>
+                        </div>
+                        <div class="col-sm-8 col-12">
+                            <div class="col-sm-12 p-0">
+                                <h5 class="text-center">Chọn ảnh để tải lên</h5>
+                            </div>
+                            <div class="col-sm-12">
+                                <input #uploadFile class="input-upload border border-primary p-1" type="file" (change)="onSelectFile($event)">
+                            </div>
+                            <div class="col-sm-12 col-12 pt-3">
+                                <button class="btn btn-block btn-primary rounded-0 mr-3 pl-3 pr-3">Lưu</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="errorUpload" class="error-upload">
+                        <mat-icon>error_outline</mat-icon>
+                        <span>{{errorUpload}}</span>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

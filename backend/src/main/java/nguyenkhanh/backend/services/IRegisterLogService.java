@@ -3,9 +3,10 @@ package nguyenkhanh.backend.services;
 import java.util.Optional;
 
 import nguyenkhanh.backend.entity.RegisterLogEntity;
+import nguyenkhanh.backend.entity.UserEntity;
 
 public interface IRegisterLogService {
-	public RegisterLogEntity findByUser(long userid);
+	public UserEntity findByUser(String token);
 
 	public String getStatus(String token);
 

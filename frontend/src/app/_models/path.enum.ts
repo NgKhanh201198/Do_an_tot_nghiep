@@ -7,6 +7,8 @@ export enum Path {
     REGISTER = 'register',
     PROFILE = 'user-profile',
     CHANGEPASSWORD = 'user-change-password',
+    RESETPASSWORD = 'user-reset-password',
+    FORGOTPASSWORD = 'forgot-password',
     BOOKINGROOM = 'user-bookingroom',
     HOTEL = 'hotel',
     POST = 'post',

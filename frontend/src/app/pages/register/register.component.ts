@@ -93,29 +93,28 @@ export class RegisterComponent {
         this.loading = true;
         console.log(this.formData.value);
 
-        return this.authenticationService.register(this.formData.value)
-            .subscribe({
-                next: (result) => {
-                    this.loading = false;
-                    this.submitted = false;
-                    this.error = '';
-                    // this.myForm.resetForm();
-                    this.success = result.message;
-                    this.logger.logger(result);
-                },
-                error: (error) => {
-                    this.error = error.message;
-                    this.loading = false;
-                    this.logger.loggerError(error.message);
-                }
-            }),
-            setTimeout(() => {
-                this.success = '';
-            }, 3000),
-            setTimeout(() => {
-                if (this.error == '') {
-                    this.router.navigate(['/login']);
-                }
-            }, 3000);
+        // return this.authenticationService.register(this.formData.value)
+        //     .subscribe({
+        //         next: (result) => {
+        //             this.loading = false;
+        //             this.submitted = false;
+        //             this.error = '';
+        //             this.success = result.message;
+        //             this.logger.logger(result);
+        //         },
+        //         error: (error) => {
+        //             this.error = error.message;
+        //             this.loading = false;
+        //             this.logger.loggerError(error.message);
+        //         }
+        //     }),
+        //     setTimeout(() => {
+        //         this.success = '';
+        //     }, 3000),
+        //     setTimeout(() => {
+        //         if (this.error == '') {
+        //             this.router.navigate(['/login']);
+        //         }
+        //     }, 3000);
     }
 }

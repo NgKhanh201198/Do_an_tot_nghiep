@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeoutException;
 
 import javax.validation.Valid;
 
@@ -19,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,6 +69,18 @@ public class UserController {
 	@Autowired
 	RegisterLogServiceImpl registerLogServiceImpl;
 
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
+	@PutMapping("/user/savePassword")
+	public ResponseEntity<?> savePassword(@RequestParam("token") String token, @RequestParam("newPassword") String newPassword) {
+		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
+				.orElseThrow(() -> new NotFoundException("Token không hợp lệ."));
+		UserEntity userEntity = userServiceImpl.getUserById(registerLogEntity.getUser().getId());
+		userServiceImpl.savePassword(userEntity.getId(), passwordEncoder.encode(newPassword));
+		return ResponseEntity.ok("Thay đổi mật khẩu thành công.");
+	}
+
 	@PostMapping("/user")
 	public ResponseEntity<?> createUser() {
 		return new ResponseEntity<>("create", HttpStatus.OK);
@@ -109,7 +121,7 @@ public class UserController {
 					return ResponseEntity.badRequest()
 							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 									HttpStatus.BAD_REQUEST.name(),
-									"Số điện thoại được sử dụng! Vui lòng thử số điện thoại khác!"));
+									"Số điện thoại đã được sử dụng! Vui lòng thử số điện thoại khác!"));
 				}
 
 				UserEntity userEntity = new UserEntity();
@@ -137,7 +149,7 @@ public class UserController {
 		} catch (Exception ex) {
 			System.out.println(ex.getLocalizedMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), "Bad Request",
+					.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
 							"Tài khoản này đã được sử dụng! Vui lòng thử tài khoản khác"));
 		}
 	}
@@ -151,38 +163,26 @@ public class UserController {
 		userServiceImpl.resetPassword(userEntity);
 
 		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
-				"Chúng tôi đã gửi một xác nhận đến email của bạn. Vui lòng kiểm tra email để đặt lại mật khẩu!"));
-
+				"Chúng tôi đã gửi một hướng dẫn đến " + email + ". Vui lòng kiểm tra email để đặt lại mật khẩu!"));
 	}
 
-	@GetMapping("/user/updatePassword")
-	public ResponseEntity<?> updatePassword(@RequestParam(required = false) String token) throws TimeoutException {
+	@PostMapping("/user/updatePassword")
+	public ResponseEntity<?> updatePassword(@RequestParam(required = false) String token) {
 
 		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
-				.orElseThrow(() -> new NotFoundException("Không tìm thấy Token"));
+				.orElseThrow(() -> new NotFoundException("Mã xác nhận của bạn không hợp lệ."));
 
 		LocalDateTime dateActive = registerLogEntity.getDateActive();
 
-		if (dateActive.isBefore(LocalDateTime.now())
-				&& registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString())) {
-			throw new TimeoutException("Token của bạn đã hết hạn.");
-		}
-
-		// ---------------------
-
-		if (registerLogServiceImpl.getStatus(token).equals(EStatus.ACTIVE.toString())) {
-			return ResponseEntity
-					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Tài khoản của bạn đã được xác nhận!"));
+		if (registerLogServiceImpl.getStatus(token).equals(EStatus.ACTIVE.toString())
+				|| (dateActive.isBefore(LocalDateTime.now())
+						&& registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString()))) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
+							"Mã xác nhận của bạn đã hết hạn. Hoặc đã được sử dụng!"));
 		} else {
-			registerLogServiceImpl.updateStatus(token);
-			userServiceImpl.updateStatus(registerLogEntity.getUser().getUsername());
-			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
-					"Địa chỉ email đã được xác minh. Đăng nhập để tiếp tục."));
+			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Mã xác nhận hợp lệ"));
 		}
-	}
-
-	@PostMapping("/user/savePassword")
-	public void savePassword() {
 	}
 
 	@PutMapping("/user/updateAvatar/{id}")

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import nguyenkhanh.backend.entity.RegisterLogEntity;
+import nguyenkhanh.backend.entity.UserEntity;
 import nguyenkhanh.backend.repository.RegisterLogRepository;
 import nguyenkhanh.backend.services.IRegisterLogService;
 
@@ -15,8 +16,8 @@ public class RegisterLogServiceImpl implements IRegisterLogService {
 	RegisterLogRepository registerLogRepository;
 
 	@Override
-	public RegisterLogEntity findByUser(long userid) {
-		return registerLogRepository.findByUser(userid);
+	public UserEntity findByUser(String token) {
+		return registerLogRepository.findByUser(token);
 	}
 
 	@Override

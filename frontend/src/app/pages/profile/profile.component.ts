@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from 'src/app/_models/user';
 import { AuthenticationService } from 'src/app/_services/authentication.service';
@@ -12,8 +12,10 @@ import { formatDate } from '@angular/common';
     styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+    @ViewChild('uploadFile') myInputVariable: ElementRef;
     currentUser: User;
     avatar: any;
+    avatarDefault = "../../../assets/customs/images/user.png";
     email: any;
     dateOfBirth: any = null;
 
@@ -23,20 +25,11 @@ export class ProfileComponent implements OnInit {
     disabled = "true";
     success = "";
     error = "";
+    errorUpload = "";
 
     reader = new FileReader();
     currentFile: File = null;
     imgURL: any = null;
-    onSelectFile(event) {
-        if (event.target.files.length > 0) {
-            this.currentFile = event.target.files[0];
-
-            this.reader.readAsDataURL(this.currentFile);
-            this.reader.onload = (_event) => {
-                this.imgURL = this.reader.result;
-            }
-        }
-    }
 
     formUpdate = this.formBuilder.group({
         username: ['', [Validators.required]],
@@ -85,8 +78,47 @@ export class ProfileComponent implements OnInit {
         this.onupdate = true;
         this.disabled = null;
     }
-    updateAvatar() {
+    showForm() {
         this.onupdateAvatar = true;
+    }
+    closeForm() {
+        this.onupdateAvatar = false;
+        this.myInputVariable.nativeElement.value = "";
+        this.imgURL = null;
+    }
+
+    onSelectFile(event) {
+        if (event.target.files.length > 0) {
+            this.currentFile = event.target.files[0];
+
+            this.reader.readAsDataURL(this.currentFile);
+            this.reader.onload = (_event) => {
+                this.imgURL = this.reader.result;
+            }
+        }
+    }
+
+    updateAvatar() {
+        return this.userService.updateAvatar(this.currentUser.id, this.currentFile)
+            .subscribe({
+                next: (res) => {
+                    this.loggerService.logger(res);
+                    this.avatarDefault = this.imgURL
+                    this.avatar = this.imgURL
+                    this.onupdateAvatar = false;
+                    this.error = '';
+                    this.success = res.message;
+                },
+                error: (err) => {
+                    this.loggerService.logger(err);
+                    this.success = '';
+                    this.errorUpload = err.message;
+                }
+            })
+            , setTimeout(() => {
+                this.imgURL = '';
+                this.success = '';
+            }, 3000);
     }
 
     onUpdate() {

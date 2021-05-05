@@ -1,7 +1,7 @@
 * {
     margin: 0px;
     padding: 0px;
-    font-family: Segoe UI light, Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Segoe UI light', Arial, sans-serif;
     font-size: 1em;
 }
 
@@ -201,6 +201,15 @@ a.nav-link.active-now {
     color: blue !important;
 }
 
+a.nav-link.active-now div {
+    text-decoration: underline;
+}
+
+
+/* a.nav-link:hover {
+    color: rgba(0, 0, 255, 0.75) !important;
+} */
+
 mat-icon.incon-profile {
     margin-right: 10px;
 }
@@ -213,10 +222,16 @@ mat-icon.incon-profile {
     position: relative;
 }
 
+.my-avatar img {
+    height: 252px;
+    width: 252px;
+    padding: 3px;
+}
+
 .update-avatar {
     position: absolute;
     bottom: 0px;
-    right: 25px;
+    left: 170px;
     font-size: 30px;
     padding: 4px 15px;
     text-align: center;
@@ -226,16 +241,143 @@ mat-icon.incon-profile {
     opacity: 0.7;
 }
 
+.form-upload {
+    margin-top: 100px;
+}
+
 .upload-avatar {
-    border: 1px solid gray;
-    padding-top: 20px;
+    padding: 20px;
     background-color: white;
-    height: 175px;
+    min-height: 100%;
+    z-index: 110;
+    overflow: hidden;
+}
+
+.img-avatar {
+    width: 126px;
+    height: 100%;
+    text-align: center;
+}
+
+.img-upload {
+    border-radius: 50%;
+    width: 126px;
+    height: 126px;
+}
+
+.img-avatar-default {
+    background-color: rgba(0, 0, 0, 0.768);
+    border-radius: 50%;
+    width: 126px;
+    height: 100%;
+}
+
+.img-avatar-default i {
+    position: absolute;
+    top: 10px;
+    left: 42px;
+    font-size: 70px;
+    color: white;
 }
 
 input.input-upload {
-    margin-left: -14px;
     width: 100%;
+}
+
+.error-profile {
+    position: relative;
+    color: red;
+    margin: 0px 0px 10px 10px;
+}
+
+.error-upload {
+    position: relative;
+    top: 0px;
+    left: 135px;
+    color: red;
+    margin-top: 10px;
+}
+
+.error-profile span {
+    position: absolute;
+    top: 0px;
+    left: 30px;
+}
+
+.error-upload span {
+    position: absolute;
+    top: 0px;
+    left: 30px;
+}
+
+.error-forgot-password {
+    display: block;
+    color: red;
+    text-align: center;
+    padding: 15px;
+    background-color: #ff00001c;
+}
+
+.error-forgot-password span {
+    padding-left: 5px;
+}
+
+.error-forgot-password i {
+    font-size: 20px;
+}
+
+.my-upload {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .75);
+    padding: 16px 20px;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    overflow: auto;
+    visibility: visible;
+}
+
+.close-upload {
+    position: absolute;
+    top: 0px;
+    right: 20px;
+    cursor: pointer;
+    background-color: transparent;
+    font-size: 30px;
+    color: #00000082;
+}
+
+.close-upload:hover {
+    color: black;
+}
+
+.btn-token {
+    display: block;
+    padding: 15px 40px;
+    margin: 10px auto;
+    text-decoration: none;
+    font-weight: 100;
+    background: linear-gradient( 90deg, #3a9bed 0%, #235ecf 100%);
+    color: #ffffff;
+    width: 30%;
+    line-height: 25px;
+    text-align: center;
+    border: none;
+    font-size: 18px;
+}
+
+.send-mail {
+    display: block;
+    margin: 10px auto;
+    text-decoration: none;
+    font-weight: 100;
+    width: 30%;
+    line-height: 25px;
+    font-size: 18px;
 }
 
 @media only screen and (min-width: 1025px) {
@@ -250,6 +392,13 @@ input.input-upload {
         padding: 30px 150px !important;
         position: absolute;
         bottom: 0;
+    }
+    .error-upload {
+        position: relative;
+        top: 0px;
+        left: 15px;
+        color: red;
+        margin: 10px 0px;
     }
 }
 
@@ -282,4 +431,35 @@ input.input-upload {
     .btn-edit {
         padding-bottom: 10px;
     }
+    .img-avatar-default {
+        background-color: rgba(0, 0, 0, 0.768);
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        margin: auto;
+        margin-bottom: 15px;
+    }
+    .img-avatar-default i {
+        top: 3px;
+        left: 103px;
+        font-size: 60px;
+    }
+    .img-upload {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 15px;
+    }
+    .img-avatar {
+        margin: auto;
+    }
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
