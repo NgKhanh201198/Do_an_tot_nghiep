@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import nguyenkhanh.backend.config.security.JwtTokenUtils;
-import nguyenkhanh.backend.dto.UserDTO;
+import nguyenkhanh.backend.dto.UserCustomerDTO;
 import nguyenkhanh.backend.entity.EStatus;
 import nguyenkhanh.backend.entity.RegisterLogEntity;
 import nguyenkhanh.backend.entity.UserEntity;
@@ -72,15 +72,6 @@ public class UserController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	@PutMapping("/user/savePassword")
-	public ResponseEntity<?> savePassword(@RequestParam("token") String token, @RequestParam("newPassword") String newPassword) {
-		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
-				.orElseThrow(() -> new NotFoundException("Token không hợp lệ."));
-		UserEntity userEntity = userServiceImpl.getUserById(registerLogEntity.getUser().getId());
-		userServiceImpl.savePassword(userEntity.getId(), passwordEncoder.encode(newPassword));
-		return ResponseEntity.ok("Thay đổi mật khẩu thành công.");
-	}
-
 	@PostMapping("/user")
 	public ResponseEntity<?> createUser() {
 		return new ResponseEntity<>("create", HttpStatus.OK);
@@ -105,8 +96,8 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/user/{id}")
-	public ResponseEntity<?> updateUser(@RequestBody @Valid UserDTO userDTO, @PathVariable("id") long id) {
+	@PutMapping("/account/{id}")
+	public ResponseEntity<?> updateAccount(@RequestBody @Valid UserCustomerDTO userCustomerDTO, @PathVariable("id") long id) {
 		try {
 			if (userServiceImpl.isUserExitsById(id) == false) {
 				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
@@ -114,10 +105,10 @@ public class UserController {
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
 			} else {
-				UserDTO oldUser = userServiceImpl.getOneUser(id);
+				UserCustomerDTO oldUser = userServiceImpl.getOneUser(id);
 
-				if (userServiceImpl.isUserExitsByPhoneNumber(userDTO.getPhoneNumber())
-						&& !(userDTO.getPhoneNumber().equals(oldUser.getPhoneNumber()))) {
+				if (userServiceImpl.isUserExitsByPhoneNumber(userCustomerDTO.getPhoneNumber())
+						&& !(userCustomerDTO.getPhoneNumber().equals(oldUser.getPhoneNumber()))) {
 					return ResponseEntity.badRequest()
 							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 									HttpStatus.BAD_REQUEST.name(),
@@ -127,7 +118,7 @@ public class UserController {
 				UserEntity userEntity = new UserEntity();
 
 				// Set DateOfBirth
-				String dateOfBirth = userDTO.getDateOfBirth();
+				String dateOfBirth = userCustomerDTO.getDateOfBirth();
 				Date date;
 				try {
 					date = DateUtils.parseDate(dateOfBirth, new String[] { "yyyy-MM-dd", "dd-MM-yyyy" });
@@ -137,9 +128,58 @@ public class UserController {
 				}
 
 				userEntity.setId(id);
-				userEntity.setFullName(userDTO.getFullName());
-				userEntity.setPhoneNumber(userDTO.getPhoneNumber());
-				userEntity.setGender(userDTO.getGender());
+				userEntity.setFullName(userCustomerDTO.getFullName());
+				userEntity.setPhoneNumber(userCustomerDTO.getPhoneNumber());
+				userEntity.setGender(userCustomerDTO.getGender());
+
+				userServiceImpl.update(userEntity);
+
+				return ResponseEntity
+						.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
+			}
+		} catch (Exception ex) {
+			System.out.println(ex.getLocalizedMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
+							"Tài khoản này đã được sử dụng! Vui lòng thử tài khoản khác"));
+		}
+	}
+
+	@PutMapping("/customer/{id}")
+	public ResponseEntity<?> updateCustomer(@RequestBody @Valid UserCustomerDTO userCustomerDTO, @PathVariable("id") long id) {
+		try {
+			if (userServiceImpl.isUserExitsById(id) == false) {
+				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
+						"Not found ID = " + id);
+				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+
+			} else {
+				UserCustomerDTO oldUser = userServiceImpl.getOneUser(id);
+
+				if (userServiceImpl.isUserExitsByPhoneNumber(userCustomerDTO.getPhoneNumber())
+						&& !(userCustomerDTO.getPhoneNumber().equals(oldUser.getPhoneNumber()))) {
+					return ResponseEntity.badRequest()
+							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+									HttpStatus.BAD_REQUEST.name(),
+									"Số điện thoại đã được sử dụng! Vui lòng thử số điện thoại khác!"));
+				}
+
+				UserEntity userEntity = new UserEntity();
+
+				// Set DateOfBirth
+				String dateOfBirth = userCustomerDTO.getDateOfBirth();
+				Date date;
+				try {
+					date = DateUtils.parseDate(dateOfBirth, new String[] { "yyyy-MM-dd", "dd-MM-yyyy" });
+					userEntity.setDateOfBirth(date);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+
+				userEntity.setId(id);
+				userEntity.setFullName(userCustomerDTO.getFullName());
+				userEntity.setPhoneNumber(userCustomerDTO.getPhoneNumber());
+				userEntity.setGender(userCustomerDTO.getGender());
 
 				userServiceImpl.update(userEntity);
 
@@ -183,6 +223,21 @@ public class UserController {
 		} else {
 			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Mã xác nhận hợp lệ"));
 		}
+	}
+
+	@PutMapping("/user/savePassword")
+	public ResponseEntity<?> savePassword(@RequestParam("token") String token,
+			@RequestParam("newPassword") String newPassword) {
+		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
+				.orElseThrow(() -> new NotFoundException("Token không hợp lệ."));
+
+		UserEntity userEntity = userServiceImpl.getUserById(registerLogEntity.getUser().getId());
+
+		userServiceImpl.savePassword(userEntity.getId(), passwordEncoder.encode(newPassword));
+		registerLogServiceImpl.updateStatus(token);
+
+		return ResponseEntity
+				.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thay đổi mật khẩu thành công."));
 	}
 
 	@PutMapping("/user/updateAvatar/{id}")

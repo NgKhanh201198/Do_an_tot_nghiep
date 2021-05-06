@@ -1,8 +1,10 @@
 package nguyenkhanh.backend.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import nguyenkhanh.backend.entity.RoleEntity;
@@ -15,8 +17,13 @@ public class RoleServiceImpl implements IRoleService {
 	RoleRepository roleRepository;
 
 	@Override
-	public Optional<RoleEntity> finByRoleName(String roleName) {
-		return roleRepository.findByRoleName(roleName);
+	public Optional<RoleEntity> finByKeyName(String keyName) {
+		return roleRepository.findByKeyName(keyName);
+	}
+
+	@Override
+	public List<RoleEntity> getRoleAll() {
+		return roleRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
 	}
 
 }

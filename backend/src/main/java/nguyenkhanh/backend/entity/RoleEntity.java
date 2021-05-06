@@ -28,6 +28,9 @@ public class RoleEntity extends BaseEntity {
 	@Column(name = "rolename")
 	private String roleName;
 
+	@Column(name = "keyname")
+	private String keyName;
+
 	@Column(name = "status")
 	private String status;
 
@@ -37,15 +40,18 @@ public class RoleEntity extends BaseEntity {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "role_permission", joinColumns = @JoinColumn(name = "roleid"), inverseJoinColumns = @JoinColumn(name = "permissionid"))
+	@JsonIgnore
 	private Set<PermissionEntity> permissions = new HashSet<PermissionEntity>();
 
 	public RoleEntity() {
 		super();
 	}
 
-	public RoleEntity(String roleName, String status, Set<UserEntity> user, Set<PermissionEntity> permissions) {
+	public RoleEntity(String roleName, String keyName, String status, Set<UserEntity> user,
+			Set<PermissionEntity> permissions) {
 		super();
 		this.roleName = roleName;
+		this.keyName = keyName;
 		this.status = status;
 		this.user = user;
 		this.permissions = permissions;
@@ -65,6 +71,14 @@ public class RoleEntity extends BaseEntity {
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
+	}
+
+	public String getKeyName() {
+		return keyName;
+	}
+
+	public void setKeyName(String keyName) {
+		this.keyName = keyName;
 	}
 
 	public String getStatus() {

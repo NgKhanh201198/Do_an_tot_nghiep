@@ -16,11 +16,6 @@ public class RegisterLogServiceImpl implements IRegisterLogService {
 	RegisterLogRepository registerLogRepository;
 
 	@Override
-	public UserEntity findByUser(String token) {
-		return registerLogRepository.findByUser(token);
-	}
-
-	@Override
 	public void save(RegisterLogEntity registerLogEntity) {
 		registerLogRepository.save(registerLogEntity);
 	}
@@ -38,6 +33,11 @@ public class RegisterLogServiceImpl implements IRegisterLogService {
 	@Override
 	public void updateStatus(String token) {
 		registerLogRepository.updateStatus(token);
+	}
+
+	@Override
+	public RegisterLogEntity findByUser(UserEntity user) {
+		return registerLogRepository.findByUser(user);
 	}
 
 }

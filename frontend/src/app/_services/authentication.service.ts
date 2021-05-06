@@ -23,10 +23,10 @@ export class AuthenticationService {
     public currentUser: Observable<User>;
 
     constructor(private http: HttpClient, private router: Router) {
-        // this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(window.sessionStorage.getItem(USER_KEY)));
-        // this.currentUser = this.currentUserSubject.asObservable();
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(window.localStorage.getItem(USER_KEY)));
-        this.currentUser = this.currentUserSubject.asObservable();        
+        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(window.sessionStorage.getItem(USER_KEY)));
+        this.currentUser = this.currentUserSubject.asObservable();
+        // this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(window.localStorage.getItem(USER_KEY)));
+        // this.currentUser = this.currentUserSubject.asObservable();        
     }
 
     handleError(error: HttpErrorResponse) {
@@ -44,14 +44,14 @@ export class AuthenticationService {
         // return window.localStorage.getItem(TOKEN_KEY);
     }
     public storeUser(user: string) {
-        // window.sessionStorage.removeItem(USER_KEY);
-        // window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
-        window.localStorage.removeItem(USER_KEY);
-        window.localStorage.setItem(USER_KEY, JSON.stringify(user));
+        window.sessionStorage.removeItem(USER_KEY);
+        window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+    //     window.localStorage.removeItem(USER_KEY);
+    //     window.localStorage.setItem(USER_KEY, JSON.stringify(user));
     }
     public getUser(): any {
-        // return JSON.parse(window.sessionStorage.getItem(USER_KEY));
-        return JSON.parse(window.localStorage.getItem(USER_KEY));
+        return JSON.parse(window.sessionStorage.getItem(USER_KEY));
+        // return JSON.parse(window.localStorage.getItem(USER_KEY));
     }
 
     public get currentUserValue(): User {
@@ -74,8 +74,8 @@ export class AuthenticationService {
     }
 
     logout() {
-        // window.sessionStorage.clear();
-        window.localStorage.clear();
+        window.sessionStorage.clear();
+        // window.localStorage.clear();
         this.currentUserSubject.next(null);
     }
 

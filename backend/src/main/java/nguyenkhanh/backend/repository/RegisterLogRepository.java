@@ -17,7 +17,7 @@ public interface RegisterLogRepository extends JpaRepository<RegisterLogEntity, 
 
 	public Optional<RegisterLogEntity> findByToken(String token);
 
-	public UserEntity findByUser(String token);
+	public RegisterLogEntity findByUser(UserEntity user);
 
 	@Transactional
 	@Query("SELECT r.status FROM RegisterLogEntity r " + "WHERE r.token = ?1")

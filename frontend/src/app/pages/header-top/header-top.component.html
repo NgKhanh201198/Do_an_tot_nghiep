@@ -4,22 +4,24 @@
         <a [routerLink]="['','log-in']" class="nav-link btn btn-outline-dark btn-sm  mr-2 rounded-0 border-white text-white">Đăng nhập</a>
         <a [routerLink]="['','register']" class="nav-link btn btn-outline-dark btn-sm  mr-2 rounded-0 border-white text-white">Đăng ký</a>
     </div>
-    <div class="nav ml-auto mr-5" *ngIf="currentUser">
+    <div class="nav ml-auto mr-5 position-relative" *ngIf="currentUser">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle username text-white" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{fullName}}
+                <span>{{fullName}}</span>
             </a>
             <div class="dropdown-menu build-drop-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" [routerLink]="['','admin-page']" *ngIf="isAdmin">
-                    Trang quản trị
+                <a class="dropdown-item herder-top" [routerLink]="['','admin-page']" *ngIf="isAdmin">
+                    <i class="bi bi-person-lines-fill"></i>
+                    <span>Trang quản trị</span>
                 </a>
-                <a class="dropdown-item" [routerLink]="['','user-profile']" *ngIf="!isAdmin">
-                    <mat-icon>account_circle</mat-icon>
-                    <div>Quản lý tài khoản</div>
+                <a class="dropdown-item herder-top" [routerLink]="['','user-profile']" *ngIf="!isAdmin">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Quản lý tài khoản</span>
                 </a>
-                <a class="dropdown-item" [routerLink]="['','log-in']" (click)="logout()">
-                    <mat-icon>exit_to_app</mat-icon>
-                    <div>Đăng xuất</div>
+                <a class="dropdown-item herder-top" [routerLink]="['','log-in']" (click)="logout()">
+                    <!-- <mat-icon>exit_to_app</mat-icon> -->
+                    <i class="bi bi-box-arrow-left"></i>
+                    <span>Đăng xuất</span>
                 </a>
             </div>
         </li>

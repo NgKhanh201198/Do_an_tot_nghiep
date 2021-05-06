@@ -11,7 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import nguyenkhanh.backend.converter.UserConverter;
-import nguyenkhanh.backend.dto.UserDTO;
+import nguyenkhanh.backend.dto.UserCustomerDTO;
 import nguyenkhanh.backend.entity.EStatus;
 import nguyenkhanh.backend.entity.RegisterLogEntity;
 import nguyenkhanh.backend.entity.UserEntity;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements IUserService {
 	@Autowired
 	UserConverter userConverter;
 
-	@Value("${email.dateExpiedSeconds}")
+	@Value("${dateExpiedSeconds}")
 	private long DATE_EXPIED;
 
 	@Value("${system.baseUrl}")
@@ -60,15 +60,22 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public void resetPassword(UserEntity user) {
-		String token = UUID.randomUUID().toString();
+//		String token = UUID.randomUUID().toString();
 
-		RegisterLogEntity registerLogEntity = new RegisterLogEntity(token, EStatus.INACTIVE.toString(),
-				LocalDateTime.now().plusSeconds(DATE_EXPIED), user);
-		registerLogServiceImpl.save(registerLogEntity);
+		RegisterLogEntity oldRegisterLogEntity = registerLogServiceImpl.findByUser(user);
+		oldRegisterLogEntity.setStatus(EStatus.INACTIVE.toString());
+		oldRegisterLogEntity.setDateActive(LocalDateTime.now().plusSeconds(DATE_EXPIED));
 
-		String link = "http://localhost:4200/user-reset-password?token=" + token;
+		registerLogServiceImpl.save(oldRegisterLogEntity);
+
+		String link = "http://localhost:4200/user-reset-password?token=" + oldRegisterLogEntity.getToken();
 
 		sendEmailService.sendResetPassword(user.getUsername(), buildResetPassword(user.getFullName(), link));
+	}
+
+	@Override
+	public void savePassword(long id, String newPassword) {
+		userRepository.savePassword(id, newPassword);
 	}
 
 	@Override
@@ -134,7 +141,7 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public UserDTO getOneUser(long id) {
+	public UserCustomerDTO getOneUser(long id) {
 		UserEntity userEntity = userRepository.getOne(id);
 		return userConverter.entityToDTO(userEntity);
 	}
@@ -154,8 +161,4 @@ public class UserServiceImpl implements IUserService {
 		return userRepository.findById(id);
 	}
 
-	@Override
-	public void savePassword(long id, String newPassword) {		
-		userRepository.savePassword(id, newPassword);
-	}
 }

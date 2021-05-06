@@ -14,29 +14,22 @@ import { Path } from '../../_models/path.enum';
 export class HeaderTopComponent implements OnInit {
     currentUser: User;
     fullName: string;
-    show = true;
 
     constructor(
         private authenticationService: AuthenticationService,
         private userService: UserService,
         private router: Router
     ) {
-        this.authenticationService.currentUser.subscribe(user => { this.currentUser = user });
-        setTimeout(() => {
-            this.show = false;
-        }, 1500);
+
     }
 
     ngOnInit(): void {
         this.currentUser = this.authenticationService.currentUserValue;
-
         if (this.currentUser != null) {
             this.userService.getUserById(this.currentUser.id).subscribe((result: any) => {
                 this.fullName = result.fullName;
             });
         }
-
-
     }
 
     logout() {

@@ -14,6 +14,14 @@
     padding: 15px 10px;
 }
 
+.herder-top i {
+    font-size: 20px;
+}
+
+.herder-top span {
+    margin: auto 10px;
+}
+
 .username {
     font-size: 1.25rem !important;
 }
@@ -72,8 +80,7 @@ input.search-date:focus {
 }
 
 .my-title {
-    font-size: 16px;
-    font-weight: 400;
+    font-size: 24px;
     line-height: 24px;
 }
 
@@ -105,7 +112,8 @@ input.search-date:focus {
 }
 
 .dropdown-menu.show {
-    margin-left: -52px;
+    right: 15px;
+    left: auto;
 }
 
 .build-drop-menu a mat-icon {
@@ -205,11 +213,6 @@ a.nav-link.active-now div {
     text-decoration: underline;
 }
 
-
-/* a.nav-link:hover {
-    color: rgba(0, 0, 255, 0.75) !important;
-} */
-
 mat-icon.incon-profile {
     margin-right: 10px;
 }
@@ -233,7 +236,7 @@ mat-icon.incon-profile {
     bottom: 0px;
     left: 170px;
     font-size: 30px;
-    padding: 4px 15px;
+    padding: 15px 15px;
     text-align: center;
     border-radius: 50% !important;
     cursor: pointer;
@@ -274,8 +277,8 @@ mat-icon.incon-profile {
 
 .img-avatar-default i {
     position: absolute;
-    top: 10px;
-    left: 42px;
+    top: 26px;
+    left: 36px;
     font-size: 70px;
     color: white;
 }
@@ -380,8 +383,97 @@ input.input-upload {
     font-size: 18px;
 }
 
+.create-delete {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+
+/* phân trang */
+
+.ngx-pagination a {
+    outline: none !important;
+    padding: .5rem .75rem !important;
+    margin-left: -2px;
+    line-height: 1.25;
+    color: #007bff !important;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.ngx-pagination .current {
+    outline: none !important;
+    padding: .5rem .75rem !important;
+    margin-left: -2px;
+    line-height: 1.25;
+    background: #2199e8;
+    color: #fefefe;
+    border: 1px solid #dee2e6 !important;
+}
+
+.ngx-pagination .disabled {
+    padding: .5rem .75rem !important;
+    margin-left: -2px;
+    line-height: 1.25;
+    border: 1px solid #dee2e6!important;
+}
+
+ul.ngx-pagination .disabled:first-child {
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem
+}
+
+ul.ngx-pagination .disabled:last-child {
+    border-top-right-radius: .25rem;
+    border-bottom-right-radius: .25rem
+}
+
+ul.ngx-pagination li.pagination-next a {
+    border-top-right-radius: .25rem;
+    border-bottom-right-radius: .25rem
+}
+
+ul.ngx-pagination li.pagination-previous a {
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+}
+
+ul.ngx-pagination .pagination-previous a::before,
+ul.ngx-pagination .pagination-previous.disabled::before {
+    content: '◀' !important;
+}
+
+ul.ngx-pagination .pagination-next a::after,
+ul.ngx-pagination .pagination-next.disabled::after {
+    content: '▶' !important;
+}
+
+.status-active,
+.status-inactive,
+.status-locked {
+    color: white;
+    padding: 1px;
+    border-radius: 10px;
+    width: 60%;
+    margin: auto;
+}
+
+.status-active {
+    background-color: #008900;
+}
+
+.status-inactive {
+    background-color: #F16B00;
+}
+
+.status-locked {
+    background-color: #F50000;
+}
+
 @media only screen and (min-width: 1025px) {
-    .navbar-nav li {
+    .nav-bottom ul.navbar-nav li {
         margin-right: 3rem !important;
     }
 }
@@ -452,6 +544,26 @@ input.input-upload {
     .img-avatar {
         margin: auto;
     }
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 html,

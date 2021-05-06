@@ -6,7 +6,7 @@ import nguyenkhanh.backend.entity.RegisterLogEntity;
 import nguyenkhanh.backend.entity.UserEntity;
 
 public interface IRegisterLogService {
-	public UserEntity findByUser(String token);
+	public RegisterLogEntity findByUser(UserEntity user);
 
 	public String getStatus(String token);
 

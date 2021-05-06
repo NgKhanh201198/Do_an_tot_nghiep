@@ -6,13 +6,8 @@ import javax.validation.constraints.Size;
 
 import nguyenkhanh.backend.api.validation.FullNameFormat;
 import nguyenkhanh.backend.api.validation.PhoneNumberFormat;
-import nguyenkhanh.backend.entity.UserTypeEntity;
 
-
-public class UserDTO {
-	private String username;
-
-	private String password;
+public class UserCustomerDTO {
 
 	@NotNull(message = "Name cannot be null")
 	@NotBlank(message = "{FullName.NotBlank}")
@@ -27,47 +22,19 @@ public class UserDTO {
 	@NotBlank(message = "{DateOfBirth.NotBlank}")
 	private String dateOfBirth;
 
-	private String avatar;
-
 	@NotBlank(message = "{Gender.NotBlank}")
 	private String gender;
 
-	private String status;
-
-	private UserTypeEntity userType;
-
-	public UserDTO() {
+	public UserCustomerDTO() {
 		super();
 	}
 
-	public UserDTO(String username, String password, String fullName, String phoneNumber, String dateOfBirth,
-			String avatar, String gender, String status, UserTypeEntity userType) {
+	public UserCustomerDTO(String fullName, String phoneNumber, String dateOfBirth,  String gender) {
 		super();
-		this.username = username;
-		this.password = password;
 		this.fullName = fullName;
 		this.phoneNumber = phoneNumber;
 		this.dateOfBirth = dateOfBirth;
-		this.avatar = avatar;
 		this.gender = gender;
-		this.status = status;
-		this.userType = userType;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getFullName() {
@@ -94,36 +61,12 @@ public class UserDTO {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-
 	public String getGender() {
 		return gender;
 	}
 
 	public void setGender(String gender) {
 		this.gender = gender;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public UserTypeEntity getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserTypeEntity userType) {
-		this.userType = userType;
 	}
 
 }

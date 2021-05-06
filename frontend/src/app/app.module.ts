@@ -20,6 +20,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSliderModule } from '@angular/material/slider'; 
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CarouselModule } from 'ngx-owl-carousel-o';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 //Service
 import { UserService } from './_services/user.service';
@@ -75,6 +76,7 @@ import { HotelComponent } from './pages/hotel/hotel.component';
 import { PostComponent } from './pages/post/post.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { FooterAdminComponent } from './admin/footer-admin/footer-admin.component';
 
 @NgModule({
     declarations: [
@@ -123,7 +125,8 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
         HotelComponent,
         PostComponent,
         ResetPasswordComponent,
-        ForgotPasswordComponent
+        ForgotPasswordComponent,
+        FooterAdminComponent
     ],
     imports: [
         BrowserModule,
@@ -146,7 +149,8 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
         MatButtonModule,
         MatTooltipModule,
         MatProgressBarModule,
-        MatTableModule
+        MatTableModule,
+        NgxPaginationModule
     ],
     providers: [
         UserService,

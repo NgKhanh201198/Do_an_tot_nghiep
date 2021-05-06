@@ -1,1 +1,41 @@
-<h1 class="text-center mt-5">ADMIN PAGES</h1>
+<!-- <div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="content-wrapper">
+        <div class="card mt-2 ml-2 mr-2">
+            <h4 class="card-header">Thông tin tài khoản</h4>
+            <div *ngIf="loading" class="ml-3 mt-3 mb-3 spinner-border spinner-border-sm"></div>
+            <div class="card-body" *ngIf="currentUser">
+                <p>Tên tài khoản: {{currentUser.fullName}}</p>
+                <p>Email: {{currentUser.email}}</p>
+                <span>Quyền hạn:</span>
+                <div *ngFor="let item of currentUser.roles">
+                    <span class="nav-link">{{(item=="ADMIN")?'Quản trị viên':((item=="MANAGER")?'Giám đốc':'')}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="wrapper">
+    <app-navbar></app-navbar>
+
+    <div class="content-wrapper">
+        <div class="content pt-3">
+            <div class="container-fluid">
+                <div class="card">
+                    <h4 class="card-header">Thông tin tài khoản</h4>
+                    <div *ngIf="loading" class="ml-3 mt-3 mb-3 spinner-border spinner-border-sm"></div>
+                    <div class="card-body" *ngIf="currentUser">
+                        <p>Tên tài khoản: {{currentUser.fullName}}</p>
+                        <p>Email: {{currentUser.email}}</p>
+                        <span>Quyền hạn:</span>
+                        <div *ngFor="let item of currentUser.roles">
+                            <span class="nav-link">{{item}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-footer-admin></app-footer-admin>
+</div>

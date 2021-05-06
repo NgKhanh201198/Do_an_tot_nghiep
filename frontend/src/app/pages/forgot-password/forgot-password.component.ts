@@ -9,15 +9,13 @@ import { ResetPasswordComponent } from '../reset-password/reset-password.compone
     styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
-    @Input() childMessage: string;
-    currentUser: User;
+    @Input() childErrorMessage: string;
+    @Input() childEmail: string;
 
     constructor(
-        private authenticationService: AuthenticationService,
     ) { }
 
     ngOnInit(): void {
-        this.currentUser = this.authenticationService.currentUserValue;
     }
 
 }

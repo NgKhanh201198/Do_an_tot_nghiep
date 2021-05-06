@@ -3,7 +3,7 @@ package nguyenkhanh.backend.services;
 import java.util.List;
 import java.util.Optional;
 
-import nguyenkhanh.backend.dto.UserDTO;
+import nguyenkhanh.backend.dto.UserCustomerDTO;
 import nguyenkhanh.backend.entity.UserEntity;
 
 public interface IUserService {
@@ -18,7 +18,7 @@ public interface IUserService {
 
 	public List<UserEntity> getUserAll();
 
-	public UserDTO getOneUser(long id);
+	public UserCustomerDTO getOneUser(long id);
 
 	public UserEntity getUserById(long id);
 

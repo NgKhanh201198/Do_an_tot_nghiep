@@ -84,12 +84,6 @@ public class AuthenticationController {
 				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 						HttpStatus.BAD_REQUEST.name(), "Email này đã được sử dụng, vui lòng thử email khác!"));
 			}
-//			if (userServiceImpl.isUserExitsByPhoneNumber(registerRequest.getPhoneNumber())) {
-//				return ResponseEntity.badRequest()
-//						.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-//								HttpStatus.BAD_REQUEST.name(),
-//								"Phone number is exist already! Please try other Phone number!"));
-//			}
 			if (registerRequest.getPassword() == null) {
 				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 						HttpStatus.BAD_REQUEST.name(), "Mật khẩu không được để trống!"));
@@ -97,23 +91,14 @@ public class AuthenticationController {
 
 			UserEntity userEntity = new UserEntity();
 
-			// Set DateOfBirth
-//			String dateOfBirth = registerRequest.getDateOfBirth();
-//			Date date;
-//			try {
-//				date = DateUtils.parseDate(dateOfBirth, new String[] { "dd/MM/yyyy", "yyyy/MM/dd HH:mm:ss" });
-//				userEntity.setDateOfBirth(date);
-//			} catch (ParseException e) {
-//				e.printStackTrace();
-//			}
-
 //			 Set User type
 			UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName("customer")
 					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại người dùng!"));
 			userEntity.setUserType(userTypeEntity);
 
 			Set<RoleEntity> roleEntity = new HashSet<RoleEntity>();
-			RoleEntity userRole = roleServiceImpl.finByRoleName(ERoles.CUSTOMER.toString())
+			System.out.print(ERoles.CUSTOMER.toString().toLowerCase());
+			RoleEntity userRole = roleServiceImpl.finByKeyName(ERoles.CUSTOMER.toString().toUpperCase())
 					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy quyền này"));
 			roleEntity.add(userRole);
 			userEntity.setRoles(roleEntity);
@@ -121,10 +106,6 @@ public class AuthenticationController {
 			userEntity.setFullName(registerRequest.getFullName());
 			userEntity.setUsername(registerRequest.getUsername());
 			userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-
-//			userEntity.setPhoneNumber(registerRequest.getPhoneNumber());
-//			userEntity.setAvatar(registerRequest.getAvatar());
-//			userEntity.setGender(registerRequest.getGender());
 			userEntity.setStatus(EStatus.INACTIVE.toString());
 
 			// Save
