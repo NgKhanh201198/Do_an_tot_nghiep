@@ -456,7 +456,7 @@ ul.ngx-pagination .pagination-next.disabled::after {
     color: white;
     padding: 1px;
     border-radius: 10px;
-    width: 60%;
+    width: 80%;
     margin: auto;
 }
 

@@ -44,6 +44,11 @@ public class UserServiceImpl implements IUserService {
 	private String BASE_URL;
 
 	@Override
+	public void createAccount(UserEntity user) {
+		userRepository.save(user);
+	}
+
+	@Override
 	public void save(UserEntity user) {
 		userRepository.save(user);
 
@@ -87,6 +92,11 @@ public class UserServiceImpl implements IUserService {
 	public void update(UserEntity user) {
 		userRepository.updateUser(user.getId(), user.getFullName(), user.getPhoneNumber(), user.getDateOfBirth(),
 				user.getGender());
+	}
+
+	@Override
+	public void updateAccount(UserEntity user) {
+		userRepository.save(user);
 	}
 
 	@Override

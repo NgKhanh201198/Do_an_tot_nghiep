@@ -19,7 +19,8 @@
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img [src]="currentUser.avatar" class="img-circle elevation-2" alt="User Image">
+                <img *ngIf="!currentUser.avatar" src="../../../assets/customs/images/user.png" class="img-circle elevation-2" alt="User Image">
+                <img *ngIf="currentUser.avatar" [src]="currentUser.avatar" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <div class="d-block text-white">{{currentUser.fullName}}</div>
@@ -36,6 +37,12 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a [routerLink]="['/admin-page','create-account']" [routerLinkActive]="['active']" class="nav-link">
+                                <i class="nav-icon bi bi-person-plus-fill"></i>
+                                <p>Thêm tài khoản</p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a [routerLink]="['/admin-page','list-account']" [routerLinkActive]="['active']" class="nav-link">
                                 <i class="nav-icon bi bi-person-fill"></i>
@@ -60,7 +67,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a [routerLink]="['/admin-page','listUser']" class="nav-link">
+                            <a [routerLink]="['/admin-page','list-city']" class="nav-link">
                                 <i class="nav-icon bi bi-grid-3x3-gap-fill"></i>
                                 <p>Thành phố</p>
                             </a>

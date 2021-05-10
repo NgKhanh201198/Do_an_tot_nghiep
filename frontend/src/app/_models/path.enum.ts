@@ -25,6 +25,11 @@ export enum Path {
     UPDATED_CUSTOMER = 'updated-customer/:id',
     DELETED_CUSTOMER = 'deleted-customer',
 
+    CREATE_CITY = 'create-city',
+    LIST_CITY = 'list-city',
+    UPDATED_CITY = 'updated-city/:id',
+    DELETED_CITY = 'deleted-city',
+
     CREATE_HOTEL = 'create-hotel',
     LIST_HOTEL = 'list-hotel',
     UPDATED_HOTEL = 'updated-hotel/:id',

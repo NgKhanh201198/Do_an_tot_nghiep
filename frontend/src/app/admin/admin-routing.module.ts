@@ -6,7 +6,9 @@ import { CreateAccountComponent } from './account/create-account/create-account.
 import { ListAccountComponent } from './account/list-account/list-account.component';
 import { UpdateAccountComponent } from './account/update-account/update-account.component';
 import { AdminComponent } from './admin.component';
-import { CreateCustomerComponent } from './customer/create-customer/create-customer.component';
+import { CreateCityComponent } from './city/create-city/create-city.component';
+import { ListCityComponent } from './city/list-city/list-city.component';
+import { UpdateCityComponent } from './city/update-city/update-city.component';
 import { ListCustomerComponent } from './customer/list-customer/list-customer.component';
 import { UpdateCustomerComponent } from './customer/update-customer/update-customer.component';
 
@@ -40,26 +42,23 @@ const routes: Routes = [
         path: Path.UPDATED_CUSTOMER,
         component: UpdateCustomerComponent,
         // data: { permission: Permission.UPDATED_CUSTOMER }
-    }, {
-        path: Path.CREATE_CUSTOMER,
-        component: CreateCustomerComponent,
-        // data: { permission: Permission.CREATE_CUSTOMER }
     },
-    // //city
-    // {
-    //     path: Path.LIST_ACCOUNT,
-    //     component: ListAccountComponent,
-    //     data: { permission: Permission.LIST_ACCOUNT }
-    // },
-    // {
-    //     path: Path.UPDATED_ACCOUNT,
-    //     component: UpdateAccountComponent,
-    //     data: { permission: Permission.UPDATED_ACCOUNT }
-    // }, {
-    //     path: Path.CREATE_ACCOUNT,
-    //     component: CreateAccountComponent,
-    //     data: { permission: Permission.CREATE_ACCOUNT }
-    // },
+    //city
+    {
+        path: Path.LIST_CITY,
+        component: ListCityComponent,
+        // data: { permission: Permission.LIST_ACCOUNT }
+    },
+    {
+        path: Path.UPDATED_CITY,
+        component: UpdateCityComponent,
+        // data: { permission: Permission.UPDATED_ACCOUNT }
+    },
+    {
+        path: Path.CREATE_CITY,
+        component: CreateCityComponent,
+        // data: { permission: Permission.CREATE_ACCOUNT }
+    },
     // //hotel
     // {
     //     path: Path.LIST_ACCOUNT,

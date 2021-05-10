@@ -91,7 +91,7 @@ public class AuthenticationController {
 
 			UserEntity userEntity = new UserEntity();
 
-//			 Set User type
+			// Set User type
 			UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName("customer")
 					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại người dùng!"));
 			userEntity.setUserType(userTypeEntity);
@@ -145,7 +145,7 @@ public class AuthenticationController {
 			});
 
 			List<String> permissions = userDetailsImpl.getAuthorities().stream()
-					.map(permission -> permission.getAuthority()).collect(Collectors.toList());
+					.map(permission -> permission.getAuthority()).collect(Collectors.toList());            
 
 			return ResponseEntity.ok(new JwtResponse(userDetailsImpl.getId(), userDetailsImpl.getUsername(),
 					userDetailsImpl.getFullName(), userDetailsImpl.getPhoneNumber(), userDetailsImpl.getDateOfBirth(),

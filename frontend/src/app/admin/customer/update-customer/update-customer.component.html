@@ -1,1 +1,96 @@
-<p>update-customer works!</p>
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="content-wrapper" style="background-color: white;">
+        <div class="container py-3">
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <h1 class="text-center text-info mt-3 mb-3 my-title">Cập nhật thông tin khách hàng</h1>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-sm-6">
+                    <form [formGroup]="formUpdateData" (ngSubmit)="onSubmit()">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Họ và tên </mat-label>
+                                <input formControlName="fullName" #fullName matInput maxlength="18" class="input-height" type="text">
+                                <mat-icon matSuffix>person</mat-icon>
+                                <mat-hint align="end">{{fullName.value.length}} / 18</mat-hint>
+                                <mat-error *ngIf="formValid.fullName.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getFullnameErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Email</mat-label>
+                                <input formControlName="username" #username matInput class="input-height">
+                                <mat-icon matSuffix>email</mat-icon>
+                                <mat-error *ngIf="formValid.username.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getEmailErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Phone number</mat-label>
+                                <input formControlName="phoneNumber" #phoneNumber matInput class="input-height" type="email">
+                                <mat-icon matSuffix>phone</mat-icon>
+                                <mat-error *ngIf="formValid.phoneNumber.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getPhoneNumberErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Giới tính</mat-label>
+                                <mat-select formControlName="gender">
+                                    <mat-option *ngFor="let role of gender" [value]="role.value">{{role.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formValid.gender.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getGenderErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Ngày sinh</mat-label>
+                                <input formControlName="dateOfBirth" matInput [matDatepicker]="picker" readonly>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                <mat-error *ngIf="formValid.dateOfBirth.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getDateOfBirthErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Vai trò</mat-label>
+                                <mat-select formControlName="roles" multiple>
+                                    <mat-option *ngFor="let role of rolesList" [value]="role.value">{{role.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formValid.roles.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getRoleErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Kiểu người dùng</mat-label>
+                                <mat-select formControlName="userType">
+                                    <mat-option *ngFor="let type of userTypeList" [value]="type.value">{{type.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formValid.userType.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getUserTypeErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Trạng thái</mat-label>
+                                <mat-select formControlName="status">
+                                    <mat-option *ngFor="let type of status" [value]="type.value">{{type.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formValid.status.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getStatusErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <button [disabled]="formUpdateData.invalid" class="btn btn-primary btn-block">Lưu lại</button>
+                        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+                    </form>
+                </div>
+            </div>
+            <div [ngClass]="{ 'show': success }" class="alert thongbao">
+                <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
+                <div class="noidung-thongbao">{{success}}</div>
+            </div>
+        </div>
+    </div>
+
+    <app-footer-admin></app-footer-admin>
+</div>

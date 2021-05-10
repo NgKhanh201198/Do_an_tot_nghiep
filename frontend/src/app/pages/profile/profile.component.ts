@@ -51,17 +51,20 @@ export class ProfileComponent implements OnInit {
         // get current user
         this.currentUser = this.authenticationService.currentUserValue;
         this.userService.getUserById(this.currentUser.id).subscribe((result: any) => {
+            this.loggerService.logger(result);
             if (result.avatar != null) {
                 this.avatar = result.avatar;
             }
             if (result.dateOfBirth != null) {
                 this.dateOfBirth = formatDate(result.dateOfBirth, 'yyyy-MM-dd', 'en');
+                this.loggerService.logger(this.dateOfBirth);
             }
             this.email = result.username;
 
             this.formUpdate = this.formBuilder.group({
                 fullName: [result.fullName, [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{3,100}')]],
                 phoneNumber: [result.phoneNumber, [Validators.required]],
+                // dateOfBirth: [result.dateOfBirth, [Validators.required]],
                 dateOfBirth: [this.dateOfBirth, [Validators.required]],
                 gender: [result.gender, [Validators.required]],
             });
@@ -123,6 +126,7 @@ export class ProfileComponent implements OnInit {
     }
 
     onUpdate() {
+        this.loggerService.logger(this.formUpdate.value);
 
         return this.userService.updateUserById(this.currentUser.id, this.formUpdate.value)
             .subscribe({
@@ -142,7 +146,5 @@ export class ProfileComponent implements OnInit {
             setTimeout(() => {
                 this.success = '';
             }, 2500);
-
-
     }
 }

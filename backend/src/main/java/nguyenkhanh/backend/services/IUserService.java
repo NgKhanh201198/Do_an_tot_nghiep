@@ -10,6 +10,8 @@ public interface IUserService {
 
 	public Optional<UserEntity> findByUsername(String username);
 
+	public void createAccount(UserEntity user);
+
 	public void save(UserEntity user);
 
 	public void savePassword(long id, String password);
@@ -23,6 +25,8 @@ public interface IUserService {
 	public UserEntity getUserById(long id);
 
 	public void update(UserEntity user);
+
+	public void updateAccount(UserEntity user);
 
 	public void updateAvatar(long id, String avatar);
 

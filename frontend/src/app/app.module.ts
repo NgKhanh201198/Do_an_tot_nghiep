@@ -17,10 +17,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
-import { MatSliderModule } from '@angular/material/slider'; 
+import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { CommonModule } from '@angular/common';
 
 //Service
 import { UserService } from './_services/user.service';
@@ -67,7 +71,6 @@ import { ListRoomTypeComponent } from './admin/roomType/list-room-type/list-room
 import { CreateRoomTypeComponent } from './admin/roomType/create-room-type/create-room-type.component';
 import { UpdateRoomTypeComponent } from './admin/roomType/update-room-type/update-room-type.component';
 import { ListCustomerComponent } from './admin/customer/list-customer/list-customer.component';
-import { CreateCustomerComponent } from './admin/customer/create-customer/create-customer.component';
 import { UpdateCustomerComponent } from './admin/customer/update-customer/update-customer.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { BookingRoomComponent } from './pages/booking-room/booking-room.component';
@@ -77,6 +80,9 @@ import { PostComponent } from './pages/post/post.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { FooterAdminComponent } from './admin/footer-admin/footer-admin.component';
+import { CreateCityComponent } from './admin/city/create-city/create-city.component';
+import { ListCityComponent } from './admin/city/list-city/list-city.component';
+import { UpdateCityComponent } from './admin/city/update-city/update-city.component';
 
 @NgModule({
     declarations: [
@@ -88,6 +94,10 @@ import { FooterAdminComponent } from './admin/footer-admin/footer-admin.componen
         AdminComponent,
         NavbarComponent,
 
+        ListCityComponent, 
+        UpdateCityComponent, 
+        CreateCityComponent,
+
         CreateHotelComponent,
         ListHotelComponent,
         UpdateHotelComponent,
@@ -97,8 +107,11 @@ import { FooterAdminComponent } from './admin/footer-admin/footer-admin.componen
         UpdateRoomComponent,
 
         CreateAccountComponent,
+
         ListAccountComponent,
         UpdateAccountComponent,
+        ListCustomerComponent,
+        UpdateCustomerComponent,
 
         CreateBookingRoomComponent,
         ListBookingRoomComponent,
@@ -112,10 +125,6 @@ import { FooterAdminComponent } from './admin/footer-admin/footer-admin.componen
         ListRoomTypeComponent,
         UpdateRoomTypeComponent,
 
-        CreateCustomerComponent,
-        ListCustomerComponent,
-        UpdateCustomerComponent,
-        
         HeaderTopComponent,
         HeaderBottomComponent,
         FooterComponent,
@@ -136,6 +145,7 @@ import { FooterAdminComponent } from './admin/footer-admin/footer-admin.componen
         HttpClientModule,
         BrowserAnimationsModule,
         CarouselModule,
+        CommonModule,
 
         MatIconModule,
         MatInputModule,
@@ -150,7 +160,10 @@ import { FooterAdminComponent } from './admin/footer-admin/footer-admin.componen
         MatTooltipModule,
         MatProgressBarModule,
         MatTableModule,
-        NgxPaginationModule
+        NgxPaginationModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatMomentDateModule
     ],
     providers: [
         UserService,
@@ -162,8 +175,23 @@ import { FooterAdminComponent } from './admin/footer-admin/footer-admin.componen
         BookingRoomService,
         AuthenticationService,
         LoggerService,
+        // MatDatepickerModule,
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        {
+            provide: MAT_DATE_FORMATS,
+            useValue: {
+                parse: {
+                    dateInput: 'DD/MM/YYYY',
+                },
+                display: {
+                    dateInput: 'DD/MM/YYYY',
+                    monthYearLabel: 'MMMM YYYY',
+                    dateA11yLabel: 'LL',
+                    monthYearA11yLabel: 'MMMM YYYY '
+                },
+            },
+        }
     ],
     bootstrap: [AppComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -4,7 +4,7 @@
         <div class="container py-3">
             <div class="row justify-content-center">
                 <div class="col-sm-12">
-                    <h1 class="text-center text-info mt-3 mb-3 my-title">Cập nhật thông tin tài khoản</h1>
+                    <h1 class="text-center text-info mt-3 mb-3 my-title">Cập nhật thông tin nhân viên</h1>
                 </div>
             </div>
             <div class="row justify-content-center mt-3">
@@ -22,9 +22,17 @@
                         <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Email</mat-label>
-                                <input formControlName="username" #username matInput class="input-height" type="email">
+                                <input formControlName="username" #username matInput class="input-height">
                                 <mat-icon matSuffix>email</mat-icon>
                                 <mat-error *ngIf="formValid.username.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getEmailErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Phone number</mat-label>
+                                <input formControlName="phoneNumber" #phoneNumber matInput class="input-height" type="email">
+                                <mat-icon matSuffix>phone</mat-icon>
+                                <mat-error *ngIf="formValid.phoneNumber.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getPhoneNumberErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="form-group ">
@@ -34,6 +42,15 @@
                                     <mat-option *ngFor="let role of gender" [value]="role.value">{{role.name}}</mat-option>
                                 </mat-select>
                                 <mat-error *ngIf="formValid.gender.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getGenderErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Ngày sinh</mat-label>
+                                <input formControlName="dateOfBirth" matInput [matDatepicker]="picker" readonly>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                <mat-error *ngIf="formValid.dateOfBirth.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getDateOfBirthErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="form-group ">
@@ -68,9 +85,10 @@
                     </form>
                 </div>
             </div>
-            <!-- <div [ngClass]="{ 'hienra': success }" class="alert tb">
-                <i class="fas fa-check" style="color: green; font-size: 1.25em;"></i>&nbsp;Updated successfully!
-            </div> -->
+            <div [ngClass]="{ 'show': success }" class="alert thongbao">
+                <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
+                <div class="noidung-thongbao">{{success}}</div>
+            </div>
         </div>
     </div>
 

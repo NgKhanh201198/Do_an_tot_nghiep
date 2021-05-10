@@ -14,8 +14,9 @@ const httpOptions = {
 export class UserService {
     url = `${environment.baseUrlServer}` + 'api/user';
     urlCustomer = `${environment.baseUrlServer}` + 'api/customer';
-    url1 = `${environment.baseUrlServer}` + 'api/userType';
-    url2 = `${environment.baseUrlServer}` + 'api/role';
+    urlAccount = `${environment.baseUrlServer}` + 'api/account';
+    urlGetUserType = `${environment.baseUrlServer}` + 'api/userType';
+    urlGetRoles = `${environment.baseUrlServer}` + 'api/role';
 
     constructor(
         private http: HttpClient
@@ -23,6 +24,12 @@ export class UserService {
 
     handleError(error: HttpErrorResponse) {
         return throwError(error);
+    }
+    createAccount(data: any): Observable<any> {
+        return this.http.post(`${this.urlAccount}`, data, httpOptions)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     getAllUser(): Observable<User> {
@@ -41,6 +48,13 @@ export class UserService {
 
     updateUserById(id: any, data: any): Observable<any> {
         return this.http.put(`${this.urlCustomer}/${id}`, data, httpOptions)
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
+    updateAccountById(id: any, data: any): Observable<any> {
+        return this.http.put(`${this.urlAccount}/${id}`, data, httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
@@ -81,7 +95,7 @@ export class UserService {
 
     // User Type
     getAllUserType(): Observable<User> {
-        return this.http.get<User>(`${this.url1}`)
+        return this.http.get<User>(`${this.urlGetUserType}`)
             .pipe(
                 catchError(this.handleError)
             );
@@ -89,7 +103,7 @@ export class UserService {
 
     //Role
     getAllRole(): Observable<User> {
-        return this.http.get<User>(`${this.url2}`)
+        return this.http.get<User>(`${this.urlGetRoles}`)
             .pipe(
                 catchError(this.handleError)
             );

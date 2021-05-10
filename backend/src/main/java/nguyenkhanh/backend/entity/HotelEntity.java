@@ -43,6 +43,11 @@ public class HotelEntity extends BaseEntity {
 	@JoinColumn(name = "userid")
 	@JsonIgnore
 	private UserEntity user;
+	
+	@ManyToOne
+	@JoinColumn(name = "cityid")
+	@JsonIgnore
+	private CityEntity city;
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
 	private Set<RoomEntity> rooms = new HashSet<RoomEntity>();

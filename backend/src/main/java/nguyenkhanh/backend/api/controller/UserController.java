@@ -1,9 +1,15 @@
 package nguyenkhanh.backend.api.controller;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -31,10 +37,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import nguyenkhanh.backend.config.security.JwtTokenUtils;
+import nguyenkhanh.backend.dto.UserAccountDTO;
 import nguyenkhanh.backend.dto.UserCustomerDTO;
+import nguyenkhanh.backend.dto.UserDTO;
+import nguyenkhanh.backend.entity.ERoles;
 import nguyenkhanh.backend.entity.EStatus;
 import nguyenkhanh.backend.entity.RegisterLogEntity;
+import nguyenkhanh.backend.entity.RoleEntity;
 import nguyenkhanh.backend.entity.UserEntity;
+import nguyenkhanh.backend.entity.UserTypeEntity;
 import nguyenkhanh.backend.exception.BadRequestException;
 import nguyenkhanh.backend.exception.NotFoundException;
 import nguyenkhanh.backend.response.MessageResponse;
@@ -72,9 +83,85 @@ public class UserController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	@PostMapping("/user")
-	public ResponseEntity<?> createUser() {
-		return new ResponseEntity<>("create", HttpStatus.OK);
+	@PostMapping("/account")
+	public ResponseEntity<?> createAccount(@RequestBody @Valid UserDTO userDTO) {
+		try {
+			if (userServiceImpl.isUserExitsByUsername(userDTO.getUsername())) {
+				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+						HttpStatus.BAD_REQUEST.name(), "Email này đã được sử dụng, vui lòng thử email khác!"));
+			}
+			if (userDTO.getPassword() == null) {
+				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+						HttpStatus.BAD_REQUEST.name(), "Mật khẩu không được để trống!"));
+			}
+
+			UserEntity userEntity = new UserEntity();
+
+			// Set User type
+			UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName(userDTO.getUserType())
+					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại người dùng!"));
+			userEntity.setUserType(userTypeEntity);
+
+			// Set Roles
+			Set<String> strRoles = userDTO.getRoles();
+			Set<RoleEntity> roleEntity = new HashSet<RoleEntity>();
+
+			if (strRoles == null) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+						HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), "Vai trò không được để trống"));
+			} else {
+				strRoles.forEach(role -> {
+					switch (role) {
+					case "MANAGER":
+						RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.MANAGER.toString())
+								.orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
+						roleEntity.add(managerRole);
+						break;
+					case "ADMIN":
+						RoleEntity adminRole = roleServiceImpl.finByKeyName(ERoles.ADMIN.toString())
+								.orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
+						roleEntity.add(adminRole);
+						break;
+					default:
+						RoleEntity defaultRole = roleServiceImpl.finByKeyName(ERoles.CUSTOMER.toString())
+								.orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
+						roleEntity.add(defaultRole);
+						break;
+					}
+				});
+			}
+			userEntity.setRoles(roleEntity);
+
+			// Set DateOfBirth
+			String dateOfBirth = userDTO.getDateOfBirth();
+			Date date;
+			if (isDateValid(dateOfBirth, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")) {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+				formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+				date = formatter.parse(dateOfBirth);
+			} else {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+				formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+				date = formatter.parse(dateOfBirth);
+			}
+			userEntity.setDateOfBirth(date);
+
+			userEntity.setFullName(userDTO.getFullName());
+			userEntity.setUsername(userDTO.getUsername());
+			userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+			userEntity.setGender(userDTO.getGender());
+			userEntity.setStatus(userDTO.getStatus());
+			userEntity.setStatus(userDTO.getStatus());
+
+			// Save
+			userServiceImpl.createAccount(userEntity);
+
+			return ResponseEntity
+					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm tài khoản thành công!"));
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+					"Bad Request", "Tài khoản đã được sử dụng. Vui lòng thử tài khoản khác!"));
+		}
 	}
 
 	@GetMapping("/user")
@@ -97,7 +184,8 @@ public class UserController {
 	}
 
 	@PutMapping("/account/{id}")
-	public ResponseEntity<?> updateAccount(@RequestBody @Valid UserCustomerDTO userCustomerDTO, @PathVariable("id") long id) {
+	public ResponseEntity<?> updateAccount(@RequestBody @Valid UserAccountDTO userAccountDTO,
+			@PathVariable("id") long id) {
 		try {
 			if (userServiceImpl.isUserExitsById(id) == false) {
 				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
@@ -105,34 +193,73 @@ public class UserController {
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
 			} else {
-				UserCustomerDTO oldUser = userServiceImpl.getOneUser(id);
-
-				if (userServiceImpl.isUserExitsByPhoneNumber(userCustomerDTO.getPhoneNumber())
-						&& !(userCustomerDTO.getPhoneNumber().equals(oldUser.getPhoneNumber()))) {
+				UserEntity oldUserEntity = userServiceImpl.getUserById(id);
+				
+				if (userServiceImpl.isUserExitsByPhoneNumber(userAccountDTO.getPhoneNumber())
+						&& !(userAccountDTO.getPhoneNumber().equals(oldUserEntity.getPhoneNumber()))) {
 					return ResponseEntity.badRequest()
 							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 									HttpStatus.BAD_REQUEST.name(),
 									"Số điện thoại đã được sử dụng! Vui lòng thử số điện thoại khác!"));
 				}
 
-				UserEntity userEntity = new UserEntity();
+				// Set Roles
+				Set<String> strRoles = userAccountDTO.getRoles();
+				Set<RoleEntity> roles = new HashSet<>();
+
+				if (strRoles == null) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+									HttpStatus.BAD_REQUEST.name(), "Vai trò không được để trống"));
+				} else {
+					strRoles.forEach(role -> {
+						switch (role) {
+						case "MANAGER":
+							RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.MANAGER.toString())
+									.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+							roles.add(managerRole);
+							break;
+						case "ADMIN":
+							RoleEntity adminRole = roleServiceImpl.finByKeyName(ERoles.ADMIN.toString())
+									.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+							roles.add(adminRole);
+							break;
+						default:
+							RoleEntity defaultRole = roleServiceImpl.finByKeyName(ERoles.CUSTOMER.toString())
+									.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+							roles.add(defaultRole);
+							break;
+						}
+					});
+				}
+				oldUserEntity.setRoles(roles);
 
 				// Set DateOfBirth
-				String dateOfBirth = userCustomerDTO.getDateOfBirth();
+				String dateOfBirth = userAccountDTO.getDateOfBirth();
 				Date date;
-				try {
-					date = DateUtils.parseDate(dateOfBirth, new String[] { "yyyy-MM-dd", "dd-MM-yyyy" });
-					userEntity.setDateOfBirth(date);
-				} catch (ParseException e) {
-					e.printStackTrace();
+				if (isDateValid(dateOfBirth, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")) {
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+					formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+					date = formatter.parse(dateOfBirth);
+				} else {
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+					formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+					date = formatter.parse(dateOfBirth);
 				}
+				oldUserEntity.setDateOfBirth(date);
 
-				userEntity.setId(id);
-				userEntity.setFullName(userCustomerDTO.getFullName());
-				userEntity.setPhoneNumber(userCustomerDTO.getPhoneNumber());
-				userEntity.setGender(userCustomerDTO.getGender());
+				// Set UserType
+				UserTypeEntity typeEntity = userTypeServiceImpl.findByKeyName(userAccountDTO.getUserType())
+						.orElseThrow(() -> new UsernameNotFoundException("Loại người dùng này không tồn tại!"));
+				oldUserEntity.setUserType(typeEntity);
 
-				userServiceImpl.update(userEntity);
+				oldUserEntity.setId(id);
+				oldUserEntity.setFullName(userAccountDTO.getFullName());
+				oldUserEntity.setPhoneNumber(userAccountDTO.getPhoneNumber());
+				oldUserEntity.setGender(userAccountDTO.getGender());
+				oldUserEntity.setStatus(userAccountDTO.getStatus());
+
+				userServiceImpl.updateAccount(oldUserEntity);
 
 				return ResponseEntity
 						.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
@@ -141,12 +268,13 @@ public class UserController {
 			System.out.println(ex.getLocalizedMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
-							"Tài khoản này đã được sử dụng! Vui lòng thử tài khoản khác"));
+							"Đã có lỗi xảy ra, vui lòng thử lại!"));
 		}
 	}
 
 	@PutMapping("/customer/{id}")
-	public ResponseEntity<?> updateCustomer(@RequestBody @Valid UserCustomerDTO userCustomerDTO, @PathVariable("id") long id) {
+	public ResponseEntity<?> updateCustomer(@RequestBody @Valid UserCustomerDTO userCustomerDTO,
+			@PathVariable("id") long id) {
 		try {
 			if (userServiceImpl.isUserExitsById(id) == false) {
 				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
@@ -273,5 +401,16 @@ public class UserController {
 		Resource file = uploadFileService.load(filename);
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("image/jpeg"))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "Content-Disposition: inlines").body(file);
+	}
+
+	public static boolean isDateValid(String date, String date_format) {
+		try {
+			DateFormat df = new SimpleDateFormat(date_format);
+			df.setLenient(false);
+			df.parse(date);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
 	}
 }
