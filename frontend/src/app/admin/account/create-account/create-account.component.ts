@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Role } from 'src/app/_models/role.enum';
 import { User } from 'src/app/_models/user';
@@ -24,7 +24,7 @@ export class Options {
     styleUrls: ['./create-account.component.css']
 })
 export class CreateAccountComponent implements OnInit {
-
+    @ViewChild('myForm') myForm: NgForm;
     user: User;
     formData: FormGroup;
     roles = [];
@@ -34,8 +34,8 @@ export class CreateAccountComponent implements OnInit {
     success = '';
     error = '';
     hidePass = true;
-    userTypeList: Array<Options> = [];
-    rolesList: Array<Options> = [];
+    listUserType: Array<Options> = [];
+    listRoles: Array<Options> = [];
     _dateOfBirth: any = null;
 
     status: Options[] = [
@@ -60,21 +60,21 @@ export class CreateAccountComponent implements OnInit {
         this.userService.getAllUserType().subscribe((result: any) => {
             for (let index = 0; index < result.length; index++) {
                 let userType = new Options(result[index].userTypeName, result[index].keyName);
-                this.userTypeList.push(userType);
+                this.listUserType.push(userType);
             }
         })
 
         this.userService.getAllRole().subscribe((result: any) => {
             for (let index = 0; index < result.length; index++) {
                 let role = new Options(result[index].roleName, result[index].keyName);
-                this.rolesList.push(role);
+                this.listRoles.push(role);
             }
         })
     }
 
     ngOnInit(): void {
         this.formData = this.formBuilder.group({
-            fullName: ['', [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{3,100}')]],
+            fullName: ['', [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{3,50}')]],
             username: ['', [Validators.required, emailValidator()]],
             password: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9_@]{8,18}')]],
             gender: ['', [Validators.required]],
@@ -92,7 +92,7 @@ export class CreateAccountComponent implements OnInit {
         if (this.formValid.fullName.errors.required) {
             return 'Vui lòng nhập họ và tên của bạn.';
         }
-        return this.formValid.fullName.errors.pattern ? 'Tên hợp lệ phải có ít nhất 3 ký tự chỉ bao gồm chữ cái.' : '';
+        return this.formValid.fullName.errors.pattern ? 'Tên hợp lệ phải có ít nhất 3 ký tự chỉ bao gồm chữ cái và số.' : '';
     }
     getEmailErrorMessage(): string {
         if (this.formValid.username.errors.required) {
@@ -146,6 +146,7 @@ export class CreateAccountComponent implements OnInit {
                     this.loading = false;
                     this.submitted = false;
                     this.error = '';
+                    this.myForm.resetForm();
                     this.success = result.message;
                     this.loggerService.logger(result);
                 },

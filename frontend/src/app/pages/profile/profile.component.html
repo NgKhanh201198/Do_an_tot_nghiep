@@ -128,12 +128,12 @@
                 <div class="close-upload" (click)="closeForm()">
                     <i class="bi bi-x"></i>
                 </div>
-                <form [formGroup]="formUpdate" (ngSubmit)="updateAvatar()">
+                <form (ngSubmit)="updateAvatar()">
                     <div class="row container m-0">
                         <div class="col-sm-4 col-12">
-                            <div class="img-avatar-default" *ngIf="!imgURL"><i class="bi bi-card-image"></i></div>
-                            <div class="img-avatar" *ngIf="imgURL">
-                                <img class="img-upload" [src]="imgURL">
+                            <div class="avatar-default" *ngIf="!imgURL"><i class="bi bi-card-image"></i></div>
+                            <div class="avatar" *ngIf="imgURL">
+                                <img class="avatar-upload" [src]="imgURL">
                             </div>
                         </div>
                         <div class="col-sm-8 col-12">

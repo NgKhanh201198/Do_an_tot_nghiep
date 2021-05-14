@@ -8,15 +8,15 @@ import nguyenkhanh.backend.entity.UserEntity;
 
 public interface IUserService {
 
-	public Optional<UserEntity> findByUsername(String username);
-
+	// Create
 	public void createAccount(UserEntity user);
 
 	public void save(UserEntity user);
 
 	public void savePassword(long id, String password);
 
-	public void resetPassword(UserEntity user);
+	// Read
+	public Optional<UserEntity> findByUsername(String username);
 
 	public List<UserEntity> getUserAll();
 
@@ -24,6 +24,7 @@ public interface IUserService {
 
 	public UserEntity getUserById(long id);
 
+	// Update
 	public void update(UserEntity user);
 
 	public void updateAccount(UserEntity user);
@@ -32,6 +33,9 @@ public interface IUserService {
 
 	public void updateStatus(String username);
 
+	public void resetPassword(UserEntity user);
+
+	// Delete
 	public void deletes(long[] id);
 
 	public void deleteAndRestore(long id);

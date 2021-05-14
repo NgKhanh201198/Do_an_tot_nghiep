@@ -3,9 +3,13 @@
     <div class="content-wrapper" style="background-color: white;">
         <div class="container py-3">
             <div class="row justify-content-center">
-                <div class="col-sm-12">
+                <div class="col-sm-1 back">
+                    <button class="btn btn-outline-info" (click)="comeBack()" matTooltip="Quay lại" [matTooltipPosition]="'right'"><i class="bi bi-reply-fill"></i></button>
+                </div>
+                <div class="col-sm-10">
                     <h1 class="text-center text-info mt-3 mb-3 my-title">Cập nhật thông tin nhân viên</h1>
                 </div>
+                <div class="col-sm-1"></div>
             </div>
             <div class="row justify-content-center mt-3">
                 <div class="col-sm-6">
@@ -13,25 +17,27 @@
                         <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Họ và tên </mat-label>
-                                <input formControlName="fullName" #fullName matInput maxlength="18" class="input-height" type="text">
+                                <input formControlName="fullName" #fullName matInput maxlength="50" class="input-height" type="text">
                                 <mat-icon matSuffix>person</mat-icon>
-                                <mat-hint align="end">{{fullName.value.length}} / 18</mat-hint>
+                                <mat-hint align="end">{{fullName.value.length}} / 50</mat-hint>
                                 <mat-error *ngIf="formValid.fullName.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getFullnameErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Email</mat-label>
-                                <input formControlName="username" #username matInput class="input-height">
+                                <input formControlName="username" #username maxlength="50" matInput class="input-height">
                                 <mat-icon matSuffix>email</mat-icon>
+                                <mat-hint align="end">{{username.value.length}} /50</mat-hint>
                                 <mat-error *ngIf="formValid.username.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getEmailErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Phone number</mat-label>
-                                <input formControlName="phoneNumber" #phoneNumber matInput class="input-height" type="email">
+                                <input formControlName="phoneNumber" #phoneNumber maxlength="10" matInput class="input-height" type="email">
                                 <mat-icon matSuffix>phone</mat-icon>
+                                <mat-hint align="end">{{phoneNumber.value.length}} /10</mat-hint>
                                 <mat-error *ngIf="formValid.phoneNumber.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getPhoneNumberErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
@@ -80,8 +86,9 @@
                                 <mat-error *ngIf="formValid.status.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getStatusErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
+                        <div *ngIf="error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{error}}</div>
                         <button [disabled]="formUpdateData.invalid" class="btn btn-primary btn-block">Lưu lại</button>
-                        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+                        <!-- <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div> -->
                     </form>
                 </div>
             </div>

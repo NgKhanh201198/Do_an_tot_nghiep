@@ -6,9 +6,10 @@ import { User } from 'src/app/_models/user';
 import { LoggerService } from 'src/app/_services/logger.service';
 import { emailValidator } from 'src/assets/customs/validation/CustomValidator';
 import { UserService } from '../../../_services/user.service';
-
+import { Location } from '@angular/common'
 import * as moment from 'moment';
 import { UserType } from 'src/app/_models/user-type.enum';
+import { phoneNumberValidator } from '../../../../assets/customs/validation/CustomValidator';
 export class Options {
     name: string;
     value: string;
@@ -45,9 +46,9 @@ export class UpdateCustomerComponent implements OnInit {
 
 
     formUpdateData = this.formBuilder.group({
-        fullName: ['', [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{3,100}')]],
+        fullName: ['', [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{3,50}')]],
         username: ['', [Validators.required, emailValidator()]],
-        phoneNumber: ['', [Validators.required]],
+        phoneNumber: ['', [Validators.required, phoneNumberValidator()]],
         gender: ['', [Validators.required]],
         dateOfBirth: ['', [Validators.required]],
         roles: [[''], [Validators.required]],
@@ -58,6 +59,7 @@ export class UpdateCustomerComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
+        private location: Location,
         private userService: UserService,
         private loggerService: LoggerService
     ) {
@@ -106,9 +108,9 @@ export class UpdateCustomerComponent implements OnInit {
             }
 
             this.formUpdateData = this.formBuilder.group({
-                fullName: [result.fullName, [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{3,100}')]],
+                fullName: [result.fullName, [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{3,50}')]],
                 username: [result.username, [Validators.required, emailValidator()]],
-                phoneNumber: [result.phoneNumber, [Validators.required]],
+                phoneNumber: [result.phoneNumber, [Validators.required, phoneNumberValidator()]],
                 gender: [result.gender, [Validators.required]],
                 dateOfBirth: [result.dateOfBirth, [Validators.required]],
                 roles: [this.roles, [Validators.required]],
@@ -138,7 +140,7 @@ export class UpdateCustomerComponent implements OnInit {
         if (this.formValid.phoneNumber.errors.required) {
             return 'Vui lòng nhập số điện thoại.';
         }
-        return '';
+        return this.formValid.phoneNumber ? 'Vui lòng nhập số điện thoại hợp lệ' : '';
     }
     getGenderErrorMessage(): string {
         if (this.formValid.gender.errors.required) {
@@ -169,6 +171,10 @@ export class UpdateCustomerComponent implements OnInit {
             return 'Kiểu người dùng không được để trống.';
         }
         return '';
+    }
+
+    comeBack() {
+        this.location.back();
     }
 
     onSubmit() {

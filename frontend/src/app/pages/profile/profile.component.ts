@@ -16,8 +16,6 @@ export class ProfileComponent implements OnInit {
     currentUser: User;
     avatar: any;
     avatarDefault = "../../../assets/customs/images/user.png";
-    email: any;
-    dateOfBirth: any = null;
 
     loading = false;
     onupdate = false;
@@ -26,6 +24,7 @@ export class ProfileComponent implements OnInit {
     success = "";
     error = "";
     errorUpload = "";
+    email: any;
 
 
     reader = new FileReader();
@@ -56,16 +55,16 @@ export class ProfileComponent implements OnInit {
                 this.avatar = result.avatar;
             }
             if (result.dateOfBirth != null) {
-                this.dateOfBirth = formatDate(result.dateOfBirth, 'yyyy-MM-dd', 'en');
-                this.loggerService.logger(this.dateOfBirth);
+                result.dateOfBirth = formatDate(result.dateOfBirth, 'yyyy-MM-dd', 'en');
+                this.loggerService.logger(result.dateOfBirth);
             }
             this.email = result.username;
+            this.imgURL = result.avatar;
 
             this.formUpdate = this.formBuilder.group({
                 fullName: [result.fullName, [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{3,100}')]],
                 phoneNumber: [result.phoneNumber, [Validators.required]],
-                // dateOfBirth: [result.dateOfBirth, [Validators.required]],
-                dateOfBirth: [this.dateOfBirth, [Validators.required]],
+                dateOfBirth: [result.dateOfBirth, [Validators.required]],
                 gender: [result.gender, [Validators.required]],
             });
         });
@@ -103,6 +102,8 @@ export class ProfileComponent implements OnInit {
     }
 
     updateAvatar() {
+        this.loggerService.logger(this.currentFile);
+
         return this.userService.updateAvatar(this.currentUser.id, this.currentFile)
             .subscribe({
                 next: (res) => {

@@ -1,1 +1,62 @@
-<p>create-city works!</p>
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="content-wrapper" style="background-color: white;">
+        <div class="container py-3">
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <h1 class="text-center text-info mt-3 mb-3 my-title">Thêm thành phố mới</h1>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <h5>Hình ảnh</h5>
+                                </div>
+                                <div class="col-sm-12">
+                                    <input #uploadFile class="input-upload border border-primary p-1" type="file" (change)="onSelectFile($event)">
+                                </div>
+                                <div *ngIf="errorImage" class="error-message"><i class="bi bi-exclamation-circle"></i>{{errorImage}}</div>
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="image-create" *ngIf="imgURL">
+                                        <img class="img-fluid-y" [src]="imgURL">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form #myForm="ngForm" [formGroup]="formUpdateData" (ngSubmit)="onSubmit()">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Tên thành phố</mat-label>
+                                <input formControlName="cityName" #cityName matInput maxlength="50" class="input-height" type="text">
+                                <mat-icon matSuffix>location_city</mat-icon>
+                                <mat-hint align="end">{{cityName.value.length}} /50</mat-hint>
+                                <mat-error *ngIf="formValid.cityName.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getCityNameErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Mô tả</mat-label>
+                                <input formControlName="description" #description matInput maxlength="255" class="input-height" type="text">
+                                <mat-icon matSuffix>description</mat-icon>
+                                <mat-hint align="end">{{description.value.length}} /255</mat-hint>
+                                <mat-error *ngIf="formValid.description.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getDescriptionErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{error}}</div>
+                        <button [disabled]="formUpdateData.invalid && !imgURL" class="btn btn-primary btn-block">Lưu lại</button>
+                    </form>
+                </div>
+            </div>
+            <div [ngClass]="{ 'show': success }" class="alert thongbao">
+                <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
+                <div class="noidung-thongbao">{{success}}</div>
+            </div>
+        </div>
+    </div>
+
+    <app-footer-admin></app-footer-admin>
+</div>

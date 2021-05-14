@@ -16,7 +16,7 @@
                                 <th style="width:15%" scope="col">Email</th>
                                 <th style="width:15%" scope="col">Kiểu người dùng</th>
                                 <th style="width:10%" scope="col">Trạng thái</th>
-                                <th style="width:15%; padding-left:35px;" class="text-left" scope="col">Thao tác</th>
+                                <th style="width:15%" scope="col">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody *ngFor="let item of collection| paginate: { itemsPerPage: 5, currentPage: page}">
@@ -37,9 +37,9 @@
                                     <div class="status-inactive" *ngIf="item.status=='INACTIVE'">Chờ kích hoạt</div>
                                     <div class="status-locked" *ngIf="item.status=='LOCKED'">Bị Khóa</div>
                                 </td>
-                                <td class="text-left">
-                                    <a [routerLink]="['/admin-page','updated-account',item.id]" class="btn-edit btn btn-outline-info" matTooltip="Sửa" [matTooltipPosition]="'left'"><i class="fas fa-pen "></i></a>
-                                    <a [routerLink]="['/admin-page','list-account']" (click)="deleteData(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Khóa" [matTooltipPosition]="'right'"><i class="bi bi-lock-fill"></i></a>
+                                <td class="text-center">
+                                    <a [routerLink]="['/admin-page','updated-account',item.id]" class="btn-edit btn btn-outline-info" matTooltip="Chỉnh sửa" [matTooltipPosition]="'left'"><i class="fas fa-pen "></i></a>
+                                    <!-- <a [routerLink]="['/admin-page','list-account']" (click)="deleteData(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Khóa" [matTooltipPosition]="'right'"><i class="bi bi-lock-fill"></i></a> -->
                                 </td>
                             </tr>
                         </tbody>

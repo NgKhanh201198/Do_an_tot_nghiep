@@ -25,45 +25,45 @@ export class UserService {
     handleError(error: HttpErrorResponse) {
         return throwError(error);
     }
-    createAccount(data: any): Observable<any> {
+    
+    public createAccount(data: any): Observable<any> {
         return this.http.post(`${this.urlAccount}`, data, httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
-    getAllUser(): Observable<User> {
+    public getAllUser(): Observable<User> {
         return this.http.get<User>(`${this.url}`)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
-    getUserById(id: any): Observable<User> {
+    public getUserById(id: any): Observable<User> {
         return this.http.get<User>(`${this.url}/${id}`)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
-    updateUserById(id: any, data: any): Observable<any> {
+    public updateUserById(id: any, data: any): Observable<any> {
         return this.http.put(`${this.urlCustomer}/${id}`, data, httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
-    updateAccountById(id: any, data: any): Observable<any> {
+    public updateAccountById(id: any, data: any): Observable<any> {
         return this.http.put(`${this.urlAccount}/${id}`, data, httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
-    updateAvatar(id: any, file: File): Observable<any> {
+    public updateAvatar(id: any, file: File): Observable<any> {
         const formData: FormData = new FormData();
         formData.append('file', file);
-        console.log();
 
         return this.http.put(`${this.url + '/updateAvatar'}/${id}`, formData)
             .pipe(
@@ -72,21 +72,21 @@ export class UserService {
             );
     }
 
-    resetPassword(email: any): Observable<any> {
+    public resetPassword(email: any): Observable<any> {
         return this.http.post(`${this.url + '/resetPassword?email='}${email}`, httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
-    updatePassword(token: any): Observable<any> {
+    public updatePassword(token: any): Observable<any> {
         return this.http.post(`${this.url + '/updatePassword?token='}${token}`, httpOptions)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
-    savePassword(token: any, newPassword: any): Observable<any> {
+    public savePassword(token: any, newPassword: any): Observable<any> {
         return this.http.put(`${this.url + '/savePassword?token='}${token}${'&newPassword='}${newPassword}`, httpOptions)
             .pipe(
                 catchError(this.handleError)
@@ -94,7 +94,7 @@ export class UserService {
     }
 
     // User Type
-    getAllUserType(): Observable<User> {
+    public getAllUserType(): Observable<User> {
         return this.http.get<User>(`${this.urlGetUserType}`)
             .pipe(
                 catchError(this.handleError)
@@ -102,7 +102,7 @@ export class UserService {
     }
 
     //Role
-    getAllRole(): Observable<User> {
+    public getAllRole(): Observable<User> {
         return this.http.get<User>(`${this.urlGetRoles}`)
             .pipe(
                 catchError(this.handleError)

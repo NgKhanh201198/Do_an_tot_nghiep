@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "citys")
-public class CityEntity {
+public class CityEntity extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cityid")
@@ -40,9 +40,8 @@ public class CityEntity {
 		super();
 	}
 
-	public CityEntity(Long id, String cityName, String description, String image) {
+	public CityEntity(String cityName, String description, String image) {
 		super();
-		this.id = id;
 		this.cityName = cityName;
 		this.description = description;
 		this.image = image;

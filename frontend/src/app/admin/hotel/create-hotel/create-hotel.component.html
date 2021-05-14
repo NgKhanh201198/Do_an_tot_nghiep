@@ -1,1 +1,89 @@
-<p>create-hotel works!</p>
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="content-wrapper" style="background-color: white;">
+        <div class="container py-3">
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <h1 class="text-center text-info mt-3 mb-3 my-title">Thêm khách sạn mới</h1>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <h5>Hình ảnh</h5>
+                                </div>
+                                <div class="col-sm-12">
+                                    <input #uploadFile class="input-upload border border-primary p-1" type="file" (change)="onSelectFile($event)">
+                                </div>
+                                <div *ngIf="errorImage" class="error-message"><i class="bi bi-exclamation-circle"></i>{{errorImage}}</div>
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="image-create" *ngIf="imgURL">
+                                        <img class="img-fluid-y" [src]="imgURL">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form [formGroup]="formUpdateData" (ngSubmit)="onSubmit()">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Tên khách sạn</mat-label>
+                                <input formControlName="hotelName" #hotelName matInput maxlength="50" class="input-height" type="text">
+                                <mat-icon matSuffix>domain</mat-icon>
+                                <mat-hint align="end">{{hotelName.value.length}} /50</mat-hint>
+                                <mat-error *ngIf="formValid.hotelName.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getHotelNameErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Email</mat-label>
+                                <input formControlName="email" #email matInput maxlength="50" class="input-height" type="email">
+                                <mat-icon matSuffix>email</mat-icon>
+                                <mat-hint align="end">{{email.value.length}} /50</mat-hint>
+                                <mat-error *ngIf="formValid.email.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getEmailErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Số điện thoại</mat-label>
+                                <input formControlName="phoneNumber" #phoneNumber matInput maxlength="10" class="input-height" type="text">
+                                <mat-icon matSuffix>phone</mat-icon>
+                                <mat-hint align="end">{{phoneNumber.value.length}} /10</mat-hint>
+                                <mat-error *ngIf="formValid.phoneNumber.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getPhoneNumberErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Địa chỉ</mat-label>
+                                <input formControlName="address" #address matInput maxlength="255" class="input-height" type="text">
+                                <mat-icon matSuffix>location_on</mat-icon>
+                                <mat-hint align="end">{{address.value.length}} /255</mat-hint>
+                                <mat-error *ngIf="formValid.address.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getAddressErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Thành phố</mat-label>
+                                <mat-select formControlName="city">
+                                    <mat-option *ngFor="let type of listCity" [value]="type.value">{{type.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formValid.city.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getCityErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{error}}</div>
+                        <button [disabled]="formUpdateData.invalid" class="btn btn-primary btn-block">Lưu lại</button>
+                    </form>
+                </div>
+            </div>
+            <div [ngClass]="{ 'show': success }" class="alert thongbao">
+                <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
+                <div class="noidung-thongbao">{{success}}</div>
+            </div>
+        </div>
+    </div>
+
+    <app-footer-admin></app-footer-admin>
+</div>

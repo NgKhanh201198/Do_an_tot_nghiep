@@ -10,11 +10,12 @@ import nguyenkhanh.backend.api.validation.FullNameFormat;
 
 public class UserDTO {
 	@NotBlank(message = "{FullName.NotBlank}")
-	@Size(min = 3, max = 25, message = "{FullName.Size}")
+	@Size(min = 3, max = 50, message = "{FullName.Size}")
 	@FullNameFormat(message = "{FullName.Format}")
 	private String fullName;
 
 	@NotBlank(message = "{Email.NotBlank}")
+	@Size(max = 50, message = "{Email.Size}")
 	@EmailFormat(message = "{Email.EmailFormat}")
 	private String username;
 

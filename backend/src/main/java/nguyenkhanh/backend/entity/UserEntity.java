@@ -63,9 +63,9 @@ public class UserEntity extends BaseEntity {
 	@JsonIgnore
 	private Set<BookingRoomEntity> bookingRoom = new HashSet<BookingRoomEntity>();
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	@JsonIgnore
-	private Set<HotelEntity> hotels = new HashSet<HotelEntity>();
+//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//	@JsonIgnore
+//	private Set<HotelEntity> hotels = new HashSet<HotelEntity>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -190,13 +190,13 @@ public class UserEntity extends BaseEntity {
 		this.bookingRoom = bookingRoom;
 	}
 
-	public Set<HotelEntity> getHotels() {
-		return hotels;
-	}
-
-	public void setHotels(Set<HotelEntity> hotels) {
-		this.hotels = hotels;
-	}
+//	public Set<HotelEntity> getHotels() {
+//		return hotels;
+//	}
+//
+//	public void setHotels(Set<HotelEntity> hotels) {
+//		this.hotels = hotels;
+//	}
 
 	public Set<PostEntity> getPosts() {
 		return posts;

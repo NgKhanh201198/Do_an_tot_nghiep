@@ -11,6 +11,9 @@ import { ListCityComponent } from './city/list-city/list-city.component';
 import { UpdateCityComponent } from './city/update-city/update-city.component';
 import { ListCustomerComponent } from './customer/list-customer/list-customer.component';
 import { UpdateCustomerComponent } from './customer/update-customer/update-customer.component';
+import { ListHotelComponent } from './hotel/list-hotel/list-hotel.component';
+import { UpdateHotelComponent } from './hotel/update-hotel/update-hotel.component';
+import { CreateHotelComponent } from './hotel/create-hotel/create-hotel.component';
 
 const routes: Routes = [
     {
@@ -60,20 +63,20 @@ const routes: Routes = [
         // data: { permission: Permission.CREATE_ACCOUNT }
     },
     // //hotel
-    // {
-    //     path: Path.LIST_ACCOUNT,
-    //     component: ListAccountComponent,
-    //     data: { permission: Permission.LIST_ACCOUNT }
-    // },
-    // {
-    //     path: Path.UPDATED_ACCOUNT,
-    //     component: UpdateAccountComponent,
-    //     data: { permission: Permission.UPDATED_ACCOUNT }
-    // }, {
-    //     path: Path.CREATE_ACCOUNT,
-    //     component: CreateAccountComponent,
-    //     data: { permission: Permission.CREATE_ACCOUNT }
-    // },
+    {
+        path: Path.LIST_HOTEL,
+        component: ListHotelComponent,
+        // data: { permission: Permission.LIST_ACCOUNT }
+    },
+    {
+        path: Path.UPDATED_HOTEL,
+        component: UpdateHotelComponent,
+        // data: { permission: Permission.UPDATED_ACCOUNT }
+    }, {
+        path: Path.CREATE_HOTEL,
+        component: CreateHotelComponent,
+        // data: { permission: Permission.CREATE_ACCOUNT }
+    },
     // //room
     // {
     //     path: Path.LIST_ACCOUNT,

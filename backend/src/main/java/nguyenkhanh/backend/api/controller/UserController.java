@@ -18,10 +18,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,10 +86,6 @@ public class UserController {
 			if (userServiceImpl.isUserExitsByUsername(userDTO.getUsername())) {
 				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 						HttpStatus.BAD_REQUEST.name(), "Email này đã được sử dụng, vui lòng thử email khác!"));
-			}
-			if (userDTO.getPassword() == null) {
-				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.name(), "Mật khẩu không được để trống!"));
 			}
 
 			UserEntity userEntity = new UserEntity();
@@ -175,7 +168,7 @@ public class UserController {
 	public ResponseEntity<?> getUserById(@Valid @PathVariable("id") long id) {
 		if (userServiceImpl.isUserExitsById(id) == false) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-					"Not found ID = " + id);
+					"Không tìm thấy người dùng có id=" + id);
 			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 		} else {
 			UserEntity user = userServiceImpl.getUserById(id);
@@ -194,7 +187,7 @@ public class UserController {
 
 			} else {
 				UserEntity oldUserEntity = userServiceImpl.getUserById(id);
-				
+
 				if (userServiceImpl.isUserExitsByPhoneNumber(userAccountDTO.getPhoneNumber())
 						&& !(userAccountDTO.getPhoneNumber().equals(oldUserEntity.getPhoneNumber()))) {
 					return ResponseEntity.badRequest()
@@ -278,7 +271,7 @@ public class UserController {
 		try {
 			if (userServiceImpl.isUserExitsById(id) == false) {
 				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-						"Not found ID = " + id);
+						"Không tìm thấy người dùng có id=" + id);
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
 			} else {
@@ -318,7 +311,7 @@ public class UserController {
 			System.out.println(ex.getLocalizedMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
-							"Tài khoản này đã được sử dụng! Vui lòng thử tài khoản khác"));
+							"Đã có lỗi xảy ra, vui lòng thử lại!"));
 		}
 	}
 
@@ -370,37 +363,38 @@ public class UserController {
 
 	@PutMapping("/user/updateAvatar/{id}")
 	public ResponseEntity<?> updateAvatar(@PathVariable("id") long id, @RequestParam("file") MultipartFile file) {
-		String message = "";
+		String response = "";
 		try {
-			String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
+			if (userServiceImpl.isUserExitsById(id) == false) {
+				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
+						"Không tìm thấy người dùng có id=" + id);
+				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
-			if (!ArrayUtils.contains(allowedMimeTypes, file.getContentType().toLowerCase())) {
-				throw new BadRequestException("Tệp không hợp lệ, các tệp hợp lệ bao gồm: .jpg, .png, .gif");
+			} else {
+
+				String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
+
+				if (!ArrayUtils.contains(allowedMimeTypes, file.getContentType().toLowerCase())) {
+					throw new BadRequestException("Tệp không hợp lệ, các tệp hợp lệ bao gồm: .jpg, .png, .gif");
+				}
+				String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
+						file.getOriginalFilename().length());
+
+				String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "")
+						+ fileName.toLowerCase();
+				String avatar = BASE_URL + "api/files/" + uuidImage;
+
+				uploadFileService.save(file, uuidImage);
+				userServiceImpl.updateAvatar(id, avatar);
+
+				response = "Đã tải tệp '" + file.getOriginalFilename() + "' lên thành công.";
+				return ResponseEntity.status(HttpStatus.OK)
+						.body(new MessageResponse(new Date(), HttpStatus.OK.value(), response));
 			}
-			String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
-					file.getOriginalFilename().length());
-
-			String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
-			String avatar = BASE_URL + "api/user/loadAvatar/" + uuidImage;
-
-			uploadFileService.save(file, uuidImage);
-			userServiceImpl.updateAvatar(id, avatar);
-
-			message = "Đã tải tệp '" + file.getOriginalFilename() + "' lên thành công.";
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(new MessageResponse(new Date(), HttpStatus.OK.value(), message));
 		} catch (BadRequestException ex) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
 					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
 		}
-	}
-
-	// load image
-	@GetMapping("/user/loadAvatar/{filename:.+}")
-	public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-		Resource file = uploadFileService.load(filename);
-		return ResponseEntity.ok().contentType(MediaType.parseMediaType("image/jpeg"))
-				.header(HttpHeaders.CONTENT_DISPOSITION, "Content-Disposition: inlines").body(file);
 	}
 
 	public static boolean isDateValid(String date, String date_format) {

@@ -4,9 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Role } from 'src/app/_models/role.enum';
 import { User } from 'src/app/_models/user';
 import { LoggerService } from 'src/app/_services/logger.service';
-import { emailValidator } from 'src/assets/customs/validation/CustomValidator';
+import { emailValidator, phoneNumberValidator } from 'src/assets/customs/validation/CustomValidator';
 import { UserService } from '../../../_services/user.service';
-
+import { Location } from '@angular/common'
 import * as moment from 'moment';
 import { UserType } from 'src/app/_models/user-type.enum';
 export class Options {
@@ -47,7 +47,7 @@ export class UpdateAccountComponent implements OnInit {
     formUpdateData = this.formBuilder.group({
         fullName: ['', [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{3,100}')]],
         username: ['', [Validators.required, emailValidator()]],
-        phoneNumber: ['', [Validators.required]],
+        phoneNumber: ['', [Validators.required, phoneNumberValidator()]],
         gender: ['', [Validators.required]],
         dateOfBirth: ['', [Validators.required]],
         roles: ['', [Validators.required]],
@@ -57,6 +57,7 @@ export class UpdateAccountComponent implements OnInit {
 
     constructor(
         private formBuilder: FormBuilder,
+        private location: Location,
         private route: ActivatedRoute,
         private userService: UserService,
         private loggerService: LoggerService
@@ -106,9 +107,9 @@ export class UpdateAccountComponent implements OnInit {
             }
 
             this.formUpdateData = this.formBuilder.group({
-                fullName: [result.fullName, [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{3,100}')]],
+                fullName: [result.fullName, [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{3,50}')]],
                 username: [result.username, [Validators.required, emailValidator()]],
-                phoneNumber: [result.phoneNumber, [Validators.required]],
+                phoneNumber: [result.phoneNumber, [Validators.required, phoneNumberValidator()]],
                 gender: [result.gender, [Validators.required]],
                 dateOfBirth: [result.dateOfBirth, [Validators.required]],
                 roles: [this.roles, [Validators.required]],
@@ -132,13 +133,13 @@ export class UpdateAccountComponent implements OnInit {
         if (this.formValid.username.errors.required) {
             return 'Email không được để trống';
         }
-        return this.formValid.username ? 'Vui lòng nhập một địa chỉ email hợp lệ' : '';
+        return this.formValid.username ? 'Vui lòng nhập một địa chỉ email hợp lệ.' : '';
     }
     getPhoneNumberErrorMessage(): string {
         if (this.formValid.phoneNumber.errors.required) {
             return 'Vui lòng nhập số điện thoại.';
         }
-        return '';
+        return this.formValid.phoneNumber ? 'Vui lòng nhập số điện thoại hợp lệ.' : '';
     }
     getGenderErrorMessage(): string {
         if (this.formValid.gender.errors.required) {
@@ -171,6 +172,10 @@ export class UpdateAccountComponent implements OnInit {
         return '';
     }
 
+    comeBack() {
+        this.location.back();
+    }
+    
     onSubmit() {
         this.loggerService.logger(this.formUpdateData.value);
 

@@ -28,7 +28,7 @@ public class HotelEntity extends BaseEntity {
 	private String hotelName;
 
 	@Column(name = "address")
-	private String addrees;
+	private String address;
 
 	@Column(name = "image")
 	private String image;
@@ -39,32 +39,34 @@ public class HotelEntity extends BaseEntity {
 	@Column(name = "phonenumber")
 	private String phoneNumber;
 
-	@ManyToOne
-	@JoinColumn(name = "userid")
-	@JsonIgnore
-	private UserEntity user;
-	
+//	@ManyToOne
+//	@JoinColumn(name = "userid")
+//	@JsonIgnore
+//	private UserEntity user;
+
 	@ManyToOne
 	@JoinColumn(name = "cityid")
 	@JsonIgnore
 	private CityEntity city;
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<RoomEntity> rooms = new HashSet<RoomEntity>();
 
 	public HotelEntity() {
 		super();
 	}
 
-	public HotelEntity(String hotelName, String addrees, String image, String email, String phoneNumber,
-			UserEntity user, Set<RoomEntity> rooms) {
+	public HotelEntity(String hotelName, String address, String image, String email, String phoneNumber,
+			 CityEntity city, Set<RoomEntity> rooms) {
 		super();
 		this.hotelName = hotelName;
-		this.addrees = addrees;
+		this.address = address;
 		this.image = image;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
-		this.user = user;
+//		this.user = user;
+		this.city = city;
 		this.rooms = rooms;
 	}
 
@@ -76,22 +78,6 @@ public class HotelEntity extends BaseEntity {
 		this.id = id;
 	}
 
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(UserEntity user) {
-		this.user = user;
-	}
-
-	public Set<RoomEntity> getRooms() {
-		return rooms;
-	}
-
-	public void setRooms(Set<RoomEntity> rooms) {
-		this.rooms = rooms;
-	}
-
 	public String getHotelName() {
 		return hotelName;
 	}
@@ -100,12 +86,12 @@ public class HotelEntity extends BaseEntity {
 		this.hotelName = hotelName;
 	}
 
-	public String getAddrees() {
-		return addrees;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setAddrees(String addrees) {
-		this.addrees = addrees;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getImage() {
@@ -130,6 +116,30 @@ public class HotelEntity extends BaseEntity {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+//	public UserEntity getUser() {
+//		return user;
+//	}
+//
+//	public void setUser(UserEntity user) {
+//		this.user = user;
+//	}
+
+	public CityEntity getCity() {
+		return city;
+	}
+
+	public void setCity(CityEntity city) {
+		this.city = city;
+	}
+
+	public Set<RoomEntity> getRooms() {
+		return rooms;
+	}
+
+	public void setRooms(Set<RoomEntity> rooms) {
+		this.rooms = rooms;
 	}
 
 }
