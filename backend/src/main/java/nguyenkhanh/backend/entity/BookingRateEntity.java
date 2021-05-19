@@ -1,42 +1,59 @@
 package nguyenkhanh.backend.entity;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "bookingrate")
 public class BookingRateEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "bookrateid")
+	@Column(name = "bookingrateid")
 	private Long id;
 
-	@Column(name = "username")
-	private String userName;
+	@Column(name = "checkindate")
+	private Date checkInDate;
 
-	@Column(name = "email")
-	private String email;
+	@Column(name = "checkoutdate")
+	private Date checkOutDate;
 
-	@Column(name = "contents")
-	private String contents;
+	@ManyToOne
+	@JoinColumn(name = "userid")
+//	@JsonIgnore
+	private UserEntity user;
 
-	@Column(name = "citizenidentification")
-	private String citizenIdentification;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "room_booked", joinColumns = @JoinColumn(name = "bookingrateid"), inverseJoinColumns = @JoinColumn(name = "roomid"))
+	@JsonIgnore
+	private Set<RoomEntity> rooms = new HashSet<RoomEntity>();
 
 	public BookingRateEntity() {
 		super();
 	}
 
-	public BookingRateEntity(String userName, String email, String contents, String citizenIdentification) {
+	public BookingRateEntity(Long id, Date checkInDate, Date checkOutDate, UserEntity user, Set<RoomEntity> rooms) {
 		super();
-		this.userName = userName;
-		this.email = email;
-		this.contents = contents;
-		this.citizenIdentification = citizenIdentification;
+		this.id = id;
+		this.checkInDate = checkInDate;
+		this.checkOutDate = checkOutDate;
+		this.user = user;
+		this.rooms = rooms;
 	}
 
 	public Long getId() {
@@ -47,36 +64,36 @@ public class BookingRateEntity extends BaseEntity {
 		this.id = id;
 	}
 
-	public String getUserName() {
-		return userName;
+	public Date getCheckInDate() {
+		return checkInDate;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setCheckInDate(Date checkInDate) {
+		this.checkInDate = checkInDate;
 	}
 
-	public String getEmail() {
-		return email;
+	public Date getCheckOutDate() {
+		return checkOutDate;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setCheckOutDate(Date checkOutDate) {
+		this.checkOutDate = checkOutDate;
 	}
 
-	public String getContents() {
-		return contents;
+	public UserEntity getUser() {
+		return user;
 	}
 
-	public void setContents(String contents) {
-		this.contents = contents;
+	public void setUser(UserEntity user) {
+		this.user = user;
 	}
 
-	public String getCitizenIdentification() {
-		return citizenIdentification;
+	public Set<RoomEntity> getRooms() {
+		return rooms;
 	}
 
-	public void setCitizenIdentification(String citizenIdentification) {
-		this.citizenIdentification = citizenIdentification;
+	public void setRooms(Set<RoomEntity> rooms) {
+		this.rooms = rooms;
 	}
 
 }

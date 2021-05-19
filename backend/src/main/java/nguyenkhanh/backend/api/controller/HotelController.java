@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -95,11 +98,10 @@ public class HotelController {
 			hotelEntity.setPhoneNumber(phoneNumber);
 
 			hotelServiceImpl.createHotel(hotelEntity);
-//			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), imageURL+hotelName+address+email+phoneNumber+city));
 			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm mới thành công!"));
 		} catch (Exception ex) {
-			return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-					"Bad Request", "Đã có lỗi xảy ra. Vui lòng thử lại!"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
 		}
 	}
 
@@ -122,7 +124,7 @@ public class HotelController {
 	}
 
 	@PutMapping("/hotel/{id}")
-	public ResponseEntity<?> updateCity(@PathVariable("id") long id, @RequestBody HotelDTO hotelDTO) {
+	public ResponseEntity<?> updateCity(@PathVariable("id") long id, @RequestBody @Valid HotelDTO hotelDTO) {
 		try {
 			if (hotelServiceImpl.isHotelExitsById(id) == false) {
 				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
@@ -130,24 +132,31 @@ public class HotelController {
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
 			} else {
-				if (hotelServiceImpl.isHotelExitsByHotelName(hotelDTO.getHotelName())) {
+				HotelEntity oldHotelEntity = hotelServiceImpl.getHotelById(id);
+
+				if (hotelServiceImpl.isHotelExitsByHotelName(hotelDTO.getHotelName())
+						&& !(hotelDTO.getHotelName().equals(oldHotelEntity.getHotelName()))) {
 					return ResponseEntity.badRequest()
 							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 									HttpStatus.BAD_REQUEST.name(), "Tên khách sạn này đã tồn tại!"));
 				}
-				if (hotelServiceImpl.isHotelExitsByEmail(hotelDTO.getEmail())) {
+				if (hotelServiceImpl.isHotelExitsByEmail(hotelDTO.getEmail())
+						&& !(hotelDTO.getEmail().equals(oldHotelEntity.getEmail()))) {
 					return ResponseEntity.badRequest()
 							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 									HttpStatus.BAD_REQUEST.name(), "Email này đã tồn tại, vui lòng chọn email khác!"));
 				}
-				if (hotelServiceImpl.isHotelExitsByPhoneNumber(hotelDTO.getPhoneNumber())) {
+				if (hotelServiceImpl.isHotelExitsByPhoneNumber(hotelDTO.getPhoneNumber())
+						&& !(hotelDTO.getPhoneNumber().equals(oldHotelEntity.getPhoneNumber()))) {
 					return ResponseEntity.badRequest()
 							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 									HttpStatus.BAD_REQUEST.name(),
 									"Số điện thoại này đã được sử dụng, vui lòng chọn số điện thoại khác!"));
 				}
-
-				HotelEntity oldHotelEntity = hotelServiceImpl.getHotelById(id);
+				// Set City
+				CityEntity cityEntity = cityServiceImpl.findByCityName(hotelDTO.getCity())
+						.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy thành phố này!"));
+				oldHotelEntity.setCity(cityEntity);
 
 				oldHotelEntity.setHotelName(hotelDTO.getHotelName());
 				oldHotelEntity.setEmail(hotelDTO.getEmail());
@@ -173,7 +182,6 @@ public class HotelController {
 				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
 						"Không tìm thấy thành phố có id=" + id);
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-
 			} else {
 
 				String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
@@ -184,7 +192,7 @@ public class HotelController {
 				String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
 						file.getOriginalFilename().length());
 
-				String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "")
+				String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "")
 						+ fileName.toLowerCase();
 				String image = BASE_URL + "api/files/" + uuidImage;
 
@@ -198,6 +206,18 @@ public class HotelController {
 		} catch (BadRequestException ex) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
 					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
+		}
+	}
+
+	@DeleteMapping("/hotel/{id}")
+	public ResponseEntity<?> deleteCity(@Valid @PathVariable("id") long id) {
+		try {
+			hotelServiceImpl.deleteHotelById(id);
+			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Xóa thành công!"));
+		} catch (Exception e) {
+			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
+					"Không tìm thấy khách sạn có id= s" + id);
+			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 		}
 	}
 }

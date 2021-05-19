@@ -4,15 +4,8 @@ import { CityService } from 'src/app/_services/city.service';
 import { HotelService } from 'src/app/_services/hotel.service';
 import { LoggerService } from 'src/app/_services/logger.service';
 import { emailValidator, phoneNumberValidator } from 'src/assets/customs/validation/CustomValidator';
-
-export class Options {
-    name: string;
-    value: string;
-    constructor(name: string, value: string) {
-        this.name = name;
-        this.value = value;
-    }
-}
+import { Location } from '@angular/common';
+import { Options } from 'src/app/_models/options';
 @Component({
     selector: 'app-create-hotel',
     templateUrl: './create-hotel.component.html',
@@ -21,7 +14,7 @@ export class Options {
 export class CreateHotelComponent implements OnInit {
     @ViewChild('myForm') myForm: NgForm;
     @ViewChild('uploadFile') myInputVariable: ElementRef;
-    listCity: Array<Options> = [];
+    listCitys: Array<Options> = [];
     formUpdateData: FormGroup;
     reader = new FileReader();
     currentFile: File = null;
@@ -33,13 +26,14 @@ export class CreateHotelComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         private hotelService: HotelService,
-        private citylService: CityService,
+        private cityService: CityService,
+        private location: Location,
         private loggerService: LoggerService
     ) {
-        this.citylService.getCityAll().subscribe((result: any) => {
+        this.cityService.getCityAll().subscribe((result: any) => {
             for (let index = 0; index < result.length; index++) {
                 let city = new Options(result[index].cityName, result[index].cityName);
-                this.listCity.push(city);
+                this.listCitys.push(city);
             }
         })
     }
@@ -100,30 +94,34 @@ export class CreateHotelComponent implements OnInit {
         }
     }
 
+    comeBack() {
+        this.location.back();
+    }
+
     onSubmit() {
 
         if (this.currentFile == null) {
             this.errorImage = "Vui lòng chọn ảnh.";
         } else {
-            alert("da den day")
-            // return this.hotelService.createHotel(this.formUpdateData.value, this.currentFile)
-            //     .subscribe({
-            //         next: (res) => {
-            //             this.error = '';
-            //             this.imgURL = null;
-            //             this.myInputVariable.nativeElement.value = "";
-            //             this.myForm.resetForm();
-            //             this.success = res.message;
-            //             this.loggerService.logger(res);
-            //         },
-            //         error: (err) => {
-            //             this.error = err.message;
-            //             this.loggerService.loggerError(err);
-            //         }
-            //     }),
-            //     setTimeout(() => {
-            //         this.success = '';
-            //     }, 2500);
+            // alert("da den day")
+            return this.hotelService.createHotel(this.formUpdateData.value, this.currentFile)
+                .subscribe({
+                    next: (res) => {
+                        this.error = '';
+                        this.imgURL = null;
+                        this.myInputVariable.nativeElement.value = "";
+                        this.myForm.resetForm();
+                        this.success = res.message;
+                        this.loggerService.logger(res);
+                    },
+                    error: (err) => {
+                        this.error = err.message;
+                        this.loggerService.loggerError(err);
+                    }
+                }),
+                setTimeout(() => {
+                    this.success = '';
+                }, 2500);
         }
     }
 }

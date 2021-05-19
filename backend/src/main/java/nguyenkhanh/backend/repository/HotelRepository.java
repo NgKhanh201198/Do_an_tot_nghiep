@@ -1,5 +1,7 @@
 package nguyenkhanh.backend.repository;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +13,8 @@ import nguyenkhanh.backend.entity.HotelEntity;
 
 @Repository
 public interface HotelRepository extends JpaRepository<HotelEntity, Long> {
+	public Optional<HotelEntity> findByHotelName(String hotelName);
+	
 	public HotelEntity findById(long id);
 
 	public Boolean existsByHotelName(String hotelName);

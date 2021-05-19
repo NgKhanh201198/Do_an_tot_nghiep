@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { CityService } from 'src/app/_services/city.service';
 import { LoggerService } from 'src/app/_services/logger.service';
+import { Location } from '@angular/common'
 
 @Component({
     selector: 'app-create-city',
@@ -15,7 +16,7 @@ export class CreateCityComponent implements OnInit {
     reader = new FileReader();
     currentFile: File = null;
     imgURL: any = null;
-    
+
     success = '';
     error = '';
     errorImage = '';
@@ -23,6 +24,7 @@ export class CreateCityComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         private cityService: CityService,
+        private location: Location,
         private loggerService: LoggerService
     ) {
     }
@@ -60,6 +62,10 @@ export class CreateCityComponent implements OnInit {
                 this.imgURL = this.reader.result;
             }
         }
+    }
+
+    comeBack() {
+        this.location.back();
     }
 
     onSubmit() {

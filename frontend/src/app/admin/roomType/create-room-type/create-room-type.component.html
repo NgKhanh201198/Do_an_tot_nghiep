@@ -1,1 +1,49 @@
-<p>create-room-type works!</p>
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="content-wrapper" style="background-color: white;">
+        <div class="container py-3">
+            <div class="row justify-content-center">
+                <div class="col-sm-1 back">
+                    <button class="btn btn-outline-info" (click)="comeBack()" matTooltip="Quay lại" [matTooltipPosition]="'right'"><i class="bi bi-reply-fill"></i></button>
+                </div>
+                <div class="col-sm-10">
+                    <h1 class="text-center text-info mt-3 mb-3 my-title">Thêm loại phòng mới</h1>
+                </div>
+                <div class="col-sm-1"></div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-sm-6">
+                    <form #myForm="ngForm" [formGroup]="formUpdateData" (ngSubmit)="onSubmit()">
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Tên loại phòng</mat-label>
+                                <input formControlName="roomTypeName" #roomTypeName matInput maxlength="50" class="input-height" type="text">
+                                <mat-icon matSuffix>location_city</mat-icon>
+                                <mat-hint align="end">{{roomTypeName.value.length}} /50</mat-hint>
+                                <mat-error *ngIf="formValid.roomTypeName.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getRoomTypeNameErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Mô tả</mat-label>
+                                <input formControlName="description" #description matInput maxlength="255" class="input-height" type="text">
+                                <mat-icon matSuffix>description</mat-icon>
+                                <mat-hint align="end">{{description.value.length}} /255</mat-hint>
+                                <mat-error *ngIf="formValid.description.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getDescriptionErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{error}}</div>
+                        <button [disabled]="formUpdateData.invalid" class="btn btn-primary btn-block">Lưu lại</button>
+                    </form>
+                </div>
+            </div>
+            <div [ngClass]="{ 'show': success }" class="alert thongbao">
+                <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
+                <div class="noidung-thongbao">{{success}}</div>
+            </div>
+        </div>
+    </div>
+
+    <app-footer-admin></app-footer-admin>
+</div>

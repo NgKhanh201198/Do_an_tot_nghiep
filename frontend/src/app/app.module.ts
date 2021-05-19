@@ -25,6 +25,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { CommonModule } from '@angular/common';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 //Service
 import { UserService } from './_services/user.service';
@@ -94,8 +95,8 @@ import { UpdateCityComponent } from './admin/city/update-city/update-city.compon
         AdminComponent,
         NavbarComponent,
 
-        ListCityComponent, 
-        UpdateCityComponent, 
+        ListCityComponent,
+        UpdateCityComponent,
         CreateCityComponent,
 
         CreateHotelComponent,
@@ -163,7 +164,8 @@ import { UpdateCityComponent } from './admin/city/update-city/update-city.compon
         NgxPaginationModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatMomentDateModule
+        MatMomentDateModule,
+        TextFieldModule
     ],
     providers: [
         UserService,

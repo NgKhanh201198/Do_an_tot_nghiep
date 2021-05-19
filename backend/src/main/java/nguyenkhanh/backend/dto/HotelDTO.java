@@ -20,11 +20,22 @@ public class HotelDTO {
 	private String email;
 
 	@NotBlank(message = "{PhoneNumber.NotBlank}")
-	@PhoneNumberFormat(message = "{PhoneNumber.EmailFormat}")
+	@PhoneNumberFormat(message = "{PhoneNumber.PhoneNumberFormat}")
 	private String phoneNumber;
+
+	private String city;
 
 	public HotelDTO() {
 		super();
+	}
+
+	public HotelDTO(String hotelName, String address, String email, String phoneNumber, String city) {
+		super();
+		this.hotelName = hotelName;
+		this.address = address;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.city = city;
 	}
 
 	public String getHotelName() {
@@ -57,6 +68,14 @@ public class HotelDTO {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 }

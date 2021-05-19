@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import nguyenkhanh.backend.entity.BookingRateEntity;
 
 @Repository
-public interface BookingRateRepository extends JpaRepository<BookingRateEntity, Long>{
-
+public interface BookingRateRepository extends JpaRepository<BookingRateEntity, Long> {
+	public BookingRateEntity findById(long id);
 }

@@ -10,7 +10,7 @@
                             <h1 class="pl-5 text-info mt-3 mb-3 my-title">Danh sách khách sạn</h1>
                         </div>
                         <div class="col-sm-2 create">
-                            <a matTooltip="Thêm mới" [matTooltipPosition]="'left'" [routerLink]="['/admin-page','create-hotel']" class="btn btn-outline-success float-right"><i class="fas fa-hotel"></i></a>
+                            <a matTooltip="Thêm mới" [matTooltipPosition]="'left'" [routerLink]="['/admin-page','create-hotel']" class="btn btn-outline-success float-right"><i class="fas fa-plus"></i></a>
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                                 <td>{{item.phoneNumber}}</td>
                                 <td>
                                     <a [routerLink]="['/admin-page','updated-hotel',item.id]" class="btn-edit btn btn-outline-info" matTooltip="Chỉnh sửa" [matTooltipPosition]="'left'"><i class="fas fa-pen"></i></a>
-                                    <a [routerLink]="['/admin-page','list-hotel']" (click)="deleteCity(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Xóa" [matTooltipPosition]="'right'"><i class="fas fa-trash"></i></a>
+                                    <a [routerLink]="['/admin-page','list-hotel']" (click)="deleteHotel(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Xóa" [matTooltipPosition]="'right'"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
                         </tbody>

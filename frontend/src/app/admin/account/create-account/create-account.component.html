@@ -22,7 +22,7 @@
                         <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Email</mat-label>
-                                <input formControlName="username" #username matInput maxlength="10" class="input-height" type="email">
+                                <input formControlName="username" #username matInput maxlength="50" class="input-height" type="email">
                                 <mat-icon matSuffix>email</mat-icon>
                                 <mat-hint align="end">{{username.value.length}} / 50</mat-hint>
                                 <mat-error *ngIf="formValid.username.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getEmailErrorMessage()}}</mat-error>
@@ -51,7 +51,7 @@
                         <div class="form-group ">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Ngày sinh</mat-label>
-                                <input formControlName="dateOfBirth" matInput [matDatepicker]="picker" readonly>
+                                <input formControlName="dateOfBirth" matInput [matDatepicker]="picker" [max]="maxDate" readonly>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker disabled="false"></mat-datepicker>
                                 <mat-error *ngIf="formValid.dateOfBirth.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getDateOfBirthErrorMessage()}}</mat-error>
@@ -84,8 +84,8 @@
                                 <mat-error *ngIf="formValid.status.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getStatusErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
+                        <div *ngIf="error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{error}}</div>
                         <button [disabled]="formData.invalid" class="btn btn-primary btn-block">Lưu lại</button>
-                        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
                     </form>
                 </div>
             </div>

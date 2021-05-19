@@ -16,6 +16,7 @@ public class BackEndApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		uploadFileService.init();
+
 	}
 
 	public static void main(String[] args) {

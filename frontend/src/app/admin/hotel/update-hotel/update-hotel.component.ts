@@ -6,6 +6,7 @@ import { CityService } from '../../../_services/city.service';
 import { Location } from '@angular/common'
 import { emailValidator, phoneNumberValidator } from 'src/assets/customs/validation/CustomValidator';
 import { HotelService } from '../../../_services/hotel.service';
+import { Options } from 'src/app/_models/options';
 
 @Component({
     selector: 'app-update-hotel',
@@ -15,14 +16,13 @@ import { HotelService } from '../../../_services/hotel.service';
 export class UpdateHotelComponent implements OnInit {
 
     @ViewChild('uploadFile') myInputVariable: ElementRef;
+    listCitys: Array<Options> = [];
     reader = new FileReader();
     currentFile: File = null;
     imgURL: any = null;
     image: any = null;
 
     id: number;
-    loading: boolean = false;
-    submitted: boolean = false;
     onUpdate = false;
     success = '';
     error = '';
@@ -33,14 +33,23 @@ export class UpdateHotelComponent implements OnInit {
         private location: Location,
         private route: ActivatedRoute,
         private hotelService: HotelService,
+        private cityService: CityService,
         private loggerService: LoggerService
-    ) { }
+    ) {
+        this.cityService.getCityAll().subscribe((result: any) => {
+            for (let index = 0; index < result.length; index++) {
+                let city = new Options(result[index].cityName, result[index].cityName);
+                this.listCitys  .push(city);
+            }
+        })
+    }
 
     formUpdateData = this.formBuilder.group({
         hotelName: ['', [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,18}')]],
         address: ['', [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s][0-9]{0,255}')]],
         email: ['', [Validators.required, emailValidator()]],
         phoneNumber: ['', [Validators.required, phoneNumberValidator()]],
+        city: ['', [Validators.required]]
     });
 
     ngOnInit(): void {
@@ -54,6 +63,7 @@ export class UpdateHotelComponent implements OnInit {
                 address: [result.address, [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,255}')]],
                 email: [result.email, [Validators.required, emailValidator()]],
                 phoneNumber: [result.phoneNumber, [Validators.required, phoneNumberValidator()]],
+                city: [result.city.cityName, [Validators.required]]
             })
         });
     }
@@ -84,6 +94,12 @@ export class UpdateHotelComponent implements OnInit {
             return 'Vui lòng nhập số điện thoại.';
         }
         return this.formValid.phoneNumber ? 'Vui lòng nhập số điện thoại hợp lệ' : '';
+    }
+    getCityErrorMessage(): string {
+        if (this.formValid.city.errors.required) {
+            return 'Vui lòng chọn thành phố.';
+        }
+        return '';
     }
 
     showForm() {
@@ -135,7 +151,6 @@ export class UpdateHotelComponent implements OnInit {
     }
 
     onSubmit() {
-        this.submitted = true;
         return this.hotelService.updateHotel(this.id, this.formUpdateData.value)
             .subscribe({
                 next: (res) => {

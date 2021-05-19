@@ -14,12 +14,25 @@ import { UpdateCustomerComponent } from './customer/update-customer/update-custo
 import { ListHotelComponent } from './hotel/list-hotel/list-hotel.component';
 import { UpdateHotelComponent } from './hotel/update-hotel/update-hotel.component';
 import { CreateHotelComponent } from './hotel/create-hotel/create-hotel.component';
+import { ListRoomTypeComponent } from './roomType/list-room-type/list-room-type.component';
+import { UpdateRoomTypeComponent } from './roomType/update-room-type/update-room-type.component';
+import { CreateRoomTypeComponent } from './roomType/create-room-type/create-room-type.component';
+import { ListRoomComponent } from './room/list-room/list-room.component';
+import { UpdateRoomComponent } from './room/update-room/update-room.component';
+import { CreateRoomComponent } from './room/create-room/create-room.component';
+import { ListBookingrateComponent } from './bookingrate/list-bookingrate/list-bookingrate.component';
+import { UpdateBookingrateComponent } from './bookingrate/update-bookingrate/update-bookingrate.component';
+import { CreateBookingrateComponent } from './bookingrate/create-bookingrate/create-bookingrate.component';
+import { ListBookingRoomComponent } from './bookingRoom/list-booking-room/list-booking-room.component';
+import { UpdateBookingRoomComponent } from './bookingRoom/update-booking-room/update-booking-room.component';
+import { CreateBookingRoomComponent } from './bookingRoom/create-booking-room/create-booking-room.component';
 
 const routes: Routes = [
     {
         path: '',
         component: AdminComponent
     },
+
     //account
     {
         path: Path.LIST_ACCOUNT,
@@ -35,6 +48,7 @@ const routes: Routes = [
         component: CreateAccountComponent,
         // data: { permission: Permission.CREATE_ACCOUNT }
     },
+
     //customer
     {
         path: Path.LIST_CUSTOMER,
@@ -46,6 +60,7 @@ const routes: Routes = [
         component: UpdateCustomerComponent,
         // data: { permission: Permission.UPDATED_CUSTOMER }
     },
+
     //city
     {
         path: Path.LIST_CITY,
@@ -62,6 +77,7 @@ const routes: Routes = [
         component: CreateCityComponent,
         // data: { permission: Permission.CREATE_ACCOUNT }
     },
+
     // //hotel
     {
         path: Path.LIST_HOTEL,
@@ -77,21 +93,70 @@ const routes: Routes = [
         component: CreateHotelComponent,
         // data: { permission: Permission.CREATE_ACCOUNT }
     },
-    // //room
-    // {
-    //     path: Path.LIST_ACCOUNT,
-    //     component: ListAccountComponent,
-    //     data: { permission: Permission.LIST_ACCOUNT }
-    // },
-    // {
-    //     path: Path.UPDATED_ACCOUNT,
-    //     component: UpdateAccountComponent,
-    //     data: { permission: Permission.UPDATED_ACCOUNT }
-    // }, {
-    //     path: Path.CREATE_ACCOUNT,
-    //     component: CreateAccountComponent,
-    //     data: { permission: Permission.CREATE_ACCOUNT }
-    // },
+
+    //room type
+    {
+        path: Path.LIST_ROOMTYPE,
+        component: ListRoomTypeComponent,
+        // data: { permission: Permission.LIST_ACCOUNT }
+    },
+    {
+        path: Path.UPDATED_ROOMTYPE,
+        component: UpdateRoomTypeComponent,
+        // data: { permission: Permission.UPDATED_ACCOUNT }
+    }, {
+        path: Path.CREATE_ROOMTYPE,
+        component: CreateRoomTypeComponent,
+        // data: { permission: Permission.CREATE_ACCOUNT }
+    },
+
+    //room 
+    {
+        path: Path.LIST_ROOM,
+        component: ListRoomComponent,
+        // data: { permission: Permission.LIST_ACCOUNT }
+    },
+    {
+        path: Path.UPDATED_ROOM,
+        component: UpdateRoomComponent,
+        // data: { permission: Permission.UPDATED_ACCOUNT }
+    }, {
+        path: Path.CREATE_ROOM,
+        component: CreateRoomComponent,
+        // data: { permission: Permission.CREATE_ACCOUNT }
+    },
+
+    //bookingrate 
+    {
+        path: Path.LIST_BOOKINGRATE,
+        component: ListBookingrateComponent,
+        // data: { permission: Permission.LIST_ACCOUNT }
+    },
+    {
+        path: Path.UPDATED_BOOKINGRATE,
+        component: UpdateBookingrateComponent,
+        // data: { permission: Permission.UPDATED_ACCOUNT }
+    }, {
+        path: Path.CREATE_BOOKINGRATE,
+        component: CreateBookingrateComponent,
+        // data: { permission: Permission.CREATE_ACCOUNT }
+    },
+
+    //bookingroom
+    {
+        path: Path.LIST_BOOKINGROOM,
+        component: ListBookingRoomComponent,
+        // data: { permission: Permission.LIST_ACCOUNT }
+    },
+    {
+        path: Path.UPDATED_BOOKINGROOM,
+        component: UpdateBookingRoomComponent,
+        // data: { permission: Permission.UPDATED_ACCOUNT }
+    }, {
+        path: Path.CREATE_BOOKINGROOM,
+        component: CreateBookingRoomComponent,
+        // data: { permission: Permission.CREATE_ACCOUNT }
+    },
 ];
 
 @NgModule({

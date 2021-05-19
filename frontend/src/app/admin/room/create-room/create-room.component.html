@@ -1,1 +1,119 @@
-<p>create-room works!</p>
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="content-wrapper" style="background-color: white;">
+        <div class="container py-3">
+            <div class="row justify-content-center">
+                <div class="col-sm-1 back">
+                    <button class="btn btn-outline-info" (click)="comeBack()" matTooltip="Quay lại" [matTooltipPosition]="'right'"><i class="bi bi-reply-fill"></i></button>
+                </div>
+                <div class="col-sm-10">
+                    <h1 class="text-center text-info mt-3 mb-3 my-title">Thêm phòng mới</h1>
+                </div>
+                <div class="col-sm-1"></div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <h5>Hình ảnh</h5>
+                                </div>
+                                <div class="col-sm-12">
+                                    <input #uploadFile class="input-upload border border-primary p-1" type="file" (change)="onSelectFile($event)">
+                                </div>
+                                <div *ngIf="errorImage" class="error-message"><i class="bi bi-exclamation-circle"></i>{{errorImage}}</div>
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="image-create" *ngIf="imgURL">
+                                        <img class="img-fluid-y" [src]="imgURL">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form #myForm="ngForm" [formGroup]="formUpdateData" (ngSubmit)="onSubmit()">
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Khách sạn</mat-label>
+                                <mat-select formControlName="hotel">
+                                    <mat-option *ngFor="let item of listHotels" [value]="item.value">{{item.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formValid.hotel.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getHotelErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Loại phòng</mat-label>
+                                <mat-select formControlName="roomType">
+                                    <mat-option *ngFor="let item of listRoomType" [value]="item.value">{{item.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formValid.roomType.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getRoomTypeErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Tên phòng</mat-label>
+                                <input formControlName="roomNumber" #roomNumber matInput maxlength="50" type="text">
+                                <mat-icon matSuffix>domain</mat-icon>
+                                <mat-hint align="end">{{roomNumber.value.length}} /50</mat-hint>
+                                <mat-error *ngIf="formValid.roomNumber.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getRoomNumberErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Giá phòng</mat-label>
+                                <input formControlName="roomCost" #roomCost matInput maxlength="11" type="text">
+                                <mat-icon matSuffix>money</mat-icon>
+                                <mat-hint align="end">{{roomCost.value.length}} /11</mat-hint>
+                                <mat-error *ngIf="formValid.roomCost.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getRoomCostlErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Giá giảm giá</mat-label>
+                                <input formControlName="discount" #discount matInput maxlength="11" type="text">
+                                <mat-icon matSuffix>money</mat-icon>
+                                <mat-hint align="end">{{discount.value.length}} /11</mat-hint>
+                                <mat-error *ngIf="formValid.discount.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getDiscountErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Số người</mat-label>
+                                <mat-select formControlName="numberOfPeople">
+                                    <mat-option *ngFor="let item of numberOfPeoples" [value]="item.value">{{item.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formValid.numberOfPeople.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getNumberOfPeopleErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Nội dung</mat-label>
+                                <textarea cdkTextareaAutosize formControlName="contents" #contents matInput maxlength="255"></textarea>
+                                <mat-hint align="end">{{contents.value.length}} /255</mat-hint>
+                                <mat-error *ngIf="formValid.contents.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getContentsErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Trạng thái</mat-label>
+                                <mat-select formControlName="status">
+                                    <mat-option *ngFor="let item of status" [value]="item.value">{{item.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formValid.status.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getStatusErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{error}}</div>
+                        <button [disabled]="formUpdateData.invalid" class="btn btn-primary btn-block">Lưu lại</button>
+                    </form>
+                </div>
+            </div>
+            <div [ngClass]="{ 'show': success }" class="alert thongbao">
+                <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
+                <div class="noidung-thongbao">{{success}}</div>
+            </div>
+        </div>
+    </div>
+
+    <app-footer-admin></app-footer-admin>
+</div>

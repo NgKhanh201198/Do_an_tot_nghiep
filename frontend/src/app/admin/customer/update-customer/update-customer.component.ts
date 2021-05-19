@@ -10,14 +10,8 @@ import { Location } from '@angular/common'
 import * as moment from 'moment';
 import { UserType } from 'src/app/_models/user-type.enum';
 import { phoneNumberValidator } from '../../../../assets/customs/validation/CustomValidator';
-export class Options {
-    name: string;
-    value: string;
-    constructor(name: string, value: string) {
-        this.name = name;
-        this.value = value;
-    }
-}
+import { Options } from 'src/app/_models/options';
+
 @Component({
     selector: 'app-update-customer',
     templateUrl: './update-customer.component.html',
@@ -87,8 +81,8 @@ export class UpdateCustomerComponent implements OnInit {
         this.id = +this.route.snapshot.paramMap.get('id');
         this.userService.getUserById(this.id).subscribe((result: any) => {
             for (let index = 0; index < result.roles.length; index++) {
-                if (result.roles[index].keyName === Role.MANAGER) {
-                    this.roles.push(Role.MANAGER)
+                if (result.roles[index].keyName === Role.EMPLOYEE) {
+                    this.roles.push(Role.EMPLOYEE)
                 }
                 else if (result.roles[index].keyName === Role.ADMIN) {
                     this.roles.push(Role.ADMIN)

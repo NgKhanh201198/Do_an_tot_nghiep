@@ -252,7 +252,7 @@ mat-icon.incon-profile {
     padding: 20px;
     background-color: white;
     min-height: 100%;
-    z-index: 110;
+    z-index: 9992;
     overflow: hidden;
     border-radius: 5px;
 }
@@ -382,7 +382,7 @@ input.input-upload {
     padding: 16px 20px;
     width: 100%;
     height: 100%;
-    z-index: 9999;
+    z-index: 9990;
     overflow: auto;
     visibility: visible;
 }
@@ -391,13 +391,14 @@ input.input-upload {
     position: absolute;
     top: 0px;
     right: 20px;
+    z-index: 9991;
     cursor: pointer;
     background-color: transparent;
     font-size: 30px;
     color: #00000082;
 }
 
-.close-upload:hover {
+.close-upload i:hover {
     color: black;
 }
 
@@ -497,10 +498,15 @@ ul.ngx-pagination .pagination-next.disabled::after {
 .status-inactive,
 .status-locked {
     color: white;
-    padding: 1px;
-    border-radius: 10px;
-    width: 80%;
+    padding: 8px 1px;
+    border-radius: 25px;
+    width: 85%;
     margin: auto;
+}
+
+.user-panel img {
+    height: 2.5rem;
+    width: 2.5rem;
 }
 
 .status-active {

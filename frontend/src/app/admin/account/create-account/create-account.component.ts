@@ -1,22 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Role } from 'src/app/_models/role.enum';
 import { User } from 'src/app/_models/user';
 import { LoggerService } from 'src/app/_services/logger.service';
 import { emailValidator } from 'src/assets/customs/validation/CustomValidator';
 import { UserService } from '../../../_services/user.service';
-
-import * as moment from 'moment';
-import { UserType } from 'src/app/_models/user-type.enum';
-export class Options {
-    name: string;
-    value: string;
-    constructor(name: string, value: string) {
-        this.name = name;
-        this.value = value;
-    }
-}
+import { Options } from 'src/app/_models/options';
 
 @Component({
     selector: 'app-create-account',
@@ -37,6 +26,7 @@ export class CreateAccountComponent implements OnInit {
     listUserType: Array<Options> = [];
     listRoles: Array<Options> = [];
     _dateOfBirth: any = null;
+    maxDate = new Date();
 
     status: Options[] = [
         { name: 'Hoạt động', value: 'ACTIVE' },
@@ -46,9 +36,6 @@ export class CreateAccountComponent implements OnInit {
         { name: 'Nam', value: 'nam' },
         { name: 'Nữ', value: 'nu' }
     ];
-
-
-
 
     constructor(
         private formBuilder: FormBuilder,

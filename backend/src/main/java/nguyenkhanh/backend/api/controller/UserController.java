@@ -152,8 +152,8 @@ public class UserController {
 			return ResponseEntity
 					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm tài khoản thành công!"));
 		} catch (Exception ex) {
-			return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-					"Bad Request", "Tài khoản đã được sử dụng. Vui lòng thử tài khoản khác!"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
 		}
 	}
 
@@ -247,6 +247,7 @@ public class UserController {
 				oldUserEntity.setUserType(typeEntity);
 
 				oldUserEntity.setId(id);
+				oldUserEntity.setUsername(userAccountDTO.getUsername());
 				oldUserEntity.setFullName(userAccountDTO.getFullName());
 				oldUserEntity.setPhoneNumber(userAccountDTO.getPhoneNumber());
 				oldUserEntity.setGender(userAccountDTO.getGender());

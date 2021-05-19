@@ -140,7 +140,7 @@ public class CityController {
 				String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
 						file.getOriginalFilename().length());
 
-				String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "")
+				String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "")
 						+ fileName.toLowerCase();
 				String image = BASE_URL + "api/files/" + uuidImage;
 
@@ -157,14 +157,14 @@ public class CityController {
 		}
 	}
 
-	@DeleteMapping("/city/{id}")
+	@DeleteMapping("/room/{id}")
 	public ResponseEntity<?> deleteCity(@Valid @PathVariable("id") long id) {
 		try {
 			cityServiceImpl.deleteCityById(id);
 			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Xóa thành công!"));
 		} catch (Exception e) {
 			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-					"Không tìm thấy thành phố có id=" + id);
+					"Không tìm thấy thành phố có id= " + id);
 			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 		}
 	}

@@ -67,18 +67,17 @@
                                 <mat-error *ngIf="formValid.address.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getAddressErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
-                        <!-- <div class="form-group ">
+                        <div class="form-group ">
                             <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Kiểu người dùng</mat-label>
-                                <mat-select formControlName="userType">
+                                <mat-label>Thành phố</mat-label>
+                                <mat-select formControlName="city">
                                     <mat-option *ngFor="let type of listCitys" [value]="type.value">{{type.name}}</mat-option>
                                 </mat-select>
-                                <mat-error *ngIf="formValid.userType.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getUserTypeErrorMessage()}}</mat-error>
+                                <mat-error *ngIf="formValid.city.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getCityErrorMessage()}}</mat-error>
                             </mat-form-field>
-                        </div> -->
+                        </div>
                         <div *ngIf="error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{error}}</div>
                         <button [disabled]="formUpdateData.invalid" class="btn btn-primary btn-block">Lưu lại</button>
-                        <!-- <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div> -->
                     </form>
                 </div>
             </div>

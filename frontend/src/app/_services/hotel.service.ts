@@ -18,6 +18,24 @@ export class HotelService {
         return throwError(error);
     }
 
+    public createHotel(data: any, file: File): Observable<any> {
+        const formData: FormData = new FormData();
+        formData.append('image', file);
+        formData.append('hotelName', data.hotelName);
+        formData.append('address', data.address);
+        formData.append('email', data.email);
+        formData.append('phoneNumber', data.phoneNumber);
+        formData.append('city', data.city);
+
+        return this.http.post(`${this.url}`, formData)
+            .pipe(
+                tap(response => {
+                    console.log(response);
+                }),
+                catchError(this.handleError)
+            );
+    }
+
     public getHotelAll(): Observable<any> {
         return this.http.get(`${this.url}`)
             .pipe(
@@ -46,6 +64,14 @@ export class HotelService {
         formData.append('image', file);
 
         return this.http.put(`${this.url + '/updateImage'}/${id}`, formData)
+            .pipe(
+                tap(response => { }),
+                catchError(this.handleError)
+            );
+    }
+
+    public deleteHotel(id: any): Observable<any> {
+        return this.http.delete(`${this.url}/${id}`)
             .pipe(
                 tap(response => { }),
                 catchError(this.handleError)

@@ -3,9 +3,13 @@
     <div class="content-wrapper" style="background-color: white;">
         <div class="container py-3">
             <div class="row justify-content-center">
-                <div class="col-sm-12">
+                <div class="col-sm-1 back">
+                    <button class="btn btn-outline-info" (click)="comeBack()" matTooltip="Quay lại" [matTooltipPosition]="'right'"><i class="bi bi-reply-fill"></i></button>
+                </div>
+                <div class="col-sm-10">
                     <h1 class="text-center text-info mt-3 mb-3 my-title">Thêm khách sạn mới</h1>
                 </div>
+                <div class="col-sm-1"></div>
             </div>
             <div class="row justify-content-center mt-3">
                 <div class="col-sm-6">
@@ -27,7 +31,7 @@
                             </div>
                         </div>
                     </div>
-                    <form [formGroup]="formUpdateData" (ngSubmit)="onSubmit()">
+                    <form #myForm="ngForm" [formGroup]="formUpdateData" (ngSubmit)="onSubmit()">
                         <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Tên khách sạn</mat-label>
@@ -68,7 +72,7 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Thành phố</mat-label>
                                 <mat-select formControlName="city">
-                                    <mat-option *ngFor="let type of listCity" [value]="type.value">{{type.name}}</mat-option>
+                                    <mat-option *ngFor="let type of listCitys" [value]="type.value">{{type.name}}</mat-option>
                                 </mat-select>
                                 <mat-error *ngIf="formValid.city.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getCityErrorMessage()}}</mat-error>
                             </mat-form-field>

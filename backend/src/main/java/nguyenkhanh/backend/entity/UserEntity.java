@@ -61,11 +61,7 @@ public class UserEntity extends BaseEntity {
 //	CascadeType.ALL Khi 1 xóa user -> dữ liệu theo user sẽ bị xóa 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Set<BookingRoomEntity> bookingRoom = new HashSet<BookingRoomEntity>();
-
-//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//	@JsonIgnore
-//	private Set<HotelEntity> hotels = new HashSet<HotelEntity>();
+	private Set<BookingRateEntity> bookingrate = new HashSet<BookingRateEntity>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -79,9 +75,11 @@ public class UserEntity extends BaseEntity {
 		super();
 	}
 
-	public UserEntity(String username, String password, String fullName, String phoneNumber, Date dateOfBirth,
-			String avatar, String gender, String status, UserTypeEntity userType, Set<RoleEntity> roles) {
+	public UserEntity(Long id, String username, String password, String fullName, String phoneNumber, Date dateOfBirth,
+			String avatar, String gender, String status, UserTypeEntity userType, Set<BookingRateEntity> bookingrate,
+			Set<PostEntity> posts, Set<RoleEntity> roles) {
 		super();
+		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.fullName = fullName;
@@ -91,15 +89,23 @@ public class UserEntity extends BaseEntity {
 		this.gender = gender;
 		this.status = status;
 		this.userType = userType;
+		this.bookingrate = bookingrate;
+		this.posts = posts;
 		this.roles = roles;
 	}
-	public UserEntity(String username, String password, String fullName, String status, UserTypeEntity userType) {
+
+	public UserEntity(Long id, String username, String password, String fullName, String phoneNumber, Date dateOfBirth,
+			String avatar, String gender, String status) {
 		super();
+		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.fullName = fullName;
+		this.phoneNumber = phoneNumber;
+		this.dateOfBirth = dateOfBirth;
+		this.avatar = avatar;
+		this.gender = gender;
 		this.status = status;
-		this.userType = userType;
 	}
 
 	public Long getId() {
@@ -182,21 +188,13 @@ public class UserEntity extends BaseEntity {
 		this.userType = userType;
 	}
 
-	public Set<BookingRoomEntity> getBookingRoom() {
-		return bookingRoom;
+	public Set<BookingRateEntity> getBookingrate() {
+		return bookingrate;
 	}
 
-	public void setBookingRoom(Set<BookingRoomEntity> bookingRoom) {
-		this.bookingRoom = bookingRoom;
+	public void setBookingrate(Set<BookingRateEntity> bookingrate) {
+		this.bookingrate = bookingrate;
 	}
-
-//	public Set<HotelEntity> getHotels() {
-//		return hotels;
-//	}
-//
-//	public void setHotels(Set<HotelEntity> hotels) {
-//		this.hotels = hotels;
-//	}
 
 	public Set<PostEntity> getPosts() {
 		return posts;

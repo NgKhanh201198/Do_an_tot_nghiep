@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HotelService } from '../../../_services/hotel.service';
+import { LoggerService } from '../../../_services/logger.service';
 
 @Component({
     selector: 'app-list-hotel',
@@ -13,7 +14,8 @@ export class ListHotelComponent implements OnInit {
     itemsPage: number = 3;
 
     constructor(
-        private hotelService: HotelService
+        private hotelService: HotelService,
+        private logger: LoggerService
     ) { }
 
     ngOnInit(): void {
@@ -22,4 +24,20 @@ export class ListHotelComponent implements OnInit {
         });
     }
 
+    deleteHotel(id: any) {
+        if (confirm("Bạn có chắc muốn xóa khách sạn này?")) {
+            this.hotelService.deleteHotel(id).subscribe((result: any) => {
+                for (var i = 0; i < this.collection.length; i++) {
+                    if (this.collection[i].id === id) {
+                        this.collection.splice(i, 1);
+                    }
+                }
+                this.success = result.message;
+                this.logger.logger(this.success);
+            });
+        }
+        setTimeout(() => {
+            this.success = '';
+        }, 2500);
+    }
 }
