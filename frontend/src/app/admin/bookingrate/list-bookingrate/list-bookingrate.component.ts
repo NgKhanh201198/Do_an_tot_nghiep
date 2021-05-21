@@ -23,5 +23,4 @@ export class ListBookingrateComponent implements OnInit {
             this.collection = result;
         });
     }
-
 }

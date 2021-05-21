@@ -1,34 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { LoggerService } from 'src/app/_services/logger.service';
 import { Location } from '@angular/common'
 import { Options } from 'src/app/_models/options';
 import { RoomService } from 'src/app/_services/room.service';
 import { HotelService } from 'src/app/_services/hotel.service';
 import { UserService } from 'src/app/_services/user.service';
-import { map } from 'rxjs/operators';
-
+import { BookingrateService } from '../../../_services/bookingrate.service';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 @Component({
     selector: 'app-create-bookingrate',
     templateUrl: './create-bookingrate.component.html',
     styleUrls: ['./create-bookingrate.component.css']
 })
 export class CreateBookingrateComponent implements OnInit {
-
+    @ViewChild('myForm') myForm: NgForm;
     listUsers = [];
-    // listUsers: Array<Options> = [];
     listHotels: Array<Options> = [];
     listRooms: Array<Options> = [];
-    _maxDate: Date = new Date();
+    filteredOptions: any;
+    _minDate: Date = new Date();
     _id: number;
     _success: String = "";
     _error: String = "";
-
-
-    // myControl = new FormControl();
-    options = [];
-    filteredOptions: any;
+    _selectRoom = true;
+    _selectHotel = true;
+    _hotel = null;
+    _checkInDate = null;
+    _checkOutDate = null;
 
     formUpdateData = this.formBuilder.group({
         user: ['', [Validators.required]],
@@ -41,7 +40,7 @@ export class CreateBookingrateComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         private location: Location,
-        private route: ActivatedRoute,
+        private bookingrateService: BookingrateService,
         private roomService: RoomService,
         private userService: UserService,
         private hotelService: HotelService,
@@ -50,78 +49,27 @@ export class CreateBookingrateComponent implements OnInit {
 
 
     filterData(enteredData) {
-        this.filteredOptions = this.options.filter(item => {
+        this.filteredOptions = this.listUsers.filter(item => {
             return item.toLowerCase().indexOf(enteredData.toLowerCase()) > -1
         })
     }
 
-
     ngOnInit(): void {
+        this.userService.getAllUser().subscribe((result: any) => {
+            for (let index = 0; index < result.length; index++) {
+                if (result[index].userType.keyName === "customer") {
+                    this.listUsers.push(result[index].fullName);
+                }
+            }
+            this.filteredOptions = this.listUsers;
+        });
+
         this.hotelService.getHotelAll().subscribe((result: any) => {
             for (let index = 0; index < result.length; index++) {
                 let hotel = new Options(result[index].hotelName, result[index].hotelName);
                 this.listHotels.push(hotel);
             }
         });
-
-        this.roomService.getRoomAll().subscribe((result: any) => {
-            for (let index = 0; index < result.length; index++) {
-                let room = new Options(result[index].roomNumber, result[index].roomNumber);
-                this.listRooms.push(room);
-            }
-        });
-
-        this.userService.getAllUser().subscribe((result: any) => {
-            for (let index = 0; index < result.length; index++) {
-                if (result[index].userType.keyName === 'customer') {
-                    // let newAccount = { name: result[index].fullName }
-                    // this.options.push(result[index].fullName);
-                    this.options.push(result[index].fullName.toString());
-                    console.log(result[index].fullName);
-                }
-            }
-            // result.forEach(element => {console.log(element.fullName);
-            
-                
-            // });
-        });
-        
-        // this.userService.getAllUser().subscribe((result: any) => {
-        //     for (let index = 0; index < result.length; index++) {
-        //         if (result[index].userType.keyName === 'customer') {
-        //             let newAccount = { name: result[index].fullName }
-        //             this.options.push(newAccount);
-        //         }
-        //     }
-        // });
-
-        this.userService.getAllUser().subscribe((result: any) => {
-            // console.log(result);
-            // map((result:[])=>result.map(item=>item.fullName))
-            // for (let index = 0; index < result.length; index++) {
-            //     if (result[index].userType.keyName === 'customer') {
-            //         let newAccount = { name: result[index].fullName }
-            //         this.options.push(newAccount);
-            //     }
-            // }
-            console.log(result);
-        });
-
-        // this.userService.getNameAllUser().subscribe(response => {
-           
-        //     // this.options = response;
-        //     this.filteredOptions = response;
-        //     console.log("data");
-        //     this.options.forEach(element => {
-        //         console.log(element);
-                
-        //     });
-        //     console.log(this.options);
-        //     this.options.push("cc")
-        //     console.log(this.options);
-        // })
-
-        this._id = +this.route.snapshot.paramMap.get('id');
 
         this.formUpdateData = this.formBuilder.group({
             user: ['', [Validators.required]],
@@ -132,9 +80,11 @@ export class CreateBookingrateComponent implements OnInit {
         });
 
         this.formUpdateData.get('user').valueChanges.subscribe(response => {
-            console.log('data is ', response);
+            this.loggerService.loggerData('data: ' + response);
             this.filterData(response);
-        })
+        });
+
+
     }
 
     //Invalid error message
@@ -158,17 +108,35 @@ export class CreateBookingrateComponent implements OnInit {
         }
         return '';
     }
-    getCheckInDateErrorMessage(): string {
-        if (this.formValid.checkInDate.errors.required) {
-            return 'Vui lòng chọn ngày đặt.';
-        }
-        return '';
+
+    getCheckDateErrorMessage(): string {
+        return 'Vui lòng nhập ngày nhận và ngày trả.';
     }
-    getCheckOutDateErrorMessage(): string {
-        if (this.formValid.checkOutDate.errors.required) {
-            return 'Vui lòng chọn ngày trả.';
-        }
-        return '';
+
+    checkInDate(event: MatDatepickerInputEvent<Date>) {
+        this._checkInDate = event.value;
+
+    }
+    checkOutDate(event: MatDatepickerInputEvent<Date>) {
+        this._selectHotel = false;
+        this._checkOutDate = event.value;
+    }
+
+    onSelectHotel(event) {
+        this._selectRoom = false;
+        this._hotel = event.value;
+        this.listRooms = [];
+        this.formUpdateData.get('rooms').setValue('');
+
+        this.roomService.getRoomAll().subscribe((result: any) => {
+            for (let index = 0; index < result.length; index++) {
+                this.loggerService.loggerData(result[index]);
+                if (result[index].hotel.hotelName == this._hotel) {
+                    let room = new Options(result[index].roomNumber, result[index].roomNumber);
+                    this.listRooms.push(room);
+                }
+            }
+        });
     }
 
     comeBack() {
@@ -176,46 +144,22 @@ export class CreateBookingrateComponent implements OnInit {
     }
 
     onSubmit() {
-
+        this.loggerService.logger(this.formUpdateData.value);
+        this.bookingrateService.createBookingrate(this.formUpdateData.value)
+            .subscribe({
+                next: (result) => {
+                    this._error = '';
+                    this.myForm.resetForm();
+                    this._success = result.message;
+                    this.loggerService.logger(result);
+                },
+                error: (error) => {
+                    this._error = error.message;
+                    this.loggerService.loggerError(error.message);
+                }
+            }),
+            setTimeout(() => {
+                this._success = '';
+            }, 3000);
     }
-
-
-    // title = 'autocomplete';
-
-    // options = [];
-
-    // filteredOptions;
-
-
-    // formGroup: FormGroup;
-    // constructor(private service: UserService, private fb: FormBuilder) { }
-
-    // filterData(enteredData) {
-    //     this.filteredOptions = this.options.filter(item => {
-    //         return item.toLowerCase().indexOf(enteredData.toLowerCase()) > -1
-    //     })
-    // }
-
-    // ngOnInit() {
-    //     this.initForm();
-    //     this.getNames();
-    // }
-
-    // initForm() {
-    //     this.formGroup = this.fb.group({
-    //         'employee': ['']
-    //     })
-    //     this.formGroup.get('employee').valueChanges.subscribe(response => {
-    //         console.log('data is ', response);
-    //         this.filterData(response);
-    //     })
-    // }
-
-    // getNames() {
-    //     this.service.getData().subscribe(response => {
-    //         this.options = response;
-    //         this.filteredOptions = response;
-    //     })
-    // }
-
 }

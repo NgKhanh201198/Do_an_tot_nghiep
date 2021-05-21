@@ -62,8 +62,8 @@
                         <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Giá phòng</mat-label>
-                                <input formControlName="roomCost" #roomCost matInput maxlength="11" type="text">
-                                <mat-icon matSuffix>money</mat-icon>
+                                <input formControlName="roomCost" #roomCost matInput max="99999999999" type="number">
+                                <span matSuffix>VND</span>
                                 <mat-hint align="end">{{roomCost.value.length}} /11</mat-hint>
                                 <mat-error *ngIf="formValid.roomCost.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getRoomCostlErrorMessage()}}</mat-error>
                             </mat-form-field>
@@ -71,8 +71,8 @@
                         <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Giá giảm giá</mat-label>
-                                <input formControlName="discount" #discount matInput maxlength="11" type="text">
-                                <mat-icon matSuffix>money</mat-icon>
+                                <input formControlName="discount" #discount matInput max="99999999999" type="number">
+                                <span matSuffix>VND</span>
                                 <mat-hint align="end">{{discount.value.length}} /11</mat-hint>
                                 <mat-error *ngIf="formValid.discount.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getDiscountErrorMessage()}}</mat-error>
                             </mat-form-field>

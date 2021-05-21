@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { User } from 'src/app/_models/user';
 import { LoggerService } from 'src/app/_services/logger.service';
 import { emailValidator } from 'src/assets/customs/validation/CustomValidator';
 import { UserService } from '../../../_services/user.service';
@@ -35,7 +33,6 @@ export class CreateAccountComponent implements OnInit {
 
     constructor(
         private formBuilder: FormBuilder,
-        private route: ActivatedRoute,
         private userService: UserService,
         private loggerService: LoggerService
     ) {

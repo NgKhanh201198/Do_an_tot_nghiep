@@ -106,12 +106,16 @@ export class CreateRoomComponent implements OnInit {
     getRoomCostlErrorMessage(): string {
         if (this.formValid.roomCost.errors.required) {
             return 'Vui lòng nhập giá phòng.';
+        }else if (this.formValid.roomCost.invalid) {
+            return 'Giá tối đa là 99,999,999,999.';
         }
         return this.formValid.roomCost.errors.pattern ? 'Giá phòng không hợp lệ, vui lòng kiểm tra lại.' : '';
     }
     getDiscountErrorMessage(): string {
         if (this.formValid.discount.errors.required) {
             return 'Vui lòng nhập giá giảm giá.';
+        } else if (this.formValid.discount.invalid) {
+            return 'Giá tối đa là 99,999,999,999.';
         }
         return this.formValid.discount.errors.pattern ? 'Giá giảm giá không hợp lệ, vui lòng kiểm tra lại.' : '';
     }
