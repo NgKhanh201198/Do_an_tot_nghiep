@@ -31,9 +31,9 @@
                         <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Nhập mật khẩu</mat-label>
-                                <input formControlName="password" #password matInput maxlength="18" [type]="hidePass ? 'password' : 'text'" class="input-height">
-                                <div mat-icon-button matSuffix (click)="hidePass = !hidePass" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePass" style="cursor: pointer;">
-                                    <mat-icon>{{hidePass ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                <input formControlName="password" #password matInput maxlength="18" [type]="_hidePass ? 'password' : 'text'" class="input-height">
+                                <div mat-icon-button matSuffix (click)="_hidePass = !_hidePass" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="_hidePass" style="cursor: pointer;">
+                                    <mat-icon>{{_hidePass ? 'visibility_off' : 'visibility'}}</mat-icon>
                                 </div>
                                 <mat-hint align="end">{{password.value.length}} / 18</mat-hint>
                                 <mat-error *ngIf="formValid.password.invalid">{{getPasswordErrorMessage()}}</mat-error>
@@ -51,7 +51,7 @@
                         <div class="form-group ">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Ngày sinh</mat-label>
-                                <input formControlName="dateOfBirth" matInput [matDatepicker]="picker" [max]="maxDate" readonly>
+                                <input formControlName="dateOfBirth" matInput [matDatepicker]="picker" [max]="_maxDate" readonly>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker disabled="false"></mat-datepicker>
                                 <mat-error *ngIf="formValid.dateOfBirth.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getDateOfBirthErrorMessage()}}</mat-error>
@@ -84,14 +84,14 @@
                                 <mat-error *ngIf="formValid.status.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getStatusErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
-                        <div *ngIf="error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{error}}</div>
+                        <div *ngIf="_error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{_error}}</div>
                         <button [disabled]="formData.invalid" class="btn btn-primary btn-block">Lưu lại</button>
                     </form>
                 </div>
             </div>
-            <div [ngClass]="{ 'show': success }" class="alert thongbao">
+            <div [ngClass]="{ 'show': _success }" class="alert thongbao">
                 <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
-                <div class="noidung-thongbao">{{success}}</div>
+                <div class="noidung-thongbao">{{_success}}</div>
             </div>
         </div>
     </div>

@@ -16,7 +16,8 @@ public class BackEndApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		uploadFileService.init();
-
+		
+		uploadFileService.deleteByName("image-67ab21a9aeda428fa22683d82dd112e4.jpg");
 	}
 
 	public static void main(String[] args) {

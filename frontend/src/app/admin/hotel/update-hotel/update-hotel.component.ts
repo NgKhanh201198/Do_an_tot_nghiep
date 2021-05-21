@@ -14,19 +14,17 @@ import { Options } from 'src/app/_models/options';
     styleUrls: ['./update-hotel.component.css']
 })
 export class UpdateHotelComponent implements OnInit {
-
-    @ViewChild('uploadFile') myInputVariable: ElementRef;
+    @ViewChild('uploadFile') uploadFile: ElementRef;
     listCitys: Array<Options> = [];
     reader = new FileReader();
     currentFile: File = null;
-    imgURL: any = null;
-    image: any = null;
-
-    id: number;
-    onUpdate = false;
-    success = '';
-    error = '';
-    errorUpload = "";
+    _imgURL: any = null;
+    _image: any = null;
+    _id: number;
+    _onUpdate = false;
+    _success = '';
+    _error = '';
+    _errorUpload = "";
 
     constructor(
         private formBuilder: FormBuilder,
@@ -53,10 +51,11 @@ export class UpdateHotelComponent implements OnInit {
     });
 
     ngOnInit(): void {
-        this.id = +this.route.snapshot.paramMap.get('id');
-        this.hotelService.getHotelById(this.id).subscribe((result: any) => {
-            this.image = result.image;
-            this.imgURL = result.image;
+        this._id = +this.route.snapshot.paramMap.get('id');
+        this.hotelService.getHotelById(this._id).subscribe((result: any) => {
+            this.loggerService.logger(result);
+            this._image = result.image;
+            this._imgURL = result.image;
 
             this.formUpdateData = this.formBuilder.group({
                 hotelName: [result.hotelName, [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,50}')]],
@@ -103,12 +102,12 @@ export class UpdateHotelComponent implements OnInit {
     }
 
     showForm() {
-        this.onUpdate = true;
+        this._onUpdate = true;
     }
     closeForm() {
-        this.onUpdate = false;
-        this.myInputVariable.nativeElement.value = "";
-        this.imgURL = this.image;
+        this._onUpdate = false;
+        this.uploadFile.nativeElement.value = "";
+        this._imgURL = this._image;
     }
 
     onSelectFile(event) {
@@ -117,7 +116,7 @@ export class UpdateHotelComponent implements OnInit {
 
             this.reader.readAsDataURL(this.currentFile);
             this.reader.onload = (_event) => {
-                this.imgURL = this.reader.result;
+                this._imgURL = this.reader.result;
             }
         }
     }
@@ -129,43 +128,43 @@ export class UpdateHotelComponent implements OnInit {
     updateImage() {
         console.log(this.currentFile);
 
-        return this.hotelService.updateImage(this.id, this.currentFile)
+        return this.hotelService.updateImage(this._id, this.currentFile)
             .subscribe({
                 next: (res) => {
                     this.loggerService.logger(res);
-                    this.image = this.imgURL
-                    this.onUpdate = false;
-                    this.error = '';
-                    this.success = res.message;
+                    this._image = this._imgURL
+                    this._onUpdate = false;
+                    this._error = '';
+                    this._success = res.message;
                 },
                 error: (err) => {
                     this.loggerService.logger(err);
-                    this.success = '';
-                    this.errorUpload = err.message;
+                    this._success = '';
+                    this._errorUpload = err.message;
                 }
             })
             , setTimeout(() => {
-                this.imgURL = '';
-                this.success = '';
+                this._imgURL = '';
+                this._success = '';
             }, 3000);
     }
 
     onSubmit() {
-        return this.hotelService.updateHotel(this.id, this.formUpdateData.value)
+        return this.hotelService.updateHotel(this._id, this.formUpdateData.value)
             .subscribe({
                 next: (res) => {
-                    this.error = '';
+                    this._error = '';
 
-                    this.success = res.message;
+                    this._success = res.message;
                     this.loggerService.logger(res);
                 },
                 error: (err) => {
-                    this.error = err.message;
+                    this._error = err.message;
                     this.loggerService.logger(err);
                 }
             }),
             setTimeout(() => {
-                this.success = '';
+                this._success = '';
             }, 2500);
     }
 }

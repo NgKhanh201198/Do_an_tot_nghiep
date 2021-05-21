@@ -9,11 +9,9 @@ import { LoggerService } from 'src/app/_services/logger.service';
 })
 export class ListCityComponent implements OnInit {
     collection: Array<any> = [];
-
-    //Phân trang
-    page: number = 1;
-    itemsPage = 3;
-    success = "";
+    _page: number = 1;
+    _itemsPage = 3;
+    _success = "";
 
     constructor(
         private cityService: CityService,
@@ -34,12 +32,12 @@ export class ListCityComponent implements OnInit {
                         this.collection.splice(i, 1);
                     }
                 }
-                this.success = result.message;
-                this.logger.logger(this.success);
+                this._success = result.message;
+                this.logger.logger(this._success);
             });
         }
         setTimeout(() => {
-            this.success = '';
+            this._success = '';
         }, 2500);
     }
 }

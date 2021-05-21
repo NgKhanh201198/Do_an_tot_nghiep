@@ -518,7 +518,7 @@ ul.ngx-pagination .pagination-next.disabled::after {
 }
 
 .status-locked {
-    background-color: #F50000;
+    background-color: #ff1d1d;
 }
 
 .image-list img {

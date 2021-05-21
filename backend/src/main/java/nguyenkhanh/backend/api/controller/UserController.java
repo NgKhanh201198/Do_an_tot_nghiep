@@ -1,15 +1,11 @@
 package nguyenkhanh.backend.api.controller;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -104,6 +100,10 @@ public class UserController {
 						HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), "Vai trò không được để trống"));
 			} else {
 				strRoles.forEach(role -> {
+//					RoleEntity managerRole = roleServiceImpl.finByKeyName(role)
+//							.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy quyền " + role));
+//					roleEntity.add(managerRole);
+
 					switch (role) {
 					case "MANAGER":
 						RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.MANAGER.toString())
@@ -127,16 +127,8 @@ public class UserController {
 
 			// Set DateOfBirth
 			String dateOfBirth = userDTO.getDateOfBirth();
-			Date date;
-			if (isDateValid(dateOfBirth, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")) {
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-				formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-				date = formatter.parse(dateOfBirth);
-			} else {
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-				formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-				date = formatter.parse(dateOfBirth);
-			}
+			AppController controller = new AppController();
+			Date date = controller.stringToDate(dateOfBirth);
 			userEntity.setDateOfBirth(date);
 
 			userEntity.setFullName(userDTO.getFullName());
@@ -167,8 +159,8 @@ public class UserController {
 	@GetMapping("/user/{id}")
 	public ResponseEntity<?> getUserById(@Valid @PathVariable("id") long id) {
 		if (userServiceImpl.isUserExitsById(id) == false) {
-			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-					"Không tìm thấy người dùng có id=" + id);
+			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+					HttpStatus.NOT_FOUND.name(), "Không tìm thấy người dùng có id=" + id);
 			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 		} else {
 			UserEntity user = userServiceImpl.getUserById(id);
@@ -181,8 +173,8 @@ public class UserController {
 			@PathVariable("id") long id) {
 		try {
 			if (userServiceImpl.isUserExitsById(id) == false) {
-				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-						"Not found ID = " + id);
+				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+						HttpStatus.NOT_FOUND.name(), "Not found ID = " + id);
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
 			} else {
@@ -226,20 +218,26 @@ public class UserController {
 					});
 				}
 				oldUserEntity.setRoles(roles);
-
+				
 				// Set DateOfBirth
 				String dateOfBirth = userAccountDTO.getDateOfBirth();
-				Date date;
-				if (isDateValid(dateOfBirth, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")) {
-					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-					formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-					date = formatter.parse(dateOfBirth);
-				} else {
-					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-					formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-					date = formatter.parse(dateOfBirth);
-				}
+				AppController controller = new AppController();
+				Date date = controller.stringToDate(dateOfBirth);
 				oldUserEntity.setDateOfBirth(date);
+
+				// Set DateOfBirth
+//				String dateOfBirth = userAccountDTO.getDateOfBirth();
+//				Date date;
+//				if (isDateValid(dateOfBirth, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")) {
+//					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+//					formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//					date = formatter.parse(dateOfBirth);
+//				} else {
+//					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+//					formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//					date = formatter.parse(dateOfBirth);
+//				}
+//				oldUserEntity.setDateOfBirth(date);
 
 				// Set UserType
 				UserTypeEntity typeEntity = userTypeServiceImpl.findByKeyName(userAccountDTO.getUserType())
@@ -271,8 +269,8 @@ public class UserController {
 			@PathVariable("id") long id) {
 		try {
 			if (userServiceImpl.isUserExitsById(id) == false) {
-				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-						"Không tìm thấy người dùng có id=" + id);
+				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+						HttpStatus.NOT_FOUND.name(), "Không tìm thấy người dùng có id=" + id);
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
 			} else {
@@ -367,11 +365,12 @@ public class UserController {
 		String response = "";
 		try {
 			if (userServiceImpl.isUserExitsById(id) == false) {
-				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-						"Không tìm thấy người dùng có id=" + id);
+				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+						HttpStatus.NOT_FOUND.name(), "Không tìm thấy người dùng có id=" + id);
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
 			} else {
+				UserEntity oldUserEntity = userServiceImpl.getUserById(id);
 
 				String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
 
@@ -381,11 +380,16 @@ public class UserController {
 				String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
 						file.getOriginalFilename().length());
 
-				String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "")
+				String uuidAvatar = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "")
 						+ fileName.toLowerCase();
-				String avatar = BASE_URL + "api/files/" + uuidImage;
+				String avatar = BASE_URL + "api/files/" + uuidAvatar;
 
-				uploadFileService.save(file, uuidImage);
+				if (oldUserEntity.getAvatar() != null) {
+					uploadFileService.deleteByName(oldUserEntity.getAvatar()
+							.substring(oldUserEntity.getAvatar().length() - uuidAvatar.length()));
+				}
+
+				uploadFileService.save(file, uuidAvatar);
 				userServiceImpl.updateAvatar(id, avatar);
 
 				response = "Đã tải tệp '" + file.getOriginalFilename() + "' lên thành công.";
@@ -398,14 +402,4 @@ public class UserController {
 		}
 	}
 
-	public static boolean isDateValid(String date, String date_format) {
-		try {
-			DateFormat df = new SimpleDateFormat(date_format);
-			df.setLenient(false);
-			df.parse(date);
-			return true;
-		} catch (ParseException e) {
-			return false;
-		}
-	}
 }

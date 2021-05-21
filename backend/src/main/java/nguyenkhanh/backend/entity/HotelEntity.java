@@ -46,7 +46,7 @@ public class HotelEntity extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "cityid")
-	@JsonIgnore
+//	@JsonIgnore	
 	private CityEntity city;
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)

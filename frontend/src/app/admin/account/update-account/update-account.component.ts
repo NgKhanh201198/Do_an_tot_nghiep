@@ -17,15 +17,13 @@ import { Options } from 'src/app/_models/options';
 })
 export class UpdateAccountComponent implements OnInit {
 
-    user: User;
-    roles = [];
-    id: number;
-    loading: boolean = false;
-    submitted: boolean = false;
-    success = '';
-    error = '';
     userTypeList: Array<Options> = [];
     rolesList: Array<Options> = [];
+    roles = [];
+    _maxDate = new Date();
+    _id: number;
+    _success = '';
+    _error = '';
 
     status: Options[] = [
         { name: 'Hoạt động', value: 'ACTIVE' },
@@ -76,8 +74,8 @@ export class UpdateAccountComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.id = +this.route.snapshot.paramMap.get('id');
-        this.userService.getUserById(this.id).subscribe((result: any) => {
+        this._id = +this.route.snapshot.paramMap.get('id');
+        this.userService.getUserById(this._id).subscribe((result: any) => {
             for (let index = 0; index < result.roles.length; index++) {
                 if (result.roles[index].keyName === Role.EMPLOYEE) {
                     this.roles.push(Role.EMPLOYEE)
@@ -172,22 +170,21 @@ export class UpdateAccountComponent implements OnInit {
     onSubmit() {
         this.loggerService.logger(this.formUpdateData.value);
 
-        this.submitted = true;
-        return this.userService.updateAccountById(this.id, this.formUpdateData.value)
+        return this.userService.updateAccountById(this._id, this.formUpdateData.value)
             .subscribe({
                 next: (res) => {
-                    this.error = '';
+                    this._error = '';
 
-                    this.success = res.message;
+                    this._success = res.message;
                     this.loggerService.logger(res);
                 },
                 error: (err) => {
-                    this.error = err.message;
+                    this._error = err.message;
                     this.loggerService.logger(err);
                 }
             }),
             setTimeout(() => {
-                this.success = '';
+                this._success = '';
             }, 2500);
     }
 }

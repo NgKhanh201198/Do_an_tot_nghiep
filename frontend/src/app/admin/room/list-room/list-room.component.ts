@@ -8,11 +8,10 @@ import { LoggerService } from '../../../_services/logger.service';
     styleUrls: ['./list-room.component.css']
 })
 export class ListRoomComponent implements OnInit {
-
     collection: Array<any> = [];
-    success = '';
-    page: number = 1;
-    itemsPage: number = 3;
+    _success = '';
+    _page: number = 1;
+    _itemsPage: number = 3;
 
     constructor(
         private roomService: RoomService,
@@ -33,12 +32,12 @@ export class ListRoomComponent implements OnInit {
                         this.collection.splice(i, 1);
                     }
                 }
-                this.success = result.message;
-                this.logger.logger(this.success);
+                this._success = result.message;
+                this.logger.logger(this._success);
             });
         }
         setTimeout(() => {
-            this.success = '';
+            this._success = '';
         }, 2500);
     }
 

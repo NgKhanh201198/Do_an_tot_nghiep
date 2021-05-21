@@ -14,19 +14,15 @@ import { Options } from 'src/app/_models/options';
 })
 export class CreateAccountComponent implements OnInit {
     @ViewChild('myForm') myForm: NgForm;
-    user: User;
-    formData: FormGroup;
-    roles = [];
-    id: number;
-    loading: boolean = false;
-    submitted: boolean = false;
-    success = '';
-    error = '';
-    hidePass = true;
     listUserType: Array<Options> = [];
     listRoles: Array<Options> = [];
-    _dateOfBirth: any = null;
-    maxDate = new Date();
+    formData: FormGroup;
+    _loading: boolean = false;
+    _submitted: boolean = false;
+    _success = '';
+    _error = '';
+    _hidePass = true;
+    _maxDate = new Date();
 
     status: Options[] = [
         { name: 'Hoạt động', value: 'ACTIVE' },
@@ -130,21 +126,21 @@ export class CreateAccountComponent implements OnInit {
         return this.userService.createAccount(this.formData.value)
             .subscribe({
                 next: (result) => {
-                    this.loading = false;
-                    this.submitted = false;
-                    this.error = '';
+                    this._loading = false;
+                    this._submitted = false;
+                    this._error = '';
                     this.myForm.resetForm();
-                    this.success = result.message;
+                    this._success = result.message;
                     this.loggerService.logger(result);
                 },
                 error: (error) => {
-                    this.error = error.message;
-                    this.loading = false;
+                    this._error = error.message;
+                    this._loading = false;
                     this.loggerService.loggerError(error.message);
                 }
             }),
             setTimeout(() => {
-                this.success = '';
+                this._success = '';
             }, 3000);
     }
 

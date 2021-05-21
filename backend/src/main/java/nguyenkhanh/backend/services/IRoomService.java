@@ -13,6 +13,8 @@ public interface IRoomService {
 	// Read
 	public Optional<RoomEntity> findByRoomNumber(String roomNumber);
 
+	public Optional<RoomEntity> findByRoomNumberAndHotel(String roomNumber, HotelEntity hotelEntity);
+
 	public RoomEntity getRoomById(long id);
 
 	public List<RoomEntity> getRoomAll();

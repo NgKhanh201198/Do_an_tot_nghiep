@@ -11,9 +11,9 @@ import { RoomTypeService } from '../../../_services/room-type.service';
     styleUrls: ['./update-room-type.component.css']
 })
 export class UpdateRoomTypeComponent implements OnInit {
-    id: number;
-    success: String = "";
-    error: String = "";
+    _id: number;
+    _success: String = "";
+    _error: String = "";
 
     constructor(
         private formBuilder: FormBuilder,
@@ -29,8 +29,8 @@ export class UpdateRoomTypeComponent implements OnInit {
     })
 
     ngOnInit(): void {
-        this.id = +this.route.snapshot.paramMap.get('id');
-        this.roomTypeService.getRoomTypeById(this.id).subscribe((result: any) => {
+        this._id = +this.route.snapshot.paramMap.get('id');
+        this.roomTypeService.getRoomTypeById(this._id).subscribe((result: any) => {
             this.formUpdateData = this.formBuilder.group({
                 roomTypeName: [result.roomTypeName, [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,50}')]],
                 description: [result.description, [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,255}')]],
@@ -59,21 +59,21 @@ export class UpdateRoomTypeComponent implements OnInit {
     }
 
     onSubmit() {
-        return this.roomTypeService.updateRoomType(this.id, this.formUpdateData.value)
+        return this.roomTypeService.updateRoomType(this._id, this.formUpdateData.value)
             .subscribe({
                 next: (res) => {
-                    this.error = '';
+                    this._error = '';
 
-                    this.success = res.message;
+                    this._success = res.message;
                     this.loggerService.logger(res);
                 },
                 error: (err) => {
-                    this.error = err.message;
+                    this._error = err.message;
                     this.loggerService.logger(err);
                 }
             }),
             setTimeout(() => {
-                this.success = '';
+                this._success = '';
             }, 2500);
     }
 }

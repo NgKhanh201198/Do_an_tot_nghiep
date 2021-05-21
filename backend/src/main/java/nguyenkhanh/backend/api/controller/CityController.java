@@ -62,7 +62,7 @@ public class CityController {
 			String fileName = image.getOriginalFilename().substring(image.getOriginalFilename().length() - 4,
 					image.getOriginalFilename().length());
 
-			String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
+			String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
 			String imageURL = BASE_URL + "api/files/" + uuidImage;
 			uploadFileService.save(image, uuidImage);
 
@@ -131,6 +131,7 @@ public class CityController {
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
 			} else {
+				CityEntity oldCityEntity = cityServiceImpl.getCityById(id);
 
 				String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
 
@@ -140,10 +141,13 @@ public class CityController {
 				String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
 						file.getOriginalFilename().length());
 
-				String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "")
-						+ fileName.toLowerCase();
+				String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
 				String image = BASE_URL + "api/files/" + uuidImage;
 
+				if (oldCityEntity.getImage() != null) {
+					uploadFileService.deleteByName(
+							oldCityEntity.getImage().substring(oldCityEntity.getImage().length() - uuidImage.length()));
+				}
 				uploadFileService.save(file, uuidImage);
 				cityServiceImpl.updateImage(id, image);
 

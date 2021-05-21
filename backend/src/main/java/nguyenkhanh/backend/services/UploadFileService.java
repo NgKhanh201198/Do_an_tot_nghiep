@@ -1,5 +1,6 @@
 package nguyenkhanh.backend.services;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -36,19 +37,26 @@ public class UploadFileService {
 		}
 	}
 
-	public Resource load(String filename) {
+	public Resource load(String fileName) {
 		try {
-			Path file = root.resolve(filename).normalize();
+			Path file = root.resolve(fileName).normalize();
+			
 			Resource resource = new UrlResource(file.toUri());
 
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
 			} else {
-				throw new NotFoundException("File not found " + filename);
+				throw new NotFoundException("Không tìm thấy file: " + fileName);
 			}
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("Error: " + e.getMessage());
 		}
+	}
+
+	public void deleteByName(String fileName) {
+		Path filePath = root.resolve(fileName).normalize();
+		File file = new File(filePath.toString());
+		FileSystemUtils.deleteRecursively(file);
 	}
 
 	public void deleteAll() {

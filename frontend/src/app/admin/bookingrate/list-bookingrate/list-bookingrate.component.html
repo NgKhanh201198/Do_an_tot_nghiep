@@ -1,1 +1,70 @@
-<p>list-bookingrate works!</p>
+<div class="wrapper">
+    <app-navbar></app-navbar>
+
+    <div class="content-wrapper">
+        <div class="container-fluid pt-2">
+            <div class="card">
+                <div class="card-header p-0 create-city">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-10">
+                            <h1 class="pl-5 text-info mt-3 mb-3 my-title">Danh sách đơn đặt trước</h1>
+                        </div>
+                        <div class="col-sm-2 create">
+                            <a matTooltip="Thêm mới" [matTooltipPosition]="'left'" [routerLink]="['/admin-page','create-bookingrate']" class="btn btn-outline-success float-right"><i class="fas fa-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr class="text-center">
+                                <th style="width:5%" scope="col">Avatar</th>
+                                <th style="width:20%" scope="col">Tên khách hàng</th>
+                                <th style="width:15%" scope="col">Ngày đặt</th>
+                                <th style="width:15%" scope="col">Ngày trả</th>
+                                <th style="width:15%" scope="col">Khách sạn</th>
+                                <th style="width:15%" scope="col">Phòng</th>
+                                <th style="width:20%" scope="col">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let item of collection | paginate: { itemsPerPage: _itemsPage, currentPage: _page}">
+                            <tr class="text-center">
+                                <td>
+                                    <div class="user-panel">
+                                        <div class="image">
+                                            <img *ngIf="!item.user.avatar" src="../../../../assets/customs/images/user.png" class="img-circle" alt="Avatar">
+                                            <img *ngIf="item.user.avatar" src="{{item.user.avatar}}" class="img-circle" alt="Avatar">
+                                        </div>
+                                    </div>
+                                </td>
+                                <!-- <td>{{item.createdBy}}</td> -->
+                                <td>{{item.user.fullName}}</td>
+                                <td>{{item.checkInDate | date:'dd-MM-yyyy'}}</td>
+                                <td>{{item.checkOutDate | date:'dd-MM-yyyy'}}</td>
+                                <td>{{item.rooms[0].hotel.hotelName}} </td>
+                                <td>
+                                    <ul *ngFor="let room of item.rooms">
+                                        <p> {{room.roomNumber}} </p>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <a [routerLink]="['/admin-page','updated-bookingrate',item.id]" class="btn-edit btn btn-outline-info" matTooltip="Chỉnh sửa" [matTooltipPosition]="'left'"><i class="fas fa-pen"></i></a>
+                                    <a [routerLink]="['/admin-page','list-bookingrate']" (click)="deleteCity(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Xóa" [matTooltipPosition]="'right'"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer pb-0">
+                    <pagination-controls class="text-center" (pageChange)="_page = $event" maxSize="5"></pagination-controls>
+                </div>
+            </div>
+            <div [ngClass]="{ 'show': _success }" class="alert thongbao">
+                <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
+                <div class="noidung-thongbao">{{_success}}</div>
+            </div>
+        </div>
+    </div>
+
+    <app-footer-admin></app-footer-admin>
+</div>

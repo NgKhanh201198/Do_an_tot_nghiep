@@ -15,8 +15,7 @@ interface Status {
 export class ListAccountComponent implements OnInit {
 
     collection: Array<any> = [];
-    success = '';
-    page: number = 1;
+    _page: number = 1;
 
     status: Status[] = [
         { value: 'ACTIVE', viewValue: 'Hoạt động' },

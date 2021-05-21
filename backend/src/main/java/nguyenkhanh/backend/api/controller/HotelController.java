@@ -87,7 +87,7 @@ public class HotelController {
 			String fileName = image.getOriginalFilename().substring(image.getOriginalFilename().length() - 4,
 					image.getOriginalFilename().length());
 
-			String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
+			String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
 			String imageURL = BASE_URL + "api/files/" + uuidImage;
 			uploadFileService.save(image, uuidImage);
 			hotelEntity.setImage(imageURL);
@@ -183,6 +183,7 @@ public class HotelController {
 						"Không tìm thấy thành phố có id=" + id);
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 			} else {
+				HotelEntity oldHotelEntity = hotelServiceImpl.getHotelById(id);
 
 				String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
 
@@ -192,9 +193,13 @@ public class HotelController {
 				String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
 						file.getOriginalFilename().length());
 
-				String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "")
-						+ fileName.toLowerCase();
+				String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
 				String image = BASE_URL + "api/files/" + uuidImage;
+
+				if (oldHotelEntity.getImage() != null) {
+					uploadFileService.deleteByName(oldHotelEntity.getImage()
+							.substring(oldHotelEntity.getImage().length() - uuidImage.length()));
+				}
 
 				uploadFileService.save(file, uuidImage);
 				hotelServiceImpl.updateImage(id, image);

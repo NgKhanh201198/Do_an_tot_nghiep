@@ -22,10 +22,10 @@
                                 <div class="col-sm-12">
                                     <input #uploadFile class="input-upload border border-primary p-1" type="file" (change)="onSelectFile($event)">
                                 </div>
-                                <div *ngIf="errorImage" class="error-message"><i class="bi bi-exclamation-circle"></i>{{errorImage}}</div>
+                                <div *ngIf="_errorImage" class="error-message"><i class="bi bi-exclamation-circle"></i>{{_errorImage}}</div>
                                 <div class="col-lg-4 col-sm-6 col-12">
-                                    <div class="image-create" *ngIf="imgURL">
-                                        <img class="img-fluid-y" [src]="imgURL">
+                                    <div class="image-create" *ngIf="_imgURL">
+                                        <img class="img-fluid-y" [src]="_imgURL">
                                     </div>
                                 </div>
                             </div>
@@ -103,14 +103,14 @@
                                 <mat-error *ngIf="formValid.status.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getStatusErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
-                        <div *ngIf="error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{error}}</div>
+                        <div *ngIf="_error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{_error}}</div>
                         <button [disabled]="formUpdateData.invalid" class="btn btn-primary btn-block">Lưu lại</button>
                     </form>
                 </div>
             </div>
-            <div [ngClass]="{ 'show': success }" class="alert thongbao">
+            <div [ngClass]="{ 'show': _success }" class="alert thongbao">
                 <mat-icon class="icon-thongbao" style="color: green; font-size: 2.25em;">done</mat-icon>
-                <div class="noidung-thongbao">{{success}}</div>
+                <div class="noidung-thongbao">{{_success}}</div>
             </div>
         </div>
     </div>

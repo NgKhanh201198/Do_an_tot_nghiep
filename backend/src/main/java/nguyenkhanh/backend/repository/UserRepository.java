@@ -16,8 +16,10 @@ import nguyenkhanh.backend.entity.UserEntity;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	public Optional<UserEntity> findByUsername(String username);
 
+	public Optional<UserEntity> findByFullName(String fullName);
+
 	public UserEntity findById(long id);
-	
+
 	public Boolean existsByUsername(String username);
 
 	public Boolean existsByPhoneNumber(String phoneNumber);
@@ -37,7 +39,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	@Modifying
 	@Query("UPDATE UserEntity u " + "SET u.avatar = ?2" + " WHERE u.id = ?1")
 	public int updateImageUser(long id, String avatar);
-	
+
 	@Transactional
 	@Modifying
 	@Query("UPDATE UserEntity u " + "SET u.password = ?2" + " WHERE u.id = ?1")

@@ -11,15 +11,14 @@ import { Location } from '@angular/common'
 })
 export class CreateCityComponent implements OnInit {
     @ViewChild('myForm') myForm: NgForm;
-    @ViewChild('uploadFile') myInputVariable: ElementRef;
+    @ViewChild('uploadFile') uploadFile: ElementRef;
     formUpdateData: FormGroup;
     reader = new FileReader();
     currentFile: File = null;
-    imgURL: any = null;
-
-    success = '';
-    error = '';
-    errorImage = '';
+    _imgURL: any = null;
+    _success = '';
+    _error = '';
+    _errorImage = '';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -55,11 +54,11 @@ export class CreateCityComponent implements OnInit {
     onSelectFile(event) {
         if (event.target.files.length > 0) {
             this.currentFile = event.target.files[0];
-            this.errorImage = "";
+            this._errorImage = "";
 
             this.reader.readAsDataURL(this.currentFile);
             this.reader.onload = (_event) => {
-                this.imgURL = this.reader.result;
+                this._imgURL = this.reader.result;
             }
         }
     }
@@ -71,26 +70,26 @@ export class CreateCityComponent implements OnInit {
     onSubmit() {
 
         if (this.currentFile == null) {
-            this.errorImage = "Vui lòng chọn ảnh.";
+            this._errorImage = "Vui lòng chọn ảnh.";
         } else
 
             return this.cityService.createCity(this.formUpdateData.value, this.currentFile)
                 .subscribe({
                     next: (res) => {
-                        this.error = '';
-                        this.imgURL = null;
-                        this.myInputVariable.nativeElement.value = "";
+                        this._error = '';
+                        this._imgURL = null;
+                        this.uploadFile.nativeElement.value = "";
                         this.myForm.resetForm();
-                        this.success = res.message;
+                        this._success = res.message;
                         this.loggerService.logger(res);
                     },
                     error: (err) => {
-                        this.error = err.message;
+                        this._error = err.message;
                         this.loggerService.loggerError(err);
                     }
                 }),
                 setTimeout(() => {
-                    this.success = '';
+                    this._success = '';
                 }, 2500);
     }
 }

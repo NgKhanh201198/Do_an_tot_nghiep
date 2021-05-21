@@ -15,9 +15,9 @@ import { RoomTypeService } from '../../../_services/room-type.service';
 export class CreateRoomTypeComponent implements OnInit {
     @ViewChild('myForm') myForm: NgForm;
     formUpdateData: FormGroup;
-    id: number;
-    success: String = "";
-    error: String = "";
+    // id: number;
+    _success: String = "";
+    _error: String = "";
 
     constructor(
         private formBuilder: FormBuilder,
@@ -58,18 +58,18 @@ export class CreateRoomTypeComponent implements OnInit {
         return this.roomTypeService.createRoomType(this.formUpdateData.value)
             .subscribe({
                 next: (res) => {
-                    this.error = '';
+                    this._error = '';
                     this.myForm.resetForm();
-                    this.success = res.message;
+                    this._success = res.message;
                     this.loggerService.logger(res);
                 },
                 error: (err) => {
-                    this.error = err.message;
+                    this._error = err.message;
                     this.loggerService.logger(err);
                 }
             }),
             setTimeout(() => {
-                this.success = '';
+                this._success = '';
             }, 2500);
     }
 }

@@ -66,14 +66,13 @@ public class RoomController {
 
 			HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(hotel)
 					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy khách sạn này!"));
-			
+
 			List<String> list = roomServiceImpl.getListRoomNumber(hotelEntity);
 			if (roomServiceImpl.isRoomExitsByRoomNumber(roomNumber)) {
 				if (list.contains(roomNumber)) {
-					return ResponseEntity.badRequest()
-							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-									HttpStatus.BAD_REQUEST.name(), "Khách sạn " + hotelEntity.getHotelName()
-											+ " đã có tên phòng: " + roomNumber + "!"));
+					return ResponseEntity.badRequest().body(new MessageResponse(new Date(),
+							HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
+							"Khách sạn " + hotelEntity.getHotelName() + " đã có tên phòng: " + roomNumber + "!"));
 				}
 			}
 
@@ -88,11 +87,11 @@ public class RoomController {
 			String fileName = image.getOriginalFilename().substring(image.getOriginalFilename().length() - 4,
 					image.getOriginalFilename().length());
 
-			String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
+			String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
 			String imageURL = BASE_URL + "api/files/" + uuidImage;
 			uploadFileService.save(image, uuidImage);
 			roomEntity.setImage(imageURL);
-			
+
 			roomEntity.setRoomNumber(roomNumber);
 			roomEntity.setContents(contents);
 			roomEntity.setRoomCost(roomCost);
@@ -101,7 +100,7 @@ public class RoomController {
 			roomEntity.setRoomType(roomTypeEntity);
 			roomEntity.setHotel(hotelEntity);
 			roomEntity.setStatus(status);
-			
+
 			roomServiceImpl.createRoom(roomEntity);
 			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm mới thành công!"));
 		} catch (Exception ex) {
@@ -187,6 +186,7 @@ public class RoomController {
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
 			} else {
+				RoomEntity oldRoomEntity = roomServiceImpl.getRoomById(id);
 
 				String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
 
@@ -199,6 +199,11 @@ public class RoomController {
 				String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "")
 						+ fileName.toLowerCase();
 				String image = BASE_URL + "api/files/" + uuidImage;
+
+				if (oldRoomEntity.getImage() != null) {
+					uploadFileService.deleteByName(
+							oldRoomEntity.getImage().substring(oldRoomEntity.getImage().length() - uuidImage.length()));
+				}
 
 				uploadFileService.save(file, uuidImage);
 				roomServiceImpl.updateImage(id, image);

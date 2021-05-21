@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { LoggerService } from 'src/app/_services/logger.service';
 import { RoomTypeService } from '../../../_services/room-type.service';
 
@@ -12,9 +11,9 @@ export class ListRoomTypeComponent implements OnInit {
     collection: Array<any> = [];
 
     //Phân trang
-    page: number = 1;
-    itemsPage = 3;
-    success = "";
+    _page: number = 1;
+    _itemsPage = 5;
+    _success = "";
 
     constructor(
         private roomTypeService: RoomTypeService,
@@ -35,12 +34,12 @@ export class ListRoomTypeComponent implements OnInit {
                         this.collection.splice(i, 1);
                     }
                 }
-                this.success = result.message;
-                this.logger.logger(this.success);
+                this._success = result.message;
+                this.logger.logger(this._success);
             });
         }
         setTimeout(() => {
-            this.success = '';
+            this._success = '';
         }, 2500);
     }
 

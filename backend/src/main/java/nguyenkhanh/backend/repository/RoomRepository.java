@@ -17,7 +17,7 @@ import nguyenkhanh.backend.entity.RoomEntity;
 public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
 	public Optional<RoomEntity> findByRoomNumber(String roomNumber);
 
-//	public list
+	public Optional<RoomEntity> findByRoomNumberAndHotel(String roomNumber, HotelEntity hotelEntity);
 
 	public RoomEntity findById(long id);
 

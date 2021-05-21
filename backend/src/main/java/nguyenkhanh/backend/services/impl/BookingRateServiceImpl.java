@@ -3,6 +3,7 @@ package nguyenkhanh.backend.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import nguyenkhanh.backend.entity.BookingRateEntity;
@@ -27,7 +28,7 @@ public class BookingRateServiceImpl implements IBookingRateService {
 
 	@Override
 	public List<BookingRateEntity> getBookingRateAll() {
-		return bookingRateRepository.findAll();
+		return bookingRateRepository.findAll(Sort.by(Sort.Direction.DESC, "user").descending().and(Sort.by(Sort.Direction.DESC,"id")));
 	}
 
 	@Override
@@ -38,6 +39,11 @@ public class BookingRateServiceImpl implements IBookingRateService {
 	@Override
 	public void deleteBookingRateById(long id) {
 		bookingRateRepository.deleteById(id);
+	}
+
+	@Override
+	public boolean isBookingRateExitsById(long id) {
+		return bookingRateRepository.existsById(id);
 	}
 
 }

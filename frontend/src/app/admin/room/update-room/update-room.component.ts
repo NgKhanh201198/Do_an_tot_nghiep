@@ -14,22 +14,18 @@ import { RoomTypeService } from '../../../_services/room-type.service';
     styleUrls: ['./update-room.component.css']
 })
 export class UpdateRoomComponent implements OnInit {
-
-    @ViewChild('uploadFile') myInputVariable: ElementRef;
+    @ViewChild('uploadFile') uploadFile: ElementRef;
     listHotels: Array<Options> = [];
     listRoomType: Array<Options> = [];
     reader = new FileReader();
     currentFile: File = null;
-    imgURL: any = null;
-    image: any = null;
-
-    id: number;
-    loading: boolean = false;
-    submitted: boolean = false;
-    onUpdate = false;
-    success = '';
-    error = '';
-    errorUpload = "";
+    _imgURL: any = null;
+    _image: any = null;
+    _id: number;
+    _onUpdate = false;
+    _success = '';
+    _error = "";
+    _errorUpload = "";
 
     status: Options[] = [
         { name: 'Đang sử dụng', value: 'Đang sử dụng' },
@@ -80,10 +76,10 @@ export class UpdateRoomComponent implements OnInit {
     });
 
     ngOnInit(): void {
-        this.id = +this.route.snapshot.paramMap.get('id');
-        this.roomService.getRoomById(this.id).subscribe((result: any) => {
-            this.image = result.image;
-            this.imgURL = result.image;
+        this._id = +this.route.snapshot.paramMap.get('id');
+        this.roomService.getRoomById(this._id).subscribe((result: any) => {
+            this._image = result.image;
+            this._imgURL = result.image;
 
             this.formUpdateData = this.formBuilder.group({
                 roomNumber: [result.roomNumber, [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,50}')]],
@@ -151,13 +147,13 @@ export class UpdateRoomComponent implements OnInit {
     }
 
     showForm() {
-        this.onUpdate = true;
+        this._onUpdate = true;
     }
 
     closeForm() {
-        this.onUpdate = false;
-        this.myInputVariable.nativeElement.value = "";
-        this.imgURL = this.image;
+        this._onUpdate = false;
+        this.uploadFile.nativeElement.value = "";
+        this._imgURL = this._image;
     }
 
     onSelectFile(event) {
@@ -166,7 +162,7 @@ export class UpdateRoomComponent implements OnInit {
 
             this.reader.readAsDataURL(this.currentFile);
             this.reader.onload = (_event) => {
-                this.imgURL = this.reader.result;
+                this._imgURL = this.reader.result;
             }
         }
     }
@@ -178,45 +174,45 @@ export class UpdateRoomComponent implements OnInit {
     updateImage() {
         console.log(this.currentFile);
 
-        return this.roomService.updateImage(this.id, this.currentFile)
+        return this.roomService.updateImage(this._id, this.currentFile)
             .subscribe({
                 next: (res) => {
                     this.loggerService.logger(res);
-                    this.image = this.imgURL
-                    this.onUpdate = false;
-                    this.error = '';
-                    this.success = res.message;
+                    this._image = this._imgURL
+                    this._onUpdate = false;
+                    this._error = '';
+                    this._success = res.message;
                 },
                 error: (err) => {
                     this.loggerService.logger(err);
-                    this.success = '';
-                    this.errorUpload = err.message;
+                    this._success = '';
+                    this._errorUpload = err.message;
                 }
             })
             , setTimeout(() => {
-                this.imgURL = '';
-                this.success = '';
+                this._imgURL = '';
+                this._success = '';
             }, 3000);
     }
 
     onSubmit() {
         console.log( this.formUpdateData.value);
         
-        return this.roomService.updateRoom(this.id, this.formUpdateData.value)
+        return this.roomService.updateRoom(this._id, this.formUpdateData.value)
             .subscribe({
                 next: (res) => {
-                    this.error = '';
+                    this._error = '';
 
-                    this.success = res.message;
+                    this._success = res.message;
                     this.loggerService.logger(res);
                 },
                 error: (err) => {
-                    this.error = err.message;
+                    this._error = err.message;
                     this.loggerService.logger(err);
                 }
             }),
             setTimeout(() => {
-                this.success = '';
+                this._success = '';
             }, 2500);
     }
 }

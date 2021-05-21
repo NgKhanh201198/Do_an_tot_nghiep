@@ -1,9 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, filter, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
+import { UserType } from '../_models/user-type.enum';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -22,12 +23,22 @@ export class UserService {
         private http: HttpClient
     ) { }
 
+
+
+    public getNameAllUser() {
+        return this.http.get(`${this.url}`)
+            .pipe(
+                // map((response: []) => response.map(item => item['fullName'])),
+                catchError(this.handleError)
+            );
+    }
+
     handleError(error: HttpErrorResponse) {
         return throwError(error);
     }
-    
+
     public createAccount(data: any): Observable<any> {
-        return this.http.post(`${this.urlAccount}`, data, httpOptions)
+        return this.http.post<any>(`${this.urlAccount}`, data, httpOptions)
             .pipe(
                 catchError(this.handleError)
             );

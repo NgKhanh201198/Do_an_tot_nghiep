@@ -17,8 +17,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "bookingrate")
 public class BookingRateEntity extends BaseEntity {
@@ -40,7 +38,7 @@ public class BookingRateEntity extends BaseEntity {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "room_booked", joinColumns = @JoinColumn(name = "bookingrateid"), inverseJoinColumns = @JoinColumn(name = "roomid"))
-	@JsonIgnore
+//	@JsonIgnore
 	private Set<RoomEntity> rooms = new HashSet<RoomEntity>();
 
 	public BookingRateEntity() {

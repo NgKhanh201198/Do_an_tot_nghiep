@@ -15,17 +15,16 @@ import { RoomTypeService } from '../../../_services/room-type.service';
 export class CreateRoomComponent implements OnInit {
 
     @ViewChild('myForm') myForm: NgForm;
-    @ViewChild('uploadFile') myInputVariable: ElementRef;
+    @ViewChild('uploadFile') uploadFile: ElementRef;
     listHotels: Array<Options> = [];
     listRoomType: Array<Options> = [];
     formUpdateData: FormGroup;
     reader = new FileReader();
     currentFile: File = null;
-    imgURL: any = null;
-
-    success = '';
-    error = '';
-    errorImage = '';
+    _imgURL: any = null;
+    _success = '';
+    _error = '';
+    _errorImage = '';
 
     status: Options[] = [
         { name: 'Đang sử dụng', value: 'Đang sử dụng' },
@@ -66,7 +65,7 @@ export class CreateRoomComponent implements OnInit {
     ngOnInit(): void {
         this.formUpdateData = this.formBuilder.group({
             roomNumber: ['', [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,18}')]],
-            contents: ['', [Validators.required, Validators.pattern('[0-9a-zA-Z,ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,18}')]],
+            contents: ['', [Validators.required, Validators.pattern('[0-9a-zA-Z,ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,255}')]],
             roomCost: ['', [Validators.required, Validators.pattern('[0-9]{0,11}')]],
             discount: ['', [Validators.required, Validators.pattern('[0-9]{0,11}')]],
             numberOfPeople: ['', [Validators.required, Validators.pattern('[0-9]{0,11}')]],
@@ -132,11 +131,11 @@ export class CreateRoomComponent implements OnInit {
     onSelectFile(event) {
         if (event.target.files.length > 0) {
             this.currentFile = event.target.files[0];
-            this.errorImage = "";
+            this._errorImage = "";
 
             this.reader.readAsDataURL(this.currentFile);
             this.reader.onload = (_event) => {
-                this.imgURL = this.reader.result;
+                this._imgURL = this.reader.result;
             }
         }
     }
@@ -149,26 +148,26 @@ export class CreateRoomComponent implements OnInit {
         this.loggerService.logger(this.formUpdateData.value);
 
         if (this.currentFile == null) {
-            this.errorImage = "Vui lòng chọn ảnh.";
+            this._errorImage = "Vui lòng chọn ảnh.";
         } else
 
             return this.roomService.createRoom(this.formUpdateData.value, this.currentFile)
                 .subscribe({
                     next: (res) => {
-                        this.error = '';
-                        this.imgURL = null;
-                        this.myInputVariable.nativeElement.value = "";
+                        this._error = '';
+                        this._imgURL = null;
+                        this.uploadFile.nativeElement.value = "";
                         this.myForm.resetForm();
-                        this.success = res.message;
+                        this._success = res.message;
                         this.loggerService.logger(res);
                     },
                     error: (err) => {
-                        this.error = err.message;
+                        this._error = err.message;
                         this.loggerService.loggerError(err);
                     }
                 }),
                 setTimeout(() => {
-                    this.success = '';
+                    this._success = '';
                 }, 2500);
     }
 }

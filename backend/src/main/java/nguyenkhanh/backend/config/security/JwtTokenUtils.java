@@ -28,7 +28,7 @@ public class JwtTokenUtils {
 	private int JWT_EXPIRATIONTIME;
 
 	public String generateToken(Authentication authentication) {
-
+		// Truy xuất thông tin người dùng đang đặng nhập.
 		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();// xác thực
 
 		return Jwts.builder().setSubject(userPrincipal.getUsername()).setIssuedAt(new Date())

@@ -12,7 +12,7 @@ import { AuthenticationService } from 'src/app/_services/authentication.service'
 })
 export class NavbarComponent implements OnInit {
 	currentUser: User;
-	userFromApi: User[] = [];
+
 	constructor(
 		private authenticationService: AuthenticationService,
 		private router: Router
@@ -23,16 +23,15 @@ export class NavbarComponent implements OnInit {
 	}
 
 	get isAdmin() {
-        for (let index = 0; index < this.currentUser.permissions.length; index++) {
-            if (this.currentUser && this.currentUser.permissions[index] === Permission.ADMIN_PAGE)
-                return true;
-        }
-        return false;
-    }
-
+		for (let index = 0; index < this.currentUser.permissions.length; index++) {
+			if (this.currentUser && this.currentUser.permissions[index] === Permission.ADMIN_PAGE)
+				return true;
+		}
+		return false;
+	}
 
 	logout() {
-        this.authenticationService.logout();
-        this.router.navigate([Path.LOGIN]);
-    }
+		this.authenticationService.logout();
+		this.router.navigate([Path.LOGIN]);
+	}
 }

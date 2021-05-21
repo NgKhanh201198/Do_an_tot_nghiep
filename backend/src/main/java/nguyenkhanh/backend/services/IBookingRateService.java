@@ -18,4 +18,8 @@ public interface IBookingRateService {
 
 	// Delete
 	public void deleteBookingRateById(long id);
+
+	// Check
+	public boolean isBookingRateExitsById(long id);
+
 }

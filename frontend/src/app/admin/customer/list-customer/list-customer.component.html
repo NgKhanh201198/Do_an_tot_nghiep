@@ -20,7 +20,7 @@
                                 <th style="width:20%" scope="col">Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody *ngFor="let item of collection| paginate: { itemsPerPage: 5, currentPage: page}">
+                        <tbody *ngFor="let item of collection| paginate: { itemsPerPage: _itemsPage, currentPage: _page}">
                             <tr class="text-center">
                                 <td>
                                     <div class="user-panel">
@@ -40,15 +40,14 @@
                                     <div class="status-locked" *ngIf="item.status=='LOCKED'">Bị Khóa</div>
                                 </td>
                                 <td class="text-center">
-                                    <a [routerLink]="['/admin-page','updated-customer',item.id]" class="btn-edit btn btn-outline-info" matTooltip="Chỉnh sửa" [matTooltipPosition]="'left'"><i class="fas fa-pen "></i></a>
-                                    <!-- <a [routerLink]="['/admin-page','list-account']" (click)="deleteData(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Khóa" [matTooltipPosition]="'right'"><i class="bi bi-lock-fill"></i></a> -->
+                                    <a [routerLink]="['/admin-page','updated-customer',item.id]" class="btn-edit btn btn-outline-info" matTooltip="Chỉnh sửa" [matTooltipPosition]="'right'"><i class="fas fa-pen "></i></a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="card-footer pb-0">
-                    <pagination-controls class="text-center" (pageChange)="page = $event" maxSize="5"></pagination-controls>
+                    <pagination-controls class="text-center" (pageChange)="_page = $event" maxSize="5"></pagination-controls>
                 </div>
             </div>
         </div>

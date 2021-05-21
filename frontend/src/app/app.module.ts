@@ -26,6 +26,7 @@ import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { CommonModule } from '@angular/common';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 //Service
 import { UserService } from './_services/user.service';
@@ -165,7 +166,8 @@ import { UpdateCityComponent } from './admin/city/update-city/update-city.compon
         MatDatepickerModule,
         MatNativeDateModule,
         MatMomentDateModule,
-        TextFieldModule
+        TextFieldModule,
+        MatAutocompleteModule
     ],
     providers: [
         UserService,

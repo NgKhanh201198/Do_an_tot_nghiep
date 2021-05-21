@@ -28,6 +28,10 @@ public class RoomServiceImpl implements IRoomService {
 	}
 
 	@Override
+	public Optional<RoomEntity> findByRoomNumberAndHotel(String roomNumber, HotelEntity hotelEntity) {
+		return roomRepository.findByRoomNumberAndHotel(roomNumber, hotelEntity);
+	}
+	@Override
 	public RoomEntity getRoomById(long id) {
 		return roomRepository.findById(id);
 	}
@@ -71,5 +75,7 @@ public class RoomServiceImpl implements IRoomService {
 	public boolean isRoomExitsByHotel(HotelEntity hotelEntity) {
 		return roomRepository.existsByHotel(hotelEntity);
 	}
+
+
 
 }

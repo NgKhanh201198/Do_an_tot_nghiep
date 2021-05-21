@@ -19,7 +19,7 @@
                                 <th style="width:15%" scope="col">Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody *ngFor="let item of collection| paginate: { itemsPerPage: 5, currentPage: page}">
+                        <tbody *ngFor="let item of collection| paginate: { itemsPerPage: 5, currentPage: _page}">
                             <tr class="text-center">
                                 <td>
                                     <div class="user-panel">
@@ -45,7 +45,7 @@
                     </table>
                 </div>
                 <div class="card-footer pb-0">
-                    <pagination-controls class="text-center" (pageChange)="page = $event" maxSize="5"></pagination-controls>
+                    <pagination-controls class="text-center" (pageChange)="_page = $event" maxSize="5"></pagination-controls>
                 </div>
             </div>
         </div>
