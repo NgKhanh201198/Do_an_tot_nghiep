@@ -31,9 +31,15 @@ public class RoomServiceImpl implements IRoomService {
 	public Optional<RoomEntity> findByRoomNumberAndHotel(String roomNumber, HotelEntity hotelEntity) {
 		return roomRepository.findByRoomNumberAndHotel(roomNumber, hotelEntity);
 	}
+
 	@Override
 	public RoomEntity getRoomById(long id) {
 		return roomRepository.findById(id);
+	}
+
+	@Override
+	public List<RoomEntity> getRoomByHotel(HotelEntity hotelEntity) {
+		return roomRepository.findByHotel(hotelEntity);
 	}
 
 	@Override
@@ -75,7 +81,5 @@ public class RoomServiceImpl implements IRoomService {
 	public boolean isRoomExitsByHotel(HotelEntity hotelEntity) {
 		return roomRepository.existsByHotel(hotelEntity);
 	}
-
-
 
 }

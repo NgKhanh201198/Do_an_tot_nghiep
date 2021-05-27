@@ -1,22 +1,40 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { LoggerService } from './logger.service';
 
+const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 @Injectable({
     providedIn: 'root'
 })
 export class RoomService {
 
     url = `${environment.baseUrlServer}` + 'api/room';
+    urlCheckRoomEmpty = `${environment.baseUrlServer}` + 'api/checkRoomEmpty';
 
     constructor(
-        private http: HttpClient
+        private http: HttpClient,
+        private logger: LoggerService
     ) { }
 
     handleError(error: HttpErrorResponse) {
         return throwError(error);
+    }
+
+    public checkRoomEmpty(hotel: any, checkInDate: any, checkOutDate: any): Observable<any> {
+        const body = {
+            hotel: hotel,
+            checkInDate: checkInDate,
+            checkOutDate: checkOutDate
+        };
+        return this.http.post<any>(`${this.urlCheckRoomEmpty}`, body)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     public createRoom(data: any, file: File): Observable<any> {
@@ -49,6 +67,14 @@ export class RoomService {
 
     public getRoomById(id: any): Observable<any> {
         return this.http.get<any>(`${this.url}/${id}`)
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
+    public getRoomByHotel(hotelName: any): Observable<any> {
+        const params = new HttpParams().append('hotelName', hotelName);
+        return this.http.get<any>(`${this.url + '/byHotel'}`, { params })
             .pipe(
                 catchError(this.handleError)
             );

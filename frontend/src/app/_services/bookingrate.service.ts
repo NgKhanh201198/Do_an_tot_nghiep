@@ -18,8 +18,15 @@ export class BookingrateService {
     handleError(error: HttpErrorResponse) {
         return throwError(error);
     }
-    
-    public createBookingrate(data: any): Observable<any> {
+
+    public createBookingrate(checkInDate: any, checkOutDate: any, user: any, hotel: any, rooms: any): Observable<any> {
+        const data = {
+            checkInDate: checkInDate,
+            checkOutDate: checkOutDate,
+            user: user,
+            hotel: hotel,
+            rooms: rooms,
+        };
         return this.http.post(`${this.url}`, data)
             .pipe(
                 catchError(this.handleError)

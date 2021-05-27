@@ -42,6 +42,7 @@ export class CreateAccountComponent implements OnInit {
                 let userType = new Options(result[index].userTypeName, result[index].keyName);
                 this.listUserType.push(userType);
             }
+            this.loggerService.loggerData(this.listUserType);
         })
 
         this.userService.getAllRole().subscribe((result: any) => {
@@ -49,6 +50,7 @@ export class CreateAccountComponent implements OnInit {
                 let role = new Options(result[index].roleName, result[index].keyName);
                 this.listRoles.push(role);
             }
+            this.loggerService.loggerData(this.listRoles);
         })
     }
 

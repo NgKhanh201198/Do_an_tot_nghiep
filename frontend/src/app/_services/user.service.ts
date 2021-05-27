@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 
@@ -33,18 +33,25 @@ export class UserService {
             );
     }
 
-    public getAllUser(): Observable<User> {
-        return this.http.get<User>(`${this.url}`)
+    public getAllUser(): Observable<any> {
+        return this.http.get<any>(`${this.url}`)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
-    public getUserById(id: any): Observable<User> {
-        return this.http.get<User>(`${this.url}/${id}`)
+    public getUserById(id: any): Observable<any> {
+        return this.http.get<any>(`${this.url}/${id}`)
             .pipe(
                 catchError(this.handleError)
             );
+    }
+
+    public getNameCustomer() {
+        return this.http.get(`${this.urlCustomer}`)
+            .pipe(
+                map((response: []) => response.map(item => item['username']))
+            )
     }
 
     public updateUserById(id: any, data: any): Observable<any> {
@@ -94,16 +101,16 @@ export class UserService {
     }
 
     // User Type
-    public getAllUserType(): Observable<User> {
-        return this.http.get<User>(`${this.urlGetUserType}`)
+    public getAllUserType(): Observable<any> {
+        return this.http.get<any>(`${this.urlGetUserType}`)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     //Role
-    public getAllRole(): Observable<User> {
-        return this.http.get<User>(`${this.urlGetRoles}`)
+    public getAllRole(): Observable<any> {
+        return this.http.get<any>(`${this.urlGetRoles}`)
             .pipe(
                 catchError(this.handleError)
             );

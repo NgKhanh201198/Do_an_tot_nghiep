@@ -1,6 +1,7 @@
 package nguyenkhanh.backend.repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -19,6 +20,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	public Optional<UserEntity> findByFullName(String fullName);
 
 	public UserEntity findById(long id);
+
+//	@Transactional
+//	@Query("SELECT fullname FROM UserEntity u, UserTypeEntity ut " + " WHERE u.userType.id = ut.id AND ut.keyName = 'customer'")
+//	public List<String> getByUserTypeName();
 
 	public Boolean existsByUsername(String username);
 

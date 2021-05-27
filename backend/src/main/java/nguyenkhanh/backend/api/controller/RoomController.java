@@ -127,6 +127,22 @@ public class RoomController {
 		}
 	}
 
+	@GetMapping("/room/byHotel")
+	public ResponseEntity<?> getRoomByHotel(
+			@RequestParam(name = "hotelName", defaultValue = "") String hotelName) {
+		HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(hotelName)
+				.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy khách sạn này!"));
+//		if (hotelServiceImpl.isHotelExitsById(id) == false) {
+//			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+//					HttpStatus.NOT_FOUND.name(), "Không tìm thấy khách sạn có id=" + id);
+//			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+//		} else {
+//			HotelEntity hotelEntity = hotelServiceImpl.getHotelById(id);
+			List<RoomEntity> listRoom = roomServiceImpl.getRoomByHotel(hotelEntity);
+			return new ResponseEntity<List<RoomEntity>>(listRoom, HttpStatus.OK);
+//		}
+	}
+
 	@PutMapping("/room/{id}")
 	public ResponseEntity<?> updateRoom(@PathVariable("id") long id, @RequestBody RoomDTO roomDTO) {
 		try {

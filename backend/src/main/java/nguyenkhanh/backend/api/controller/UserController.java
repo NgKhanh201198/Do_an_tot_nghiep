@@ -2,6 +2,7 @@ package nguyenkhanh.backend.api.controller;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -100,9 +101,6 @@ public class UserController {
 						HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), "Vai trò không được để trống"));
 			} else {
 				strRoles.forEach(role -> {
-//					RoleEntity managerRole = roleServiceImpl.finByKeyName(role)
-//							.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy quyền " + role));
-//					roleEntity.add(managerRole);
 
 					switch (role) {
 					case "MANAGER":
@@ -127,8 +125,8 @@ public class UserController {
 
 			// Set DateOfBirth
 			String dateOfBirth = userDTO.getDateOfBirth();
-			AppController controller = new AppController();
-			Date date = controller.stringToDate(dateOfBirth);
+			Common common = new Common();
+			Date date = common.stringToDate(dateOfBirth);
 			userEntity.setDateOfBirth(date);
 
 			userEntity.setFullName(userDTO.getFullName());
@@ -154,6 +152,27 @@ public class UserController {
 	public ResponseEntity<?> listUser() {
 		List<UserEntity> userEntity = userServiceImpl.getUserAll();
 		return new ResponseEntity<List<UserEntity>>(userEntity, HttpStatus.OK);
+	}
+
+	@GetMapping("/customer")
+//	@PreAuthorize("hasRole('GetUserAll')")
+	public ResponseEntity<?> listCustomer() {
+		Set<String> userTypename = new HashSet<String>();
+		userTypename.add("customer");
+
+		Set<String> status = new HashSet<String>();
+		status.add("ACTIVE");
+
+		List<UserEntity> userEntity = userServiceImpl.getUserAll();
+		List<UserEntity> customer = new ArrayList<UserEntity>();
+
+		for (int i = 0; i < userEntity.size(); i++) {
+			if (userTypename.contains(userEntity.get(i).getUserType().getKeyName())
+					&& status.contains(userEntity.get(i).getStatus())) {
+				customer.add(userEntity.get(i));
+			}
+		}
+		return new ResponseEntity<>(customer, HttpStatus.OK);
 	}
 
 	@GetMapping("/user/{id}")
@@ -218,26 +237,12 @@ public class UserController {
 					});
 				}
 				oldUserEntity.setRoles(roles);
-				
-				// Set DateOfBirth
-				String dateOfBirth = userAccountDTO.getDateOfBirth();
-				AppController controller = new AppController();
-				Date date = controller.stringToDate(dateOfBirth);
-				oldUserEntity.setDateOfBirth(date);
 
 				// Set DateOfBirth
-//				String dateOfBirth = userAccountDTO.getDateOfBirth();
-//				Date date;
-//				if (isDateValid(dateOfBirth, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")) {
-//					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-//					formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-//					date = formatter.parse(dateOfBirth);
-//				} else {
-//					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-//					formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-//					date = formatter.parse(dateOfBirth);
-//				}
-//				oldUserEntity.setDateOfBirth(date);
+				String dateOfBirth = userAccountDTO.getDateOfBirth();
+				Common controller = new Common();
+				Date date = controller.stringToDate(dateOfBirth);
+				oldUserEntity.setDateOfBirth(date);
 
 				// Set UserType
 				UserTypeEntity typeEntity = userTypeServiceImpl.findByKeyName(userAccountDTO.getUserType())

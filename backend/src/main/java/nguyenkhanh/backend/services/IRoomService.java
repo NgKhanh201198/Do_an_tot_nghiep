@@ -17,6 +17,8 @@ public interface IRoomService {
 
 	public RoomEntity getRoomById(long id);
 
+	public List<RoomEntity> getRoomByHotel(HotelEntity hotelEntity);
+
 	public List<RoomEntity> getRoomAll();
 
 	public List<String> getListRoomNumber(HotelEntity hotelEntity);

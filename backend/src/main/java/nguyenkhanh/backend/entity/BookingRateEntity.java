@@ -31,11 +31,15 @@ public class BookingRateEntity extends BaseEntity {
 	@Column(name = "checkoutdate")
 	private Date checkOutDate;
 
+	@Column(name = "status")
+	private String status;
+
 	@ManyToOne
 	@JoinColumn(name = "userid")
 //	@JsonIgnore
 	private UserEntity user;
 
+//	CascadeType.ALL Khi 1 xóa user -> dữ liệu theo user sẽ bị xóa 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "room_booked", joinColumns = @JoinColumn(name = "bookingrateid"), inverseJoinColumns = @JoinColumn(name = "roomid"))
 //	@JsonIgnore
@@ -45,12 +49,14 @@ public class BookingRateEntity extends BaseEntity {
 		super();
 	}
 
-	public BookingRateEntity(Long id, Date checkInDate, Date checkOutDate, UserEntity user, Set<RoomEntity> rooms) {
+	public BookingRateEntity(Long id, Date checkInDate, Date checkOutDate, String status, UserEntity user,
+			Set<RoomEntity> rooms) {
 		super();
 		this.id = id;
 		this.checkInDate = checkInDate;
 		this.checkOutDate = checkOutDate;
 		this.user = user;
+		this.status = status;
 		this.rooms = rooms;
 	}
 
@@ -76,6 +82,14 @@ public class BookingRateEntity extends BaseEntity {
 
 	public void setCheckOutDate(Date checkOutDate) {
 		this.checkOutDate = checkOutDate;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public UserEntity getUser() {

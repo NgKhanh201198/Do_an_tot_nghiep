@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,7 +55,7 @@ public class BookingRateController {
 		try {
 			BookingRateEntity bookingRateEntity = new BookingRateEntity();
 
-			UserEntity userEntity = userServiceImpl.getUserByFullName(bookingRateDTO.getUser())
+			UserEntity userEntity = userServiceImpl.findByUsername(bookingRateDTO.getUser())
 					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng này!"));
 
 			// Set Rooms
@@ -72,7 +73,7 @@ public class BookingRateController {
 			} else {
 				strRoom.forEach(room -> {
 					RoomEntity roomEntity = roomServiceImpl.findByRoomNumberAndHotel(room, hotelEntity)
-							.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy" + room + " này!"));
+							.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy " + room + " này!"));
 
 					setRoomEntity.add(roomEntity);
 				});
@@ -80,16 +81,17 @@ public class BookingRateController {
 
 			// Set CheckInDate
 			String strCheckInDate = bookingRateDTO.getCheckInDate();
-			AppController controller1 = new AppController();
+			Common controller1 = new Common();
 			Date checkInDate = controller1.stringToDate(strCheckInDate);
 			bookingRateEntity.setCheckInDate(checkInDate);
 
 			// Set CheckOutDate
 			String strCheckOutDate = bookingRateDTO.getCheckOutDate();
-			AppController controller2 = new AppController();
+			Common controller2 = new Common();
 			Date checkOutDate = controller2.stringToDate(strCheckOutDate);
 			bookingRateEntity.setCheckOutDate(checkOutDate);
 
+			bookingRateEntity.setStatus("Đã đặt");
 			bookingRateEntity.setUser(userEntity);
 			bookingRateEntity.setRooms(setRoomEntity);
 
@@ -161,13 +163,13 @@ public class BookingRateController {
 
 				// Set CheckInDate
 				String strCheckInDate = bookingRateDTO.getCheckInDate();
-				AppController controller1 = new AppController();
+				Common controller1 = new Common();
 				Date checkInDate = controller1.stringToDate(strCheckInDate);
 				oldBookingRateEntity.setCheckInDate(checkInDate);
 
 				// Set CheckOutDate
 				String strCheckOutDate = bookingRateDTO.getCheckOutDate();
-				AppController controller2 = new AppController();
+				Common controller2 = new Common();
 				Date checkOutDate = controller2.stringToDate(strCheckOutDate);
 				oldBookingRateEntity.setCheckOutDate(checkOutDate);
 
@@ -184,4 +186,17 @@ public class BookingRateController {
 		}
 
 	}
+	
+	@DeleteMapping("/bookingrate/{id}")
+	public ResponseEntity<?> deleteBookingrate(@Valid @PathVariable("id") long id) {
+		try {
+			bookingRateServiceImpl.deleteBookingRateById(id);
+			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Xóa thành công!"));
+		} catch (Exception e) {
+			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
+					"Không tìm thấy đơn đặt trước có id= " + id);
+			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+		}
+	}
+	
 }

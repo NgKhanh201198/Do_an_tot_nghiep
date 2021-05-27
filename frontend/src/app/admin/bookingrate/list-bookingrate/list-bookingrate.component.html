@@ -18,38 +18,46 @@
                     <table class="table">
                         <thead>
                             <tr class="text-center">
-                                <th style="width:5%" scope="col">Avatar</th>
-                                <th style="width:20%" scope="col">Tên khách hàng</th>
-                                <th style="width:15%" scope="col">Ngày đặt</th>
-                                <th style="width:15%" scope="col">Ngày trả</th>
+                                <th style="width:8%" scope="col">Mã đơn</th>
+                                <!-- <th style="width:5%" scope="col">Avatar</th> -->
+                                <!-- <th style="width:15%" scope="col">Tên khách hàng</th> -->
+                                <th style="width:15%" scope="col">Email khách hàng</th>
                                 <th style="width:15%" scope="col">Khách sạn</th>
-                                <th style="width:15%" scope="col">Phòng</th>
+                                <th style="width:12%" scope="col">Phòng</th>
+                                <th style="width:10%" scope="col">Ngày đặt</th>
+                                <th style="width:10%" scope="col">Ngày trả</th>
+                                <th style="width:14%" scope="col">Trạng thái</th>
                                 <th style="width:20%" scope="col">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody *ngFor="let item of collection | paginate: { itemsPerPage: _itemsPage, currentPage: _page}">
                             <tr class="text-center">
-                                <td>
+                                <td>{{item.id}}</td>
+                                <!-- <td>
                                     <div class="user-panel">
                                         <div class="image">
                                             <img *ngIf="!item.user.avatar" src="../../../../assets/customs/images/user.png" class="img-circle" alt="Avatar">
                                             <img *ngIf="item.user.avatar" src="{{item.user.avatar}}" class="img-circle" alt="Avatar">
                                         </div>
                                     </div>
-                                </td>
-                                <!-- <td>{{item.createdBy}}</td> -->
-                                <td>{{item.user.fullName}}</td>
-                                <td>{{item.checkInDate | date:'dd-MM-yyyy'}}</td>
-                                <td>{{item.checkOutDate | date:'dd-MM-yyyy'}}</td>
+                                </td> -->
+                                <td>{{item.user.username}}</td>
                                 <td>{{item.rooms[0].hotel.hotelName}} </td>
                                 <td>
                                     <ul *ngFor="let room of item.rooms">
                                         <p> {{room.roomNumber}} </p>
                                     </ul>
                                 </td>
+                                <td style="color: rgb(0, 255, 0);">{{item.checkInDate | date:'dd-MM-yyyy'}}</td>
+                                <td style="color: red;">{{item.checkOutDate | date:'dd-MM-yyyy'}}</td>
                                 <td>
-                                    <a [routerLink]="['/admin-page','updated-bookingrate',item.id]" class="btn-edit btn btn-outline-info" matTooltip="Chỉnh sửa" [matTooltipPosition]="'left'"><i class="fas fa-pen"></i></a>
-                                    <a [routerLink]="['/admin-page','list-bookingrate']" (click)="deleteCity(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Xóa" [matTooltipPosition]="'right'"><i class="fas fa-trash"></i></a>
+                                    <div class="status-locked" *ngIf="item.status=='Đã hủy'">Đã hủy</div>
+                                    <div class="status-inactive" *ngIf="item.status=='Đã nhận'">Đã nhận</div>
+                                    <div class="status-active" *ngIf="item.status=='Đã đặt'">Đã đặt</div>
+                                </td>
+                                <td>
+                                    <!-- <a [routerLink]="['/admin-page','updated-bookingrate',item.id]" class="btn-edit btn btn-outline-info" matTooltip="Chỉnh sửa" [matTooltipPosition]="'left'"><i class="fas fa-pen"></i></a> -->
+                                    <a [routerLink]="['/admin-page','list-bookingrate']" (click)="deleteBookingrate(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Xóa" [matTooltipPosition]="'right'"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
                         </tbody>

@@ -38,6 +38,7 @@ public class BookingRateServiceImpl implements IBookingRateService {
 
 	@Override
 	public void deleteBookingRateById(long id) {
+		bookingRateRepository.deleteRoomBookedByBookingrateId(id);
 		bookingRateRepository.deleteById(id);
 	}
 

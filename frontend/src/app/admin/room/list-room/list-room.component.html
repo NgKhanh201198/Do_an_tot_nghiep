@@ -23,7 +23,7 @@
                                 <th style="width:10%" scope="col">Tên phòng</th>
                                 <th style="width:10%" scope="col">Giá phòng</th>
                                 <th style="width:11%" scope="col">Giá giảm giá</th>
-                                <th style="width:14%" scope="col">Trạng thái</th>
+                                <!-- <th style="width:14%" scope="col">Trạng thái</th> -->
                                 <th style="width:20%" scope="col">Thao tác</th>
                             </tr>
                         </thead>
@@ -38,11 +38,11 @@
                                 <td>{{item.roomNumber}}</td>
                                 <td>{{item.roomCost | currency:"VND"}}</td>
                                 <td>{{item.discount | currency:"VND"}}</td>
-                                <td>
+                                <!-- <td>
                                     <div class="status-locked" *ngIf="item.status=='Đang sử dụng'">Đang sử dụng</div>
                                     <div class="status-inactive" *ngIf="item.status=='Đang bảo trì'">Đang bảo trì</div>
                                     <div class="status-active" *ngIf="item.status=='Đang trống'">Đang trống</div>
-                                </td>
+                                </td> -->
                                 <td>
                                     <a [routerLink]="['/admin-page','updated-room',item.id]" class="btn-edit btn btn-outline-info" matTooltip="Chỉnh sửa" [matTooltipPosition]="'left'"><i class="fas fa-pen"></i></a>
                                     <a [routerLink]="['/admin-page','list-room']" (click)="deleteRoom(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Xóa" [matTooltipPosition]="'right'"><i class="fas fa-trash"></i></a>

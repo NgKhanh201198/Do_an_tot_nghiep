@@ -7,7 +7,8 @@ import { RoomService } from 'src/app/_services/room.service';
 import { HotelService } from 'src/app/_services/hotel.service';
 import { UserService } from 'src/app/_services/user.service';
 import { BookingrateService } from '../../../_services/bookingrate.service';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { Router } from '@angular/router';
+import { ThemePalette } from '@angular/material/core';
 @Component({
     selector: 'app-create-bookingrate',
     templateUrl: './create-bookingrate.component.html',
@@ -15,24 +16,20 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 })
 export class CreateBookingrateComponent implements OnInit {
     @ViewChild('myForm') myForm: NgForm;
+    collection = [];
     listUsers = [];
     listHotels: Array<Options> = [];
-    listRooms: Array<Options> = [];
-    filteredOptions: any;
+    filteredOptions;
     _minDate: Date = new Date();
     _id: number;
     _success: String = "";
     _error: String = "";
-    _selectRoom = true;
-    _selectHotel = true;
-    _hotel = null;
-    _checkInDate = null;
-    _checkOutDate = null;
+    _errorCheckRoom: String = "";
+    _selectRoom = false;
 
     formUpdateData = this.formBuilder.group({
         user: ['', [Validators.required]],
         hotel: ['', [Validators.required,]],
-        rooms: ['', [Validators.required,]],
         checkInDate: ['', [Validators.required,]],
         checkOutDate: ['', [Validators.required,]],
     });
@@ -44,25 +41,22 @@ export class CreateBookingrateComponent implements OnInit {
         private roomService: RoomService,
         private userService: UserService,
         private hotelService: HotelService,
-        private loggerService: LoggerService,
-    ) { }
+        private loggerService: LoggerService
+    ) {
+
+    }
 
 
     filterData(enteredData) {
         this.filteredOptions = this.listUsers.filter(item => {
+            this.loggerService.logger(item);
             return item.toLowerCase().indexOf(enteredData.toLowerCase()) > -1
         })
     }
 
-    ngOnInit(): void {
-        this.userService.getAllUser().subscribe((result: any) => {
-            for (let index = 0; index < result.length; index++) {
-                if (result[index].userType.keyName === "customer") {
-                    this.listUsers.push(result[index].fullName);
-                }
-            }
-            this.filteredOptions = this.listUsers;
-        });
+    ngOnInit() {
+        this.initForm();
+        this.getNameCustomer();
 
         this.hotelService.getHotelAll().subscribe((result: any) => {
             for (let index = 0; index < result.length; index++) {
@@ -71,10 +65,14 @@ export class CreateBookingrateComponent implements OnInit {
             }
         });
 
+        console.log(this.formUpdateData.value);
+        
+    }
+
+    initForm() {
         this.formUpdateData = this.formBuilder.group({
             user: ['', [Validators.required]],
             hotel: ['', [Validators.required,]],
-            rooms: ['', [Validators.required,]],
             checkInDate: ['', [Validators.required,]],
             checkOutDate: ['', [Validators.required,]],
         });
@@ -83,8 +81,13 @@ export class CreateBookingrateComponent implements OnInit {
             this.loggerService.loggerData('data: ' + response);
             this.filterData(response);
         });
+    }
 
-
+    getNameCustomer() {
+        this.userService.getNameCustomer().subscribe(response => {
+            this.listUsers = response;
+            this.filteredOptions = response;
+        });
     }
 
     //Invalid error message
@@ -113,30 +116,30 @@ export class CreateBookingrateComponent implements OnInit {
         return 'Vui lòng nhập ngày nhận và ngày trả.';
     }
 
-    checkInDate(event: MatDatepickerInputEvent<Date>) {
-        this._checkInDate = event.value;
+    //Check box
+    listRooms: any = [];
+    color: ThemePalette = 'primary';
+    allComplete: boolean = false;
 
-    }
-    checkOutDate(event: MatDatepickerInputEvent<Date>) {
-        this._selectHotel = false;
-        this._checkOutDate = event.value;
-    }
-
-    onSelectHotel(event) {
-        this._selectRoom = false;
-        this._hotel = event.value;
+    //Kiểm tra id nào đã được checked
+    isCheckSelectedId() {
         this.listRooms = [];
-        this.formUpdateData.get('rooms').setValue('');
-
-        this.roomService.getRoomAll().subscribe((result: any) => {
-            for (let index = 0; index < result.length; index++) {
-                this.loggerService.loggerData(result[index]);
-                if (result[index].hotel.hotelName == this._hotel) {
-                    let room = new Options(result[index].roomNumber, result[index].roomNumber);
-                    this.listRooms.push(room);
-                }
+        this.collection.forEach(element => {
+            if (element.isSelected) {
+                this.listRooms.push(element.roomNumber);
             }
         });
+    }
+
+    updateAllComplete() {
+        this.allComplete = this.collection != null && this.collection.every(t => t.isSelected);
+        this.isCheckSelectedId();
+    }
+    someComplete(): boolean {
+        if (this.collection == null) {
+            return false;
+        }
+        return this.collection.filter(t => t.isSelected).length > 0 && !this.allComplete;
     }
 
     comeBack() {
@@ -144,22 +147,57 @@ export class CreateBookingrateComponent implements OnInit {
     }
 
     onSubmit() {
+        this._errorCheckRoom = "";
+        this.collection = [];
+        this._selectRoom = false;
         this.loggerService.logger(this.formUpdateData.value);
-        this.bookingrateService.createBookingrate(this.formUpdateData.value)
-            .subscribe({
+
+        if (this.formUpdateData.value.user == "" || this.formUpdateData.value.checkInDate == "" || this.formUpdateData.value.checkOutDate == "") {
+            this.collection = [];
+        } else {
+            this.roomService.checkRoomEmpty(
+                this.formUpdateData.value.hotel,
+                this.formUpdateData.value.checkInDate,
+                this.formUpdateData.value.checkOutDate
+            ).subscribe({
                 next: (result) => {
-                    this._error = '';
-                    this.myForm.resetForm();
-                    this._success = result.message;
                     this.loggerService.logger(result);
+                    if (result.length === 0) {
+                        this._errorCheckRoom = " Khách sạn " + this.formUpdateData.value.hotel + " hết phòng trong thời gian này";
+                    } else {
+                        this._selectRoom = true;
+                        this.collection = result;
+                    }
                 },
                 error: (error) => {
-                    this._error = error.message;
-                    this.loggerService.loggerError(error.message);
+                    this.loggerService.loggerError(error);
+                }
+            });
+        }
+    }
+
+    bookingRoom() {
+
+        this.bookingrateService.createBookingrate(
+            this.formUpdateData.value.checkInDate,
+            this.formUpdateData.value.checkOutDate,
+            this.formUpdateData.value.user,
+            this.formUpdateData.value.hotel,
+            this.listRooms
+        )
+            .subscribe({
+                next: (result) => {
+                    this._success = result.message;
+                    this.collection = [];
+                    this._selectRoom = false;
+                },
+                error: (error) => {
+                    this._error = error.message
                 }
             }),
             setTimeout(() => {
                 this._success = '';
-            }, 3000);
+                this.comeBack();
+            }, 2500);
     }
 }
