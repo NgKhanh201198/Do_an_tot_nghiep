@@ -27,6 +27,11 @@ public class CityServiceImpl implements ICityService {
 	}
 
 	@Override
+	public List<CityEntity> findTop5ById() {
+		return cityRepository.findTop5ByOrderByIdAsc();
+	}
+
+	@Override
 	public CityEntity getCityById(long id) {
 		return cityRepository.findById(id);
 	}

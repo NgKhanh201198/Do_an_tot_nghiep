@@ -47,11 +47,7 @@ export enum Path {
 
     CREATE_BOOKINGROOM = 'create-bookingroom',
     LIST_BOOKINGROOM = 'list-bookingroom',
+    DETAILS_BOOKINGROOM = 'details-bookingroom/:id',
     UPDATED_BOOKINGROOM = 'updated-bookingroom/:id',
-    DELETED_BOOKINGROOM = 'deleted-bookingroom',
-
-    CREATE_BOOKINGRATE = 'create-bookingrate',
-    LIST_BOOKINGRATE = 'list-bookingrate',
-    UPDATED_BOOKINGRATE = 'updated-bookingrate/:id',
-    DELETED_BOOKINGRATE = 'deleted-bookingrate',
+    DELETED_BOOKINGROOM = 'deleted-bookingroom'
 }

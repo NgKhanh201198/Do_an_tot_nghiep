@@ -8,16 +8,33 @@
             <h2 class="text-search">Tìm kiếm ưu đãi khách sạn, chỗ nghỉ ...</h2>
         </div>
         <div>
-            <form>
+            <form [formGroup]="formData" (ngSubmit)="onSubmit()">
                 <div class="row">
-                    <div class="col-sm-6 col-12">
-                        <input type="search" class="form-control search-city mb-1" placeholder="Nhập thành phố">
+                    <div class="col-sm-5">
+                        <div class="form-group text-white">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Nhập thành phố</mat-label>
+                                <input formControlName="city" matInput class="input-height" type="text">
+                                <mat-error *ngIf="formValid.city.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getCityErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
                     </div>
-                    <div class="col-sm-4 col-12">
-                        <div class="form-control search-date mb-1">Ngày đến - Ngày trả</div>
+                    <div class="col-sm-5">
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Nhập ngày nhận và ngày trả</mat-label>
+                                <mat-date-range-input [rangePicker]="picker" [min]="_minDate">
+                                    <input formControlName="checkInDate" matStartDate placeholder="Ngày đến" readonly>
+                                    <input formControlName="checkOutDate" matEndDate placeholder="Ngày trả" readonly>
+                                </mat-date-range-input>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
+                                <mat-error *ngIf="formValid.checkInDate.invalid || formValid.checkOutDate.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getCheckDateErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
                     </div>
-                    <div class="col-sm-2 col-12">
-                        <button class="btn btn-primary btn-block">Tìm</button>
+                    <div class="col-sm-2">
+                        <button style="padding: 18.5px 0px;" class="btn btn-primary btn-block">Kiểm tra</button>
                     </div>
                 </div>
             </form>
@@ -27,33 +44,13 @@
 <section class="content-2">
     <div class="container">
         <div>
-            <h2>Tìm kiếm theo Khách sạn</h2>
+            <h2>Tìm kiếm theo thành phố</h2>
         </div>
         <div>
             <div class="row">
-                <div class="col-lg-6 col-sm-12">
-                    <div class="img-city" style="background-image: url(../../assets/customs/images/ha-noi.jpg);">
-                        <h1 class="text-white text-center">Hà nội</h1>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-sm-12">
-                    <div class="img-city" style="background-image: url(../../assets/customs/images/tphcm.jpeg);">
-                        <h1 class="text-white text-center">Hồ chí minh</h1>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-12">
-                    <div class="img-city" style="background-image: url(../../assets/customs/images/da-nang.jpg);">
-                        <h1 class="text-white text-center">Đà nẵng</h1>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-12">
-                    <div class="img-city" style="background-image: url(../../assets/customs/images/nha-trang.jpg);">
-                        <h1 class="text-white text-center">Nha Trang</h1>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-12">
-                    <div class="img-city" style="background-image: url(../../assets/customs/images/phu-quoc.jpg);">
-                        <h1 class="text-white text-center">Phú quốc</h1>
+                <div style="overflow: hidden;" class="col-sm-12" *ngFor="let city of listCity; index as i" [ngClass]="{ 'col-lg-6': (i <= 1),'col-lg-4': (i > 1) }">
+                    <div class="img-city" style="background-image: url('{{city.image}}');">
+                        <h1 class="title-city text-white text-center pt-3">{{city.cityName}}</h1>
                     </div>
                 </div>
             </div>
@@ -64,49 +61,13 @@
 <section class="content-3">
     <div class="container mb-5">
         <div>
-            <h2>Tìm kiếm theo loại phòng</h2>
+            <h2>Tìm kiếm theo khách sạn</h2>
         </div>
         <div>
             <owl-carousel-o [options]="customOptions">
-                <ng-template carouselSlide>
-                    <img class="img-carosel" src="assets/customs/images/loai1.jpg" alt="">
-                    <p>Loại 1</p>
-                </ng-template>
-                <ng-template carouselSlide>
-                    <img class="img-carosel" src="assets/customs/images/loai2.jpg" alt="">
-                    <p>Loại 2</p>
-                </ng-template>
-                <ng-template carouselSlide>
-                    <img class="img-carosel" src="assets/customs/images/loai3.jpg" alt="">
-                    <p>Loại 3</p>
-                </ng-template>
-                <ng-template carouselSlide>
-                    <img class="img-carosel" src="assets/customs/images/loai4.jpg" alt="">
-                    <p>Loại 4</p>
-                </ng-template>
-                <ng-template carouselSlide>
-                    <img class="img-carosel" src="assets/customs/images/loai5.jpg" alt="">
-                    <p>Loại 5</p>
-                </ng-template>
-                <ng-template carouselSlide>
-                    <img class="img-carosel" src="assets/customs/images/loai6.jpg" alt="">
-                    <p>Loại 6</p>
-                </ng-template>
-                <ng-template carouselSlide>
-                    <img class="img-carosel" src="assets/customs/images/loai7.jpg" alt="">
-                    <p>Loại 7</p>
-                </ng-template>
-                <ng-template carouselSlide>
-                    <img class="img-carosel" src="assets/customs/images/loai8.jpg" alt="">
-                    <p>Loại 8</p>
-                </ng-template>
-                <ng-template carouselSlide>
-                    <img class="img-carosel" src="assets/customs/images/loai9.jpg" alt="">
-                    <p>Loại 9</p>
-                </ng-template>
-                <ng-template carouselSlide>
-                    <img class="img-carosel" src="assets/customs/images/loai10.jpg" alt="">
-                    <p>Loại 10</p>
+                <ng-template carouselSlide *ngFor="let item of listHotel">
+                    <img style="cursor: pointer;" class="img-carosel" src="{{item.image}}" alt="">
+                    <p>{{item.hotelName}}</p>
                 </ng-template>
             </owl-carousel-o>
         </div>

@@ -13,6 +13,7 @@ const httpOptions = {
 })
 export class CityService {
     url = `${environment.baseUrlServer}` + 'api/city';
+    urlTop5 = `${environment.baseUrlServer}` + 'api/cityTop5';
 
     constructor(
         private http: HttpClient
@@ -39,6 +40,13 @@ export class CityService {
 
     public getCityAll(): Observable<any> {
         return this.http.get(`${this.url}`)
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
+    public getCityTop5(): Observable<any> {
+        return this.http.get(`${this.urlTop5}`)
             .pipe(
                 catchError(this.handleError)
             );

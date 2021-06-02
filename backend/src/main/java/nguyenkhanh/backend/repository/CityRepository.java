@@ -1,5 +1,6 @@
 package nguyenkhanh.backend.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -11,10 +12,11 @@ import org.springframework.stereotype.Repository;
 
 import nguyenkhanh.backend.entity.CityEntity;
 
-
 @Repository
 public interface CityRepository extends JpaRepository<CityEntity, Long> {
 	public Optional<CityEntity> findByCityName(String cityName);
+
+	public List<CityEntity> findTop5ByOrderByIdAsc();
 
 	public CityEntity findById(long id);
 

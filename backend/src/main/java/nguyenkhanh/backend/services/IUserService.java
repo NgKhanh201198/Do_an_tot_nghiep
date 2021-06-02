@@ -18,7 +18,7 @@ public interface IUserService {
 	// Read
 	public Optional<UserEntity> findByUsername(String username);
 
-	public Optional<UserEntity> getUserByFullName(String fullName);
+	public Optional<UserEntity> findUserByFullName(String fullName);
 
 	public List<UserEntity> getUserAll();
 

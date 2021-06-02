@@ -61,7 +61,7 @@ public class UserEntity extends BaseEntity {
 //	CascadeType.ALL Khi 1 xóa user -> dữ liệu theo user sẽ bị xóa 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Set<BookingRateEntity> bookingrate = new HashSet<BookingRateEntity>();
+	private Set<BookingRoomEntity> bookingRoom = new HashSet<BookingRoomEntity>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -76,7 +76,7 @@ public class UserEntity extends BaseEntity {
 	}
 
 	public UserEntity(Long id, String username, String password, String fullName, String phoneNumber, Date dateOfBirth,
-			String avatar, String gender, String status, UserTypeEntity userType, Set<BookingRateEntity> bookingrate,
+			String avatar, String gender, String status, UserTypeEntity userType, Set<BookingRoomEntity> bookingRoom,
 			Set<PostEntity> posts, Set<RoleEntity> roles) {
 		super();
 		this.id = id;
@@ -89,7 +89,7 @@ public class UserEntity extends BaseEntity {
 		this.gender = gender;
 		this.status = status;
 		this.userType = userType;
-		this.bookingrate = bookingrate;
+		this.bookingRoom = bookingRoom;
 		this.posts = posts;
 		this.roles = roles;
 	}
@@ -188,12 +188,12 @@ public class UserEntity extends BaseEntity {
 		this.userType = userType;
 	}
 
-	public Set<BookingRateEntity> getBookingrate() {
-		return bookingrate;
+	public Set<BookingRoomEntity> getBookingRoom() {
+		return bookingRoom;
 	}
 
-	public void setBookingrate(Set<BookingRateEntity> bookingrate) {
-		this.bookingrate = bookingrate;
+	public void setBookingRoom(Set<BookingRoomEntity> bookingRoom) {
+		this.bookingRoom = bookingRoom;
 	}
 
 	public Set<PostEntity> getPosts() {

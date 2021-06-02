@@ -13,8 +13,8 @@ public class RoomBookedEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "bookingrateid", nullable = false)
-	private Long bookingrateid;
+	@Column(name = "bookingroomid", nullable = false)
+	private Long bookingroomid;
 
 	@Id
 	@Column(name = "roomid", nullable = false)
@@ -24,12 +24,12 @@ public class RoomBookedEntity implements Serializable {
 		super();
 	}
 
-	public Long getBookingrateid() {
-		return bookingrateid;
+	public Long getBookingroomid() {
+		return bookingroomid;
 	}
 
-	public void setBookingrateid(Long bookingrateid) {
-		this.bookingrateid = bookingrateid;
+	public void setBookingroomid(Long bookingroomid) {
+		this.bookingroomid = bookingroomid;
 	}
 
 	public Long getRoomid() {

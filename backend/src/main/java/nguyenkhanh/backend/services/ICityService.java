@@ -13,6 +13,8 @@ public interface ICityService {
 	// Read
 	public Optional<CityEntity> findByCityName(String cityName);
 
+	public List<CityEntity> findTop5ById();
+
 	public CityEntity getCityById(long id);
 
 	public List<CityEntity> getCityAll();

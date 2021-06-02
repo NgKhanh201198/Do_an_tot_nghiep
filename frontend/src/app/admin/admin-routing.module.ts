@@ -20,9 +20,6 @@ import { CreateRoomTypeComponent } from './roomType/create-room-type/create-room
 import { ListRoomComponent } from './room/list-room/list-room.component';
 import { UpdateRoomComponent } from './room/update-room/update-room.component';
 import { CreateRoomComponent } from './room/create-room/create-room.component';
-import { ListBookingrateComponent } from './bookingrate/list-bookingrate/list-bookingrate.component';
-import { UpdateBookingrateComponent } from './bookingrate/update-bookingrate/update-bookingrate.component';
-import { CreateBookingrateComponent } from './bookingrate/create-bookingrate/create-bookingrate.component';
 import { ListBookingRoomComponent } from './bookingRoom/list-booking-room/list-booking-room.component';
 import { UpdateBookingRoomComponent } from './bookingRoom/update-booking-room/update-booking-room.component';
 import { CreateBookingRoomComponent } from './bookingRoom/create-booking-room/create-booking-room.component';
@@ -123,22 +120,6 @@ const routes: Routes = [
     }, {
         path: Path.CREATE_ROOM,
         component: CreateRoomComponent,
-        // data: { permission: Permission.CREATE_ACCOUNT }
-    },
-
-    //bookingrate 
-    {
-        path: Path.LIST_BOOKINGRATE,
-        component: ListBookingrateComponent,
-        // data: { permission: Permission.LIST_ACCOUNT }
-    },
-    {
-        path: Path.UPDATED_BOOKINGRATE,
-        component: UpdateBookingrateComponent,
-        // data: { permission: Permission.UPDATED_ACCOUNT }
-    }, {
-        path: Path.CREATE_BOOKINGRATE,
-        component: CreateBookingrateComponent,
         // data: { permission: Permission.CREATE_ACCOUNT }
     },
 

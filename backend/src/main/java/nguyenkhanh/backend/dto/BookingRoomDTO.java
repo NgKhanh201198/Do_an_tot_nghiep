@@ -4,7 +4,7 @@ import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 
-public class BookingRateDTO {
+public class BookingRoomDTO {
 	@NotBlank(message = "{CheckInDate.NotBlank}")
 	private String checkInDate;
 
@@ -17,18 +17,22 @@ public class BookingRateDTO {
 	@NotBlank(message = "{Hotel.NotBlank}")
 	private String hotel;
 
+	private Integer totalNumberOfPeople;
+
 	private Set<String> rooms;
 
-	public BookingRateDTO() {
+	public BookingRoomDTO() {
 		super();
 	}
 
-	public BookingRateDTO(String checkInDate, String checkOutDate, String user, String hotel, Set<String> rooms) {
+	public BookingRoomDTO(String checkInDate, String checkOutDate, String user, String hotel,
+			Integer totalNumberOfPeople, Set<String> rooms) {
 		super();
 		this.checkInDate = checkInDate;
 		this.checkOutDate = checkOutDate;
 		this.user = user;
 		this.hotel = hotel;
+		this.totalNumberOfPeople = totalNumberOfPeople;
 		this.rooms = rooms;
 	}
 
@@ -62,6 +66,14 @@ public class BookingRateDTO {
 
 	public void setHotel(String hotel) {
 		this.hotel = hotel;
+	}
+
+	public Integer getTotalNumberOfPeople() {
+		return totalNumberOfPeople;
+	}
+
+	public void setTotalNumberOfPeople(Integer totalNumberOfPeople) {
+		this.totalNumberOfPeople = totalNumberOfPeople;
 	}
 
 	public Set<String> getRooms() {

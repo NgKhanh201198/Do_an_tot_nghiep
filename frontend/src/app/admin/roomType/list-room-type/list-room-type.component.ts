@@ -27,7 +27,7 @@ export class ListRoomTypeComponent implements OnInit {
     }
 
     deleteCity(id: any) {
-        if (confirm("Bạn có chắc muốn xóa thành phố này?")) {
+        if (confirm("Bạn có chắc muốn xóa loại phòng này?")) {
             this.roomTypeService.deleteRoomType(id).subscribe((result: any) => {
                 for (var i = 0; i < this.collection.length; i++) {
                     if (this.collection[i].id === id) {

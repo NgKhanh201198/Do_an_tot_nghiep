@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import nguyenkhanh.backend.dto.CheckRoomEmptyDTO;
-import nguyenkhanh.backend.entity.BookingRateEntity;
+import nguyenkhanh.backend.entity.BookingRoomEntity;
 import nguyenkhanh.backend.entity.HotelEntity;
 import nguyenkhanh.backend.entity.RoomEntity;
-import nguyenkhanh.backend.services.impl.BookingRateServiceImpl;
+import nguyenkhanh.backend.services.impl.BookingRoomServiceImpl;
 import nguyenkhanh.backend.services.impl.HotelServiceImpl;
 import nguyenkhanh.backend.services.impl.RoomServiceImpl;
 import nguyenkhanh.backend.services.impl.UserServiceImpl;
@@ -37,7 +37,7 @@ public class AppController {
 	HotelServiceImpl hotelServiceImpl;
 
 	@Autowired
-	BookingRateServiceImpl bookingRateServiceImpl;
+	BookingRoomServiceImpl bookingRoomServiceImpl;
 
 	@Autowired
 	RoomServiceImpl roomServiceImpl;
@@ -49,7 +49,7 @@ public class AppController {
 		Common common = new Common();
 		Date checkInDate = common.stringToDate(roomEmptyDTO.getCheckInDate());
 
-		List<BookingRateEntity> listBookingrate = bookingRateServiceImpl.getBookingRateAll();
+		List<BookingRoomEntity> listBookingrate = bookingRoomServiceImpl.getBookingRoomAll();
 		listBookingrate.forEach(item -> {
 			if (checkInDate.before(item.getCheckOutDate())) {
 				item.getRooms().forEach(room -> {

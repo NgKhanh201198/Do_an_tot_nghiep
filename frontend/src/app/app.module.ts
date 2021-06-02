@@ -34,7 +34,6 @@ import { HotelService } from './_services/hotel.service';
 import { RoomTypeService } from './_services/room-type.service';
 import { RoomService } from './_services/room.service';
 import { PostService } from './_services/post.service';
-import { BookingrateService } from './_services/bookingrate.service';
 import { BookingRoomService } from './_services/booking-room.service';
 import { AuthenticationService } from './_services/authentication.service';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
@@ -66,9 +65,6 @@ import { ListAccountComponent } from './admin/account/list-account/list-account.
 import { ListBookingRoomComponent } from './admin/bookingRoom/list-booking-room/list-booking-room.component';
 import { CreateBookingRoomComponent } from './admin/bookingRoom/create-booking-room/create-booking-room.component';
 import { UpdateBookingRoomComponent } from './admin/bookingRoom/update-booking-room/update-booking-room.component';
-import { UpdateBookingrateComponent } from './admin/bookingrate/update-bookingrate/update-bookingrate.component';
-import { ListBookingrateComponent } from './admin/bookingrate/list-bookingrate/list-bookingrate.component';
-import { CreateBookingrateComponent } from './admin/bookingrate/create-bookingrate/create-bookingrate.component';
 import { ListRoomTypeComponent } from './admin/roomType/list-room-type/list-room-type.component';
 import { CreateRoomTypeComponent } from './admin/roomType/create-room-type/create-room-type.component';
 import { UpdateRoomTypeComponent } from './admin/roomType/update-room-type/update-room-type.component';
@@ -118,10 +114,6 @@ import { UpdateCityComponent } from './admin/city/update-city/update-city.compon
         CreateBookingRoomComponent,
         ListBookingRoomComponent,
         UpdateBookingRoomComponent,
-
-        CreateBookingrateComponent,
-        ListBookingrateComponent,
-        UpdateBookingrateComponent,
 
         CreateRoomTypeComponent,
         ListRoomTypeComponent,
@@ -175,7 +167,6 @@ import { UpdateCityComponent } from './admin/city/update-city/update-city.compon
         RoomService,
         RoomTypeService,
         PostService,
-        BookingrateService,
         BookingRoomService,
         AuthenticationService,
         LoggerService,

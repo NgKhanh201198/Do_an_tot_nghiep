@@ -1,14 +1,20 @@
 package nguyenkhanh.backend.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,43 +26,43 @@ public class BookingRoomEntity extends BaseEntity {
 	@Column(name = "bookingroomid")
 	private Long id;
 
-	@Column(name = "checkintime")
-	private Date checkInTime;
+	@Column(name = "checkindate")
+	private Date checkInDate;
 
-	@Column(name = "checkouttime")
-	private Date checkOutTime;
+	@Column(name = "checkoutdate")
+	private Date checkOutDate;
 
 	@Column(name = "totalnumberofpeople")
 	private Integer totalNumberOfPeople;
 
-	@Column(name = "totalroomsbooked")
-	private Integer totalRoomsBooked;
-
-	@Column(name = "totalcost")
-	private Integer totalCost;
-
 	@Column(name = "status")
 	private String status;
 
-	@OneToOne
-	@JoinColumn(name = "bookingrateid")
-	private BookingRateEntity bookingrate;
+	@ManyToOne
+	@JoinColumn(name = "userid")
+//	@JsonIgnore
+	private UserEntity user;
+
+//	CascadeType.ALL Khi 1 xóa user -> dữ liệu theo user sẽ bị xóa 
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "room_booked", joinColumns = @JoinColumn(name = "bookingroomid"), inverseJoinColumns = @JoinColumn(name = "roomid"))
+//	@JsonIgnore
+	private Set<RoomEntity> rooms = new HashSet<RoomEntity>();
 
 	public BookingRoomEntity() {
 		super();
 	}
 
-	public BookingRoomEntity(Long id, Date checkInTime, Date checkOutTime, Integer totalNumberOfPeople,
-			Integer totalRoomsBooked, Integer totalCost, String status, BookingRateEntity bookingrate) {
+	public BookingRoomEntity(Long id, Date checkInDate, Date checkOutDate, Integer totalNumberOfPeople, String status,
+			UserEntity user, Set<RoomEntity> rooms) {
 		super();
 		this.id = id;
-		this.checkInTime = checkInTime;
-		this.checkOutTime = checkOutTime;
+		this.checkInDate = checkInDate;
+		this.checkOutDate = checkOutDate;
 		this.totalNumberOfPeople = totalNumberOfPeople;
-		this.totalRoomsBooked = totalRoomsBooked;
-		this.totalCost = totalCost;
 		this.status = status;
-		this.bookingrate = bookingrate;
+		this.user = user;
+		this.rooms = rooms;
 	}
 
 	public Long getId() {
@@ -67,20 +73,20 @@ public class BookingRoomEntity extends BaseEntity {
 		this.id = id;
 	}
 
-	public Date getCheckInTime() {
-		return checkInTime;
+	public Date getCheckInDate() {
+		return checkInDate;
 	}
 
-	public void setCheckInTime(Date checkInTime) {
-		this.checkInTime = checkInTime;
+	public void setCheckInDate(Date checkInDate) {
+		this.checkInDate = checkInDate;
 	}
 
-	public Date getCheckOutTime() {
-		return checkOutTime;
+	public Date getCheckOutDate() {
+		return checkOutDate;
 	}
 
-	public void setCheckOutTime(Date checkOutTime) {
-		this.checkOutTime = checkOutTime;
+	public void setCheckOutDate(Date checkOutDate) {
+		this.checkOutDate = checkOutDate;
 	}
 
 	public Integer getTotalNumberOfPeople() {
@@ -91,22 +97,6 @@ public class BookingRoomEntity extends BaseEntity {
 		this.totalNumberOfPeople = totalNumberOfPeople;
 	}
 
-	public Integer getTotalRoomsBooked() {
-		return totalRoomsBooked;
-	}
-
-	public void setTotalRoomsBooked(Integer totalRoomsBooked) {
-		this.totalRoomsBooked = totalRoomsBooked;
-	}
-
-	public Integer getTotalCost() {
-		return totalCost;
-	}
-
-	public void setTotalCost(Integer totalCost) {
-		this.totalCost = totalCost;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -115,12 +105,20 @@ public class BookingRoomEntity extends BaseEntity {
 		this.status = status;
 	}
 
-	public BookingRateEntity getBookingrate() {
-		return bookingrate;
+	public UserEntity getUser() {
+		return user;
 	}
 
-	public void setBookingrate(BookingRateEntity bookingrate) {
-		this.bookingrate = bookingrate;
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
+	public Set<RoomEntity> getRooms() {
+		return rooms;
+	}
+
+	public void setRooms(Set<RoomEntity> rooms) {
+		this.rooms = rooms;
 	}
 
 }

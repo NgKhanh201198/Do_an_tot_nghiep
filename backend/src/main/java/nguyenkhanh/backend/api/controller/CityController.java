@@ -84,6 +84,12 @@ public class CityController {
 		return new ResponseEntity<List<CityEntity>>(listCity, HttpStatus.OK);
 	}
 
+	@GetMapping("/cityTop5")
+	public ResponseEntity<?> getCityTop5() {
+		List<CityEntity> listCity = cityServiceImpl.findTop5ById();
+		return new ResponseEntity<List<CityEntity>>(listCity, HttpStatus.OK);
+	}
+
 	@GetMapping("/city/{id}")
 	public ResponseEntity<?> getCityById(@PathVariable("id") long id) {
 		if (cityServiceImpl.isCityExitsById(id) == false) {

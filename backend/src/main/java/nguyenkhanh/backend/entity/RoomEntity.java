@@ -53,7 +53,7 @@ public class RoomEntity extends BaseEntity {
 
 	@ManyToMany(mappedBy = "rooms")
 	@JsonIgnore
-	private Set<BookingRateEntity> bookingrate;
+	private Set<BookingRoomEntity> bookingRoom;
 
 	public RoomEntity() {
 		super();
@@ -61,7 +61,7 @@ public class RoomEntity extends BaseEntity {
 
 	public RoomEntity(Long id, String roomNumber, String status, String image, String contents, Integer numberOfPeople,
 			Integer roomCost, Integer discount, RoomTypeEntity roomType, HotelEntity hotel,
-			Set<BookingRateEntity> bookingrate) {
+			Set<BookingRoomEntity> bookingRoom) {
 		super();
 		this.id = id;
 		this.roomNumber = roomNumber;
@@ -73,7 +73,7 @@ public class RoomEntity extends BaseEntity {
 		this.discount = discount;
 		this.roomType = roomType;
 		this.hotel = hotel;
-		this.bookingrate = bookingrate;
+		this.bookingRoom = bookingRoom;
 	}
 
 	public Long getId() {
@@ -100,12 +100,12 @@ public class RoomEntity extends BaseEntity {
 		this.hotel = hotel;
 	}
 
-	public Set<BookingRateEntity> getBookingrate() {
-		return bookingrate;
+	public Set<BookingRoomEntity> getBookingRoom() {
+		return bookingRoom;
 	}
 
-	public void setBookingrate(Set<BookingRateEntity> bookingrate) {
-		this.bookingrate = bookingrate;
+	public void setBookingRoom(Set<BookingRoomEntity> bookingRoom) {
+		this.bookingRoom = bookingRoom;
 	}
 
 	public String getRoomNumber() {

@@ -172,7 +172,7 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public Optional<UserEntity> getUserByFullName(String fullName) {
+	public Optional<UserEntity> findUserByFullName(String fullName) {
 		return userRepository.findByFullName(fullName);
 	}
 
