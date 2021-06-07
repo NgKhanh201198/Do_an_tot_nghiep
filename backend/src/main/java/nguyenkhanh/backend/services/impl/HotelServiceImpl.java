@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import nguyenkhanh.backend.entity.CityEntity;
 import nguyenkhanh.backend.entity.HotelEntity;
 import nguyenkhanh.backend.repository.HotelRepository;
 import nguyenkhanh.backend.services.IHotelService;
@@ -27,7 +29,12 @@ public class HotelServiceImpl implements IHotelService {
 
 	@Override
 	public List<HotelEntity> getHotelAll() {
-		return hotelRepository.findAll();
+		return hotelRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+	}
+
+	@Override
+	public List<HotelEntity> getRoomByCity(CityEntity cityEntity) {
+		return hotelRepository.findByCity(cityEntity);
 	}
 
 	@Override

@@ -48,10 +48,11 @@ public class AppController {
 		Set<String> listRoomNameBookingrate = new HashSet<String>();
 		Common common = new Common();
 		Date checkInDate = common.stringToDate(roomEmptyDTO.getCheckInDate());
+		Date checkOutDate = common.stringToDate(roomEmptyDTO.getCheckOutDate());
 
 		List<BookingRoomEntity> listBookingrate = bookingRoomServiceImpl.getBookingRoomAll();
 		listBookingrate.forEach(item -> {
-			if (checkInDate.before(item.getCheckOutDate())) {
+			if (checkInDate.before(item.getCheckOutDate()) && item.getCheckInDate().before(checkOutDate)) {
 				item.getRooms().forEach(room -> {
 					if (room.getHotel().getHotelName().equals(roomEmptyDTO.getHotel())) {
 						listRoomNameBookingrate.add(room.getRoomNumber());

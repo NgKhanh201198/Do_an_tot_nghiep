@@ -131,7 +131,12 @@ export class CreateBookingRoomComponent implements OnInit {
     }
 
     getCheckDateErrorMessage(): string {
-        return 'Vui lòng nhập ngày nhận và ngày trả.';
+            return 'Vui lòng nhập ngày nhận và ngày trả.';
+    }
+    getCheckValueDateErrorMessage(): string {
+        if (this.formUpdateData.value.checkInDate <= this.formUpdateData.value.checkOutDate){
+            return 'ssssssả.';
+        }
     }
 
     //Check box
@@ -148,7 +153,6 @@ export class CreateBookingRoomComponent implements OnInit {
             }
         });
     }
-
     updateAllComplete() {
         this.allComplete = this.collection != null && this.collection.every(t => t.isSelected);
         this.isCheckSelectedId();
@@ -159,6 +163,7 @@ export class CreateBookingRoomComponent implements OnInit {
         }
         return this.collection.filter(t => t.isSelected).length > 0 && !this.allComplete;
     }
+    //end
 
     comeBack() {
         this.location.back();
@@ -199,6 +204,7 @@ export class CreateBookingRoomComponent implements OnInit {
         this.bookingRoomService.createBookingRoom(
             this.formUpdateData.value.checkInDate,
             this.formUpdateData.value.checkOutDate,
+            this.formUpdateData.value.numberOfPeople,
             this.formUpdateData.value.user,
             this.formUpdateData.value.hotel,
             this.listRooms

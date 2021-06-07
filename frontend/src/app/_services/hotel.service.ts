@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -26,6 +26,7 @@ export class HotelService {
         formData.append('email', data.email);
         formData.append('phoneNumber', data.phoneNumber);
         formData.append('city', data.city);
+        formData.append('description', data.description);
 
         return this.http.post(`${this.url}`, formData)
             .pipe(
@@ -48,8 +49,23 @@ export class HotelService {
             .pipe(
                 catchError(this.handleError)
             );
+    }    
+    
+    public getHotelbyHotelName(hotelName: any): Observable<any> {
+        const params = new HttpParams().append('hotelName', hotelName);
+        return this.http.get<any>(`${this.url + '/hotelName'}`, { params })
+            .pipe(
+                catchError(this.handleError)
+            );
     }
-
+    
+    public getHotelbyCity(cityName: any): Observable<any> {
+        const params = new HttpParams().append('cityName', cityName);
+        return this.http.get<any>(`${this.url + '/byCity'}`, { params })
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
     public updateHotel(id: any, data: any): Observable<any> {
 
         return this.http.put(`${this.url}/${id}`, data)

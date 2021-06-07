@@ -3,6 +3,7 @@ package nguyenkhanh.backend.services;
 import java.util.List;
 import java.util.Optional;
 
+import nguyenkhanh.backend.entity.CityEntity;
 import nguyenkhanh.backend.entity.HotelEntity;
 
 public interface IHotelService {
@@ -13,6 +14,8 @@ public interface IHotelService {
 	public HotelEntity getHotelById(long id);
 
 	public List<HotelEntity> getHotelAll();
+	
+	public List<HotelEntity> getRoomByCity(CityEntity cityEntity);
 
 	public Optional<HotelEntity> findByHotelName(String hotelName);
 

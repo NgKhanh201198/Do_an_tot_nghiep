@@ -13,6 +13,7 @@ import { PostComponent } from './pages/post/post.component';
 import { HotelComponent } from './pages/hotel/hotel.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { RoomComponent } from './pages/room/room.component';
 
 const routes: Routes = [
     {
@@ -52,6 +53,10 @@ const routes: Routes = [
     {
         path: Path.HOTEL,
         component: HotelComponent
+    },
+    {
+        path: Path.ROOM,
+        component: RoomComponent
     },
     {
         path: Path.POST,

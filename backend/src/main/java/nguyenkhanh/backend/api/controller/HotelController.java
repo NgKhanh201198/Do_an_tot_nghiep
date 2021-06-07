@@ -53,7 +53,7 @@ public class HotelController {
 	public ResponseEntity<?> createCity(@RequestParam("image") MultipartFile image,
 			@RequestParam("hotelName") String hotelName, @RequestParam("address") String address,
 			@RequestParam("email") String email, @RequestParam("phoneNumber") String phoneNumber,
-			@RequestParam("city") String city) {
+			@RequestParam("city") String city, @RequestParam("description") String description) {
 		try {
 			if (hotelServiceImpl.isHotelExitsByHotelName(hotelName)) {
 				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
@@ -96,6 +96,7 @@ public class HotelController {
 			hotelEntity.setAddress(address);
 			hotelEntity.setEmail(email);
 			hotelEntity.setPhoneNumber(phoneNumber);
+			hotelEntity.setDescription(description);
 
 			hotelServiceImpl.createHotel(hotelEntity);
 			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm mới thành công!"));
@@ -121,6 +122,21 @@ public class HotelController {
 			HotelEntity hotelEntity = hotelServiceImpl.getHotelById(id);
 			return new ResponseEntity<HotelEntity>(hotelEntity, HttpStatus.OK);
 		}
+	}
+	
+	@GetMapping("/hotel/hotelName")
+	public ResponseEntity<?> getHotelByHotelName(@RequestParam("hotelName") String hotelname) {
+		HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(hotelname)
+				.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy khách sạn này!"));
+		return new ResponseEntity<HotelEntity>(hotelEntity, HttpStatus.OK);
+	}
+
+	@GetMapping("/hotel/byCity")
+	public ResponseEntity<?> getHotelByCity(@RequestParam(name = "cityName", defaultValue = "") String cityName) {
+		CityEntity cityEntity = cityServiceImpl.findByCityName(cityName)
+				.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy thành phố " + cityName + " này!"));
+		List<HotelEntity> listHotel = hotelServiceImpl.getRoomByCity(cityEntity);
+		return new ResponseEntity<List<HotelEntity>>(listHotel, HttpStatus.OK);
 	}
 
 	@PutMapping("/hotel/{id}")
@@ -162,6 +178,7 @@ public class HotelController {
 				oldHotelEntity.setEmail(hotelDTO.getEmail());
 				oldHotelEntity.setPhoneNumber(hotelDTO.getPhoneNumber());
 				oldHotelEntity.setAddress(hotelDTO.getAddress());
+				oldHotelEntity.setDescription(hotelDTO.getDescription());
 
 				hotelServiceImpl.updateHotel(oldHotelEntity);
 				return ResponseEntity

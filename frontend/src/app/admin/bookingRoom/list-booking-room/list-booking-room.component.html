@@ -202,8 +202,9 @@
                                         </div>
                                         <div class="col-sm-8">
                                             <h3>Khách sạn {{item.hotel.hotelName}}</h3>
-                                            <div>{{item.roomNumber}} - Loại phòng: {{item.roomType.roomTypeName}}</div>
-                                            <div>Giá phòng: {{item.roomCost | currency:'VND'}}</div>
+                                            <div>Số phòng: {{item.roomNumber}}</div>
+                                            <div>Loại phòng: {{item.roomType.description}}</div>
+                                            <div>Giá phòng: {{item.roomCost | currency:'VND'}} /đêm</div>
                                             <div>{{item.contents}}</div>
                                         </div>
                                     </div>

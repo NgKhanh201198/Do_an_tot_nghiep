@@ -11,6 +11,7 @@ export enum Path {
     FORGOTPASSWORD = 'forgot-password',
     BOOKINGROOM = 'user-bookingroom',
     HOTEL = 'hotel',
+    ROOM = 'room',
     POST = 'post',
 
 

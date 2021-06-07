@@ -44,7 +44,8 @@ export class CreateHotelComponent implements OnInit {
             address: ['', [Validators.required, Validators.pattern('[/0-9a-zA-Z,ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,255}')]],
             email: ['', [Validators.required, emailValidator()]],
             phoneNumber: ['', [Validators.required, phoneNumberValidator()]],
-            city: ['', [Validators.required]]
+            city: ['', [Validators.required]],
+            description: ['', [Validators.required]]
         })
     }
 
@@ -78,6 +79,12 @@ export class CreateHotelComponent implements OnInit {
     getCityErrorMessage(): string {
         if (this.formValid.city.errors.required) {
             return 'Vui lòng chọn thành phố.';
+        }
+        return '';
+    }
+    getDescriptionErrorMessage(): string {
+        if (this.formValid.description.errors.required) {
+            return 'Vui lòng nhập mô tả.';
         }
         return '';
     }

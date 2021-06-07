@@ -61,6 +61,13 @@
                         </div>
                         <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Mô tả</mat-label>
+                                <textarea formControlName="description" matInput class="input-height" rows="5"></textarea>
+                                <mat-error *ngIf="formValid.description.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getDescriptionErrorMessage()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Địa chỉ</mat-label>
                                 <input formControlName="address" #address matInput maxlength="255" class="input-height" type="text">
                                 <mat-icon matSuffix>location_on</mat-icon>

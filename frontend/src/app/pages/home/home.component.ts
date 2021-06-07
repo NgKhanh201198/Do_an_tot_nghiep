@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
-import { RoomTypeService } from '../../_services/room-type.service';
-import { HotelService } from '../../_services/hotel.service';
-import { RoomService } from 'src/app/_services/room.service';
 import { CityService } from 'src/app/_services/city.service';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Options } from 'src/app/_models/options';
+import * as moment from 'moment';
+import { HotelService } from 'src/app/_services/hotel.service';
 
 @Component({
     selector: 'app-home',
@@ -14,7 +15,9 @@ import { FormBuilder, Validators } from '@angular/forms';
 export class HomeComponent implements OnInit {
     listCity: any;
     listHotel: any;
-    _minDate: Date = new Date();
+    listCitySelect: Array<Options> = [];
+    _minCheckInDate: Date = new Date();
+    _minCheckOutDate: Date = new Date();
 
     formData = this.formBuilder.group({
         city: ['', [Validators.required,]],
@@ -25,6 +28,7 @@ export class HomeComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         private cityService: CityService,
+        private router: Router,
         private hotelService: HotelService,
     ) { }
 
@@ -32,9 +36,16 @@ export class HomeComponent implements OnInit {
         this.cityService.getCityTop5().subscribe((result) => {
             this.listCity = result;
         });
-        
+
         this.hotelService.getHotelAll().subscribe((result) => {
             this.listHotel = result;
+        });
+
+        this.cityService.getCityAll().subscribe((result) => {
+            for (let index = 0; index < result.length; index++) {
+                let city = new Options(result[index].cityName, result[index].cityName);
+                this.listCitySelect.push(city);
+            }
         });
     }
 
@@ -43,18 +54,47 @@ export class HomeComponent implements OnInit {
 
     getCityErrorMessage(): string {
         if (this.formValid.city.errors.required) {
-            return 'Vui lòng sạn tên thành phố.';
+            return 'Vui lòng chọn thành phố.';
         }
         return '';
     }
+    getCheckInDateErrorMessage(): string {
+        if (this.formValid.checkInDate.errors.required) {
+            return 'Vui lòng nhập ngày nhận phòng.';
+        }
+        return 'Vui lòng nhập ngày nhận phòng hợp lệ.';
+    }
+    getCheckOutDateErrorMessage(): string {
+        if (this.formValid.checkOutDate.errors.required) {
+            return 'Vui lòng nhập ngày trả phòng.';
+        }
+        return 'Vui lòng nhập ngày trả phòng hợp lệ.';
+    }
+    //end
 
-    getCheckDateErrorMessage(): string {
-        return 'Vui lòng nhập ngày nhận và ngày trả.';
+    redirectHotel(hotelID) {
+        this.router.navigate(['/hotel/' + hotelID])
     }
 
+    redirectHotelByCityName(cityName) {
+        this.router.navigate(['/hotel'], { queryParams: { cityName: cityName } });
+    }
 
-    onSubmit(){
+    changeCheckInDate(even) {
+        var date = new Date(even.value);
+        date.setDate(even.value.toDate().getDate() + 1);
+        this._minCheckOutDate = date;
+        this.formData.get("checkOutDate").setValue(moment(date).utc().format());
+    }
 
+    onSubmit() {
+        this.router.navigate(['/hotel'], {
+            queryParams: {
+                cityName: this.formData.value.city, 
+                checkInDate: moment(this.formData.value.checkInDate).utc().format(),
+                checkOutDate: moment(this.formData.value.checkOutDate).utc().format()
+            }
+        });
     }
 
     customOptions: OwlOptions = {
@@ -66,13 +106,6 @@ export class HomeComponent implements OnInit {
         dots: true,
         navSpeed: 700,
         nav: false,
-        // navText: ['<', '>'],
-
-        // loop: true,
-        // margin: 10,
-        // nav: false,
-        // dots: true,
-        // lazyLoad: true,
 
         responsive: {
             0: {

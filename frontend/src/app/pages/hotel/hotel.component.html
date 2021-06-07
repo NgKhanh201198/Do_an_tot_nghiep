@@ -3,11 +3,45 @@
     <app-header-bottom></app-header-bottom>
 </header>
 <section class="content-1">
-    <div class="container-fluid">
-        <div class="pb-3">
-            <h2 class="">Hotel</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="py-3">
+                    <h2 class="">Các khách sạn tìm thấy {{(cityName)?'tại '+cityName:''}}</h2>
+                </div>
+                <div *ngIf="_errorCheckRoom" class="alert alert-warning text-center elevation-2" role="alert">
+                    {{_errorCheckRoom}}
+                </div>
+                <div class="row">
+                    <div class="col-md-6" *ngFor="let item of collection | paginate: { itemsPerPage: _itemsPage, currentPage: _page}">
+                        <div class="card p-3">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div>
+                                        <img class="img-listHotel elevation-2" src="{{item.image}}" alt="Image">
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h3>Khách sạn {{item.hotelName}}</h3>
+                                            <div>Địa chỉ: {{item.address}}</div>
+                                        </div>
+                                        <div class="col-sm-12" style="display: flex;justify-content: flex-end;bottom: -9px;">
+                                            <button class="btn btn-info" (click)="redirectRoom(item.hotelName)">Xem phòng <i class="fas fa-chevron-right"></i></button>
+                                            <!-- <button [routerLink]="['/room']" [queryParams]="{hotelName:item.hotelName, checkInDate: _checIndate, checOutDate:_checOutDate}" class="btn btn-info">Xem phòng <i class="fas fa-chevron-right"></i></button> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!_errorCheckRoom">
+                    <pagination-controls class="text-center" (pageChange)="_page = $event" maxSize="5"></pagination-controls>
+                </div>
+            </div>
         </div>
-
     </div>
 </section>
 

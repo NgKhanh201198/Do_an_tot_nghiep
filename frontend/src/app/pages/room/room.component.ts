@@ -1,0 +1,206 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { User } from 'src/app/_models/user';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { BookingRoomService } from 'src/app/_services/booking-room.service';
+import { HotelService } from 'src/app/_services/hotel.service';
+import { LoggerService } from 'src/app/_services/logger.service';
+import { RoomService } from 'src/app/_services/room.service';
+import * as moment from 'moment';
+
+@Component({
+    selector: 'app-room',
+    templateUrl: './room.component.html',
+    styleUrls: ['./room.component.css']
+})
+export class RoomComponent implements OnInit {
+    currentUser: User;
+    listRoom: Array<any> = [];
+    _page: number = 1;
+    _itemsPage: number = 4;
+    _errorCheckRoom: any;
+    _minCheckInDate: Date = new Date();
+    _minCheckOutDate: Date = new Date();
+    _status = true;
+    _success: String = "";
+    _error: String = "";
+
+
+    //hotel
+    idHotel: any;
+    hotel = [];
+    hotelName: any;
+    address: any;
+    image: any;
+    description: any;
+
+    formData = this.formBuilder.group({
+        checkInDate: ['', [Validators.required,]],
+        checkOutDate: ['', [Validators.required,]],
+    });
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private roomService: RoomService,
+        private hotelService: HotelService,
+        private bookingRoomService: BookingRoomService,
+        private authenticationService: AuthenticationService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private loggerService: LoggerService
+    ) { }
+
+    ngOnInit(): void {
+        this.currentUser = this.authenticationService.currentUserValue;
+        console.log(this.currentUser);
+
+
+        this.route.queryParamMap
+            .subscribe((params) => {
+                this.hotelName = params.get('hotelName');
+                this.formData.get('checkInDate').setValue(params.get('checkInDate'));
+                this.formData.get('checkOutDate').setValue(params.get('checkOutDate'));
+
+                this.loggerService.loggerData(params.get('hotelName'));
+                this.loggerService.loggerData(params.get('checkInDate'));
+                this.loggerService.loggerData(params.get('checkOutDate'));
+
+                this.hotelService.getHotelbyHotelName(this.hotelName).subscribe((result) => {
+                    this.hotelName = result.hotelName;
+                    this.image = result.image;
+                    this.address = result.address;
+                    this.description = result.description;
+
+                    this.roomService.getRoomByHotel(result.hotelName).subscribe((result) => {
+                        if (result.length === 0) {
+                            this._errorCheckRoom = " Khách sạn " + this.hotelName + " hiện tại chưa có phòng!";
+                        } else {
+                            this.listRoom = result;
+                        }
+                    });
+                });
+            });
+
+
+    }
+
+    //Invalid error message
+    get formValid() { return this.formData.controls; }
+    getCheckInDateErrorMessage(): string {
+        if (this.formValid.checkInDate.errors.required) {
+            return 'Vui lòng nhập ngày nhận phòng.';
+        }
+        return 'Vui lòng nhập ngày nhận phòng hợp lệ.';
+    }
+    getCheckOutDateErrorMessage(): string {
+        if (this.formValid.checkOutDate.errors.required) {
+            return 'Vui lòng nhập ngày trả phòng.';
+        }
+        return 'Vui lòng nhập ngày trả phòng hợp lệ.';
+    }
+
+    changeCheckInDate(even) {
+        var date = new Date(even.value);
+        date.setDate(even.value.toDate().getDate() + 1);
+        this._minCheckOutDate = date;
+        this.formData.get("checkOutDate").setValue(moment(date).utc().format());
+    }
+
+    //Check box
+    listRooms: any = [];
+    numberOfPeople = 0;
+    color: ThemePalette = 'primary';
+    allComplete: boolean = false;
+
+    //Kiểm tra id nào đã được checked
+    isCheckSelectedId() {
+        this.listRooms = [];
+        this.numberOfPeople = 0;
+        this.listRoom.forEach(element => {
+            if (element.isSelected) {
+                this.listRooms.push(element.roomNumber);
+                this.numberOfPeople = this.numberOfPeople + element.numberOfPeople;
+            }
+        });
+    }
+    updateAllComplete() {
+        this.allComplete = this.listRoom != null && this.listRoom.every(t => t.isSelected);
+        this.isCheckSelectedId();
+    }
+    someComplete(): boolean {
+        if (this.listRoom == null) {
+            return false;
+        }
+        return this.listRoom.filter(t => t.isSelected).length > 0 && !this.allComplete;
+    }
+    //end
+
+    onSubmit() {
+        this._errorCheckRoom = "";
+        this.roomService.checkRoomEmpty(
+            this.hotelName,
+            this.formData.value.checkInDate,
+            this.formData.value.checkOutDate
+        ).subscribe({
+            next: (result) => {
+                this.loggerService.logger(result);
+                if (result.length === 0) {
+                    this._errorCheckRoom = " Khách sạn " + this.hotelName + " hết phòng trong thời gian này";
+                } else {
+                    this._status = false;
+                    this.listRoom = result;
+                }
+            },
+            error: (error) => {
+                this.loggerService.loggerError(error);
+            }
+        });
+    }
+
+    bookingRoom() {
+        // this.loggerService.loggerData(this.numberOfPeople);
+        // this.loggerService.loggerData(this.listRoom);
+        if (this.listRooms.length == 0) {
+            alert("Vui lòng chọn phòng.");
+        } else {
+            if (this.currentUser == null) {
+                if (confirm("Bạn cần đăng nhập để tiếp tục...?")) {
+                    this.router.navigate(['/log-in']);
+                }
+            } else {
+                if (this._status) {
+                    alert("Vui lòng chọn kiểm tra phòng trống trước khi đặt phòng.");
+                } else {
+                    // console.log(this.formData.value.checkInDate,);
+                    // console.log(this.formData.value.checkOutDate,);
+                    // console.log(this.numberOfPeople,);
+                    // console.log(this.currentUser.email,);
+                    // console.log(this.hotelName,);
+                    // console.log(this.listRooms);
+
+
+                    this.bookingRoomService.createBookingRoom(
+                        this.formData.value.checkInDate,
+                        this.formData.value.checkOutDate,
+                        this.numberOfPeople,
+                        this.currentUser.email,
+                        this.hotelName,
+                        this.listRooms
+                    )
+                        .subscribe({
+                            next: (result) => {
+                                this._success = "Đặt phòng thành công.";
+                            },
+                            error: (error) => {
+                                this._error = error.message
+                            }
+                        });
+                }
+            }
+        }
+
+    }
+
+}

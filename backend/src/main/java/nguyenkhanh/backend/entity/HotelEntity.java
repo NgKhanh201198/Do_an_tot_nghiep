@@ -39,6 +39,9 @@ public class HotelEntity extends BaseEntity {
 	@Column(name = "phonenumber")
 	private String phoneNumber;
 
+	@Column(name = "description")
+	private String description;
+
 //	@ManyToOne
 //	@JoinColumn(name = "userid")
 //	@JsonIgnore
@@ -58,14 +61,14 @@ public class HotelEntity extends BaseEntity {
 	}
 
 	public HotelEntity(String hotelName, String address, String image, String email, String phoneNumber,
-			 CityEntity city, Set<RoomEntity> rooms) {
+			String description, CityEntity city, Set<RoomEntity> rooms) {
 		super();
 		this.hotelName = hotelName;
 		this.address = address;
 		this.image = image;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
-//		this.user = user;
+		this.description = description;
 		this.city = city;
 		this.rooms = rooms;
 	}
@@ -125,6 +128,13 @@ public class HotelEntity extends BaseEntity {
 //	public void setUser(UserEntity user) {
 //		this.user = user;
 //	}
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public CityEntity getCity() {
 		return city;

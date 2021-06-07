@@ -19,12 +19,13 @@ export class BookingRoomService {
         return throwError(error);
     }
 
-    public createBookingRoom(checkInDate: any, checkOutDate: any, user: any, hotel: any, rooms: any): Observable<any> {
+    public createBookingRoom(checkInDate: any, checkOutDate: any, numberofPeople: any, user: any, hotel: any, rooms: any): Observable<any> {
         const data = {
-            checkInDate: checkInDate,
-            checkOutDate: checkOutDate,
             user: user,
             hotel: hotel,
+            checkInDate: checkInDate,
+            checkOutDate: checkOutDate,
+            totalNumberOfPeople: numberofPeople,
             rooms: rooms,
         };
         return this.http.post(`${this.url}`, data)

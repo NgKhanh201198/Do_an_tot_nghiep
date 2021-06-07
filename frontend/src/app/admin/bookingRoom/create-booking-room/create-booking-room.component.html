@@ -71,7 +71,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
-                                        <div *ngIf="_errorCheckRoom" class="alert alert-warning text-center" role="alert">
+                                        <div *ngIf="_errorCheckRoom" class="alert alert-warning text-center elevation-2" role="alert">
                                             {{_errorCheckRoom}}
                                         </div>
                                     </div>
@@ -105,9 +105,6 @@
                                 <td>{{item.roomCost | currency:"VND"}}</td>
                                 <td>{{item.discount | currency:"VND"}}</td>
                                 <td>
-                                    <!-- <div class="status-locked" *ngIf="item.status=='Đang sử dụng'">Đang sử dụng</div>
-                                    <div class="status-inactive" *ngIf="item.status=='Đang bảo trì'">Đang bảo trì</div>
-                                    <div class="status-active" *ngIf="item.status=='Đang trống'">Đang trống</div> -->
                                     <div class="status-active">Đang trống</div>
                                 </td>
                                 <th scope="row">

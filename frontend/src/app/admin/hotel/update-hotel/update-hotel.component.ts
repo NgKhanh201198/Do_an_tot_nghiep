@@ -2,11 +2,11 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from 'src/app/_services/logger.service';
-import { CityService } from '../../../_services/city.service';
 import { Location } from '@angular/common'
 import { emailValidator, phoneNumberValidator } from 'src/assets/customs/validation/CustomValidator';
-import { HotelService } from '../../../_services/hotel.service';
 import { Options } from 'src/app/_models/options';
+import { HotelService } from 'src/app/_services/hotel.service';
+import { CityService } from 'src/app/_services/city.service';
 
 @Component({
     selector: 'app-update-hotel',
@@ -43,11 +43,12 @@ export class UpdateHotelComponent implements OnInit {
     }
 
     formUpdateData = this.formBuilder.group({
-        hotelName: ['', [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,18}')]],
-        address: ['', [Validators.required, Validators.pattern('[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s][0-9]{0,255}')]],
+        hotelName: ['', [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,18}')]],
+        address: ['', [Validators.required, Validators.pattern('[0-9a-zA-Z,ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s][0-9]{0,255}')]],
         email: ['', [Validators.required, emailValidator()]],
         phoneNumber: ['', [Validators.required, phoneNumberValidator()]],
-        city: ['', [Validators.required]]
+        city: ['', [Validators.required]],
+        description: ['', [Validators.required]]
     });
 
     ngOnInit(): void {
@@ -59,10 +60,11 @@ export class UpdateHotelComponent implements OnInit {
 
             this.formUpdateData = this.formBuilder.group({
                 hotelName: [result.hotelName, [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,50}')]],
-                address: [result.address, [Validators.required, Validators.pattern('[0-9a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,255}')]],
+                address: [result.address, [Validators.required, Validators.pattern('[0-9a-zA-Z,ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]{0,255}')]],
                 email: [result.email, [Validators.required, emailValidator()]],
                 phoneNumber: [result.phoneNumber, [Validators.required, phoneNumberValidator()]],
-                city: [result.city.cityName, [Validators.required]]
+                city: [result.city.cityName, [Validators.required]],
+                description: [result.description, [Validators.required]]
             })
         });
     }
@@ -97,6 +99,12 @@ export class UpdateHotelComponent implements OnInit {
     getCityErrorMessage(): string {
         if (this.formValid.city.errors.required) {
             return 'Vui lòng chọn thành phố.';
+        }
+        return '';
+    }
+    getDescriptionErrorMessage(): string {
+        if (this.formValid.description.errors.required) {
+            return 'Vui lòng nhập mô tả.';
         }
         return '';
     }

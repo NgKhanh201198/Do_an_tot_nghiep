@@ -10,7 +10,7 @@ import { ResetPasswordComponent } from '../reset-password/reset-password.compone
 })
 export class ForgotPasswordComponent implements OnInit {
     @Input() childErrorMessage: string;
-    @Input() childEmail: string;
+    // @Input() childEmail: string;
 
     constructor(
     ) { }

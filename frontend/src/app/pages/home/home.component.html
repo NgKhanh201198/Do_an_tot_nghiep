@@ -10,28 +10,34 @@
         <div>
             <form [formGroup]="formData" (ngSubmit)="onSubmit()">
                 <div class="row">
-                    <div class="col-sm-5">
-                        <div class="form-group text-white">
+                    <div class="col-sm-4">
+                        <div class="form-group">
                             <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Nhập thành phố</mat-label>
-                                <input formControlName="city" matInput class="input-height" type="text">
+                                <mat-label>Chọn thành phố</mat-label>
+                                <mat-select formControlName="city">
+                                    <mat-option *ngFor="let item of listCitySelect" [value]="item.value">{{item.name}}</mat-option>
+                                </mat-select>
                                 <mat-error *ngIf="formValid.city.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getCityErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="col-sm-5">
-                        <div class="form-group ">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Nhập ngày nhận và ngày trả</mat-label>
-                                <mat-date-range-input [rangePicker]="picker" [min]="_minDate">
-                                    <input formControlName="checkInDate" matStartDate placeholder="Ngày đến" readonly>
-                                    <input formControlName="checkOutDate" matEndDate placeholder="Ngày trả" readonly>
-                                </mat-date-range-input>
-                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
-                                <mat-error *ngIf="formValid.checkInDate.invalid || formValid.checkOutDate.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getCheckDateErrorMessage()}}</mat-error>
-                            </mat-form-field>
-                        </div>
+                    <div class="col-sm-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Ngày nhận phòng</mat-label>
+                            <input formControlName="checkInDate" [min]="_minCheckInDate" matInput [matDatepicker]="picker1" readonly (dateChange)="changeCheckInDate($event)">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                            <mat-error *ngIf="formValid.checkInDate.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getCheckInDateErrorMessage()}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Ngày trả phòng</mat-label>
+                            <input formControlName="checkOutDate" [min]="_minCheckOutDate" matInput [matDatepicker]="picker2" readonly>
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                            <mat-error *ngIf="formValid.checkOutDate.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getCheckOutDateErrorMessage()}}</mat-error>
+                        </mat-form-field>
                     </div>
                     <div class="col-sm-2">
                         <button style="padding: 18.5px 0px;" class="btn btn-primary btn-block">Kiểm tra</button>
@@ -49,7 +55,7 @@
         <div>
             <div class="row">
                 <div style="overflow: hidden;" class="col-sm-12" *ngFor="let city of listCity; index as i" [ngClass]="{ 'col-lg-6': (i <= 1),'col-lg-4': (i > 1) }">
-                    <div class="img-city" style="background-image: url('{{city.image}}');">
+                    <div class="img-city" style="background-image: url('{{city.image}}');" (click)="redirectHotelByCityName(city.cityName)">
                         <h1 class="title-city text-white text-center pt-3">{{city.cityName}}</h1>
                     </div>
                 </div>
@@ -66,13 +72,18 @@
         <div>
             <owl-carousel-o [options]="customOptions">
                 <ng-template carouselSlide *ngFor="let item of listHotel">
-                    <img style="cursor: pointer;" class="img-carosel" src="{{item.image}}" alt="">
+                    <img style="cursor: pointer;" class="img-carosel" src="{{item.image}}" alt="" (click)="redirectHotel(item.id)">
                     <p>{{item.hotelName}}</p>
                 </ng-template>
             </owl-carousel-o>
         </div>
     </div>
 </section>
+
+<!-- <div>
+    <app-room [childCheckInDate]="_checkInDate" [childCheckOutDate]="_checkOutDate"></app-room>
+</div> -->
+
 <footer>
     <app-footer></app-footer>
 </footer>

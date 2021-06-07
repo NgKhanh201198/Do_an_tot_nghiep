@@ -110,7 +110,7 @@ input.search-date:focus {
 .logo {
     margin-left: 15%;
     letter-spacing: 5px;
-    font-size: 32px !important;
+    font-size: 40px !important;
     font-family: initial;
     color: #ffffff !important;
 }
@@ -542,9 +542,19 @@ ul.ngx-pagination .pagination-next.disabled::after {
     width: 10rem;
 }
 
+.img-listHotel {
+    height: 7rem;
+    width: 100%;
+}
+
 .img-details {
-    height: 10rem;
-    width: 16rem;
+    height: 12rem;
+    width: 100%;
+}
+
+.img-hotel-big {
+    height: 300px;
+    width: 100%;
 }
 
 .create {
