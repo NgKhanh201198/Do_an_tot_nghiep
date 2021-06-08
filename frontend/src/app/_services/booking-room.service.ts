@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -48,11 +48,29 @@ export class BookingRoomService {
             );
     }
 
+    public getBookingRoomByUser(fullName: any): Observable<any> {
+        const params = new HttpParams().append('name', fullName);
+        return this.http.get<any>(`${this.url + '/user'}`, { params })
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
     public updateBookingRoom(id: any, data: any): Observable<any> {
 
         return this.http.put(`${this.url}/${id}`, data)
             .pipe(
                 tap(response => { }),
+                catchError(this.handleError)
+            );
+    }
+
+    public cancelBookingRoomById(id: any): Observable<any> {
+        const formData: FormData = new FormData();
+        formData.append('id', id);
+        // const params = new HttpParams().append('id', id);
+        return this.http.put<any>(`${this.url + '/cancelBookingRoom'}`, formData)
+            .pipe(
                 catchError(this.handleError)
             );
     }

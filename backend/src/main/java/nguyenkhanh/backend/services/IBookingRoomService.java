@@ -3,26 +3,27 @@ package nguyenkhanh.backend.services;
 import java.util.List;
 
 import nguyenkhanh.backend.entity.BookingRoomEntity;
+import nguyenkhanh.backend.entity.UserEntity;
 
 public interface IBookingRoomService {
 	// Create
-		public void createBookingRoom(BookingRoomEntity bookingRoomEntity);
+	public void createBookingRoom(BookingRoomEntity bookingRoomEntity);
 
-		// Read
-//		public Optional<CityEntity> findByCityName(String cityName);
+	// Read
+	public BookingRoomEntity getBookingRoomById(long id);
 
-		public BookingRoomEntity getBookingRoomById(long id);
+	public List<BookingRoomEntity> getBookingRoomAll();
 
-		public List<BookingRoomEntity> getBookingRoomAll();
+	public List<BookingRoomEntity> getBookingRoomByUser(UserEntity userEntity);
 
-		// Update
-		public void updateBookingRoom(BookingRoomEntity bookingRoomEntity);
+	// Update
+	public void updateBookingRoom(BookingRoomEntity bookingRoomEntity);
 
-		// Delete
-		public void deleteBookingRoomById(long id);
+	public void cancelBookingRoom(long id, String status);
 
-		// Check
-		public boolean isBookingRoomExitsById(long id);
+	// Delete
+	public void deleteBookingRoomById(long id);
 
-//		public boolean isCBookingRoomExitsByCityName(String cityName);
+	// Check
+	public boolean isBookingRoomExitsById(long id);
 }

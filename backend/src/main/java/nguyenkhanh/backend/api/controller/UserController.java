@@ -103,13 +103,13 @@ public class UserController {
 				strRoles.forEach(role -> {
 
 					switch (role) {
-					case "MANAGER":
-						RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.MANAGER.toString())
+					case "ADMIN":
+						RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.ADMIN.toString())
 								.orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
 						roleEntity.add(managerRole);
 						break;
-					case "ADMIN":
-						RoleEntity adminRole = roleServiceImpl.finByKeyName(ERoles.ADMIN.toString())
+					case "EMPLOYEE":
+						RoleEntity adminRole = roleServiceImpl.finByKeyName(ERoles.EMPLOYEE.toString())
 								.orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
 						roleEntity.add(adminRole);
 						break;
@@ -134,7 +134,7 @@ public class UserController {
 			userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 			userEntity.setGender(userDTO.getGender());
 			userEntity.setStatus(userDTO.getStatus());
-			userEntity.setStatus(userDTO.getStatus());
+//			userEntity.setStatus(userDTO.getStatus());
 
 			// Save
 			userServiceImpl.createAccount(userEntity);
@@ -218,13 +218,13 @@ public class UserController {
 				} else {
 					strRoles.forEach(role -> {
 						switch (role) {
-						case "MANAGER":
-							RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.MANAGER.toString())
+						case "ADMIN":
+							RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.ADMIN.toString())
 									.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 							roles.add(managerRole);
 							break;
-						case "ADMIN":
-							RoleEntity adminRole = roleServiceImpl.finByKeyName(ERoles.ADMIN.toString())
+						case "EMPLOYEE":
+							RoleEntity adminRole = roleServiceImpl.finByKeyName(ERoles.EMPLOYEE.toString())
 									.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 							roles.add(adminRole);
 							break;

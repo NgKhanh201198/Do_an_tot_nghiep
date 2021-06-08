@@ -52,7 +52,8 @@ public class AppController {
 
 		List<BookingRoomEntity> listBookingrate = bookingRoomServiceImpl.getBookingRoomAll();
 		listBookingrate.forEach(item -> {
-			if (checkInDate.before(item.getCheckOutDate()) && item.getCheckInDate().before(checkOutDate)) {
+			if (checkInDate.before(item.getCheckOutDate()) && item.getCheckInDate().before(checkOutDate)
+					&& item.getStatus() == "Đã đặt") {
 				item.getRooms().forEach(room -> {
 					if (room.getHotel().getHotelName().equals(roomEmptyDTO.getHotel())) {
 						listRoomNameBookingrate.add(room.getRoomNumber());

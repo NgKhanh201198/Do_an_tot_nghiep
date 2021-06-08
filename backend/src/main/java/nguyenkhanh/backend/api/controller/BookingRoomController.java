@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import nguyenkhanh.backend.dto.BookingRoomDTO;
@@ -124,15 +125,28 @@ public class BookingRoomController {
 		}
 	}
 
+	@GetMapping("/bookingRoom/user")
+	public ResponseEntity<?> getBookingRoomByUser(@RequestParam("name") String fullName) {
+		UserEntity userEntity = userServiceImpl.findUserByFullName(fullName)
+				.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng: " + fullName + " này!"));
+		List<BookingRoomEntity> listBookingRoom = bookingRoomServiceImpl.getBookingRoomByUser(userEntity);
+		return new ResponseEntity<List<BookingRoomEntity>>(listBookingRoom, HttpStatus.OK);
+	}
+
+	@PutMapping("/bookingRoom/cancelBookingRoom")
+	public ResponseEntity<?> cancelBookingRoom(@RequestParam("id") long id) {
+		bookingRoomServiceImpl.cancelBookingRoom(id, "Đã hủy");
+		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Đã hủy thành công!"));
+	}
+
 	@PutMapping("/bookingRoom/{id}")
 	public ResponseEntity<?> updateBookingRoom(@PathVariable("id") long id,
 			@RequestBody @Valid BookingRoomDTO bookingRoomDTO) {
 		try {
-			if (bookingRoomServiceImpl.isBookingRoomExitsById(id) == false) {
+			if (bookingRoomServiceImpl.isBookingRoomExitsById(id)) {
 				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
 						HttpStatus.NOT_FOUND.name(), "Không tìm thấy đơn đặt phòng có id= " + id);
 				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-
 			} else {
 				BookingRoomEntity oldBookingRoomEntity = bookingRoomServiceImpl.getBookingRoomById(id);
 
@@ -175,6 +189,7 @@ public class BookingRoomController {
 				oldBookingRoomEntity.setTotalNumberOfPeople(bookingRoomDTO.getTotalNumberOfPeople());
 				oldBookingRoomEntity.setUser(userEntity);
 				oldBookingRoomEntity.setRooms(setRoomEntity);
+				oldBookingRoomEntity.setStatus(bookingRoomDTO.getStatus());
 
 				bookingRoomServiceImpl.updateBookingRoom(oldBookingRoomEntity);
 				return ResponseEntity

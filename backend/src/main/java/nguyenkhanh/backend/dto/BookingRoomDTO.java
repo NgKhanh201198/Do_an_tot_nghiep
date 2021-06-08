@@ -20,13 +20,14 @@ public class BookingRoomDTO {
 	private Integer totalNumberOfPeople;
 
 	private Set<String> rooms;
+	private String status;
 
 	public BookingRoomDTO() {
 		super();
 	}
 
 	public BookingRoomDTO(String checkInDate, String checkOutDate, String user, String hotel,
-			Integer totalNumberOfPeople, Set<String> rooms) {
+			Integer totalNumberOfPeople, Set<String> rooms, String status) {
 		super();
 		this.checkInDate = checkInDate;
 		this.checkOutDate = checkOutDate;
@@ -34,6 +35,7 @@ public class BookingRoomDTO {
 		this.hotel = hotel;
 		this.totalNumberOfPeople = totalNumberOfPeople;
 		this.rooms = rooms;
+		this.status = status;
 	}
 
 	public String getCheckInDate() {
@@ -82,6 +84,14 @@ public class BookingRoomDTO {
 
 	public void setRooms(Set<String> rooms) {
 		this.rooms = rooms;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

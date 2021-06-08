@@ -72,18 +72,13 @@
         <div>
             <owl-carousel-o [options]="customOptions">
                 <ng-template carouselSlide *ngFor="let item of listHotel">
-                    <img style="cursor: pointer;" class="img-carosel" src="{{item.image}}" alt="" (click)="redirectHotel(item.id)">
+                    <img style="cursor: pointer;" class="img-carosel" src="{{item.image}}" alt="" (click)="redirectHotel(item.hotelName)">
                     <p>{{item.hotelName}}</p>
                 </ng-template>
             </owl-carousel-o>
         </div>
     </div>
 </section>
-
-<!-- <div>
-    <app-room [childCheckInDate]="_checkInDate" [childCheckOutDate]="_checkOutDate"></app-room>
-</div> -->
-
 <footer>
     <app-footer></app-footer>
 </footer>

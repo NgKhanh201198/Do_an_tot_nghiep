@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { LoggerService } from '../../../_services/logger.service';
-import { BookingRoomService } from '../../../_services/booking-room.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { formatDate } from '@angular/common';
+import { BookingRoomService } from 'src/app/_services/booking-room.service';
+import { LoggerService } from 'src/app/_services/logger.service';
 
 @Component({
     selector: 'app-list-booking-room',
@@ -33,12 +33,13 @@ export class ListBookingRoomComponent implements OnInit {
         private bookingRoomService: BookingRoomService,
         private route: ActivatedRoute,
         private router: Router,
-        private loggerService: LoggerService
+        private logger: LoggerService
     ) { }
 
     ngOnInit(): void {
         this.bookingRoomService.getBookingRoomAll().subscribe((result) => {
             this.collection = result;
+            this.logger.loggerData(this.collection);
         });
     }
 
@@ -79,7 +80,7 @@ export class ListBookingRoomComponent implements OnInit {
                 }
                 this._success = result.message;
                 this.hiddenDeltailsBooking();
-                this.loggerService.logger(this._success);
+                this.logger.logger(this._success);
             });
         }
         setTimeout(() => {

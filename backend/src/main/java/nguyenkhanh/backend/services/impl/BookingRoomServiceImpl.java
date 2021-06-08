@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import nguyenkhanh.backend.entity.BookingRoomEntity;
+import nguyenkhanh.backend.entity.UserEntity;
 import nguyenkhanh.backend.repository.BookingRoomRepository;
 import nguyenkhanh.backend.services.IBookingRoomService;
 
@@ -27,12 +28,23 @@ public class BookingRoomServiceImpl implements IBookingRoomService {
 
 	@Override
 	public List<BookingRoomEntity> getBookingRoomAll() {
-		return bookingRoomRepository.findAll(Sort.by(Sort.Direction.DESC, "user").descending().and(Sort.by(Sort.Direction.DESC,"id")));
+		return bookingRoomRepository
+				.findAll(Sort.by(Sort.Direction.DESC, "user").descending().and(Sort.by(Sort.Direction.DESC, "id")));
+	}
+
+	@Override
+	public List<BookingRoomEntity> getBookingRoomByUser(UserEntity userEntity) {
+		return bookingRoomRepository.findByUserOrderByStatus(userEntity);
 	}
 
 	@Override
 	public void updateBookingRoom(BookingRoomEntity bookingRoomEntity) {
 		bookingRoomRepository.save(bookingRoomEntity);
+	}
+
+	@Override
+	public void cancelBookingRoom(long id, String status) {
+		bookingRoomRepository.cancelBookingRoomById(id, status);
 	}
 
 	@Override

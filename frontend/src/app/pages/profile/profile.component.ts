@@ -49,6 +49,7 @@ export class ProfileComponent implements OnInit {
 
         // get current user
         this.currentUser = this.authenticationService.currentUserValue;
+        
         this.userService.getUserById(this.currentUser.id).subscribe((result: any) => {
             this.loggerService.logger(result);
             if (result.avatar != null) {

@@ -72,8 +72,8 @@ export class HomeComponent implements OnInit {
     }
     //end
 
-    redirectHotel(hotelID) {
-        this.router.navigate(['/hotel/' + hotelID])
+    redirectHotel(hotelName) {
+        this.router.navigate(['/room/'], { queryParams: { hotelName: hotelName } })
     }
 
     redirectHotelByCityName(cityName) {

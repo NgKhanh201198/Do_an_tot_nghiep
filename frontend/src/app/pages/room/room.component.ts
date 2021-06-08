@@ -54,18 +54,12 @@ export class RoomComponent implements OnInit {
 
     ngOnInit(): void {
         this.currentUser = this.authenticationService.currentUserValue;
-        console.log(this.currentUser);
-
 
         this.route.queryParamMap
             .subscribe((params) => {
                 this.hotelName = params.get('hotelName');
                 this.formData.get('checkInDate').setValue(params.get('checkInDate'));
                 this.formData.get('checkOutDate').setValue(params.get('checkOutDate'));
-
-                this.loggerService.loggerData(params.get('hotelName'));
-                this.loggerService.loggerData(params.get('checkInDate'));
-                this.loggerService.loggerData(params.get('checkOutDate'));
 
                 this.hotelService.getHotelbyHotelName(this.hotelName).subscribe((result) => {
                     this.hotelName = result.hotelName;
@@ -110,6 +104,7 @@ export class RoomComponent implements OnInit {
 
     //Check box
     listRooms: any = [];
+    listId: any = [];
     numberOfPeople = 0;
     color: ThemePalette = 'primary';
     allComplete: boolean = false;
@@ -117,10 +112,12 @@ export class RoomComponent implements OnInit {
     //Kiểm tra id nào đã được checked
     isCheckSelectedId() {
         this.listRooms = [];
+        this.listId = [];
         this.numberOfPeople = 0;
         this.listRoom.forEach(element => {
             if (element.isSelected) {
                 this.listRooms.push(element.roomNumber);
+                this.listId.push(element.id);
                 this.numberOfPeople = this.numberOfPeople + element.numberOfPeople;
             }
         });
@@ -138,16 +135,21 @@ export class RoomComponent implements OnInit {
     //end
 
     onSubmit() {
+        console.log(this.listRooms);
+
+        this.listRooms = [];
+        this._status = true;
         this._errorCheckRoom = "";
+
         this.roomService.checkRoomEmpty(
             this.hotelName,
             this.formData.value.checkInDate,
             this.formData.value.checkOutDate
         ).subscribe({
             next: (result) => {
-                this.loggerService.logger(result);
+                // this.loggerService.logger(result);
                 if (result.length === 0) {
-                    this._errorCheckRoom = " Khách sạn " + this.hotelName + " hết phòng trong thời gian này";
+                    this._errorCheckRoom = " Khách sạn " + this.hotelName + " hết phòng trong thời gian này!";
                 } else {
                     this._status = false;
                     this.listRoom = result;
@@ -160,8 +162,10 @@ export class RoomComponent implements OnInit {
     }
 
     bookingRoom() {
-        // this.loggerService.loggerData(this.numberOfPeople);
-        // this.loggerService.loggerData(this.listRoom);
+        console.log(this._status);
+        this.loggerService.loggerData(this.listRooms);
+
+        this._success = "";
         if (this.listRooms.length == 0) {
             alert("Vui lòng chọn phòng.");
         } else {
@@ -173,14 +177,6 @@ export class RoomComponent implements OnInit {
                 if (this._status) {
                     alert("Vui lòng chọn kiểm tra phòng trống trước khi đặt phòng.");
                 } else {
-                    // console.log(this.formData.value.checkInDate,);
-                    // console.log(this.formData.value.checkOutDate,);
-                    // console.log(this.numberOfPeople,);
-                    // console.log(this.currentUser.email,);
-                    // console.log(this.hotelName,);
-                    // console.log(this.listRooms);
-
-
                     this.bookingRoomService.createBookingRoom(
                         this.formData.value.checkInDate,
                         this.formData.value.checkOutDate,
@@ -188,15 +184,18 @@ export class RoomComponent implements OnInit {
                         this.currentUser.email,
                         this.hotelName,
                         this.listRooms
-                    )
-                        .subscribe({
-                            next: (result) => {
-                                this._success = "Đặt phòng thành công.";
-                            },
-                            error: (error) => {
-                                this._error = error.message
+                    ).subscribe((result) => {
+                        this.loggerService.loggerData(this.listRoom.length);
+                        for (var i = 0; i < this.listRoom.length; i++) {
+                            this.loggerService.loggerData(this.listRoom[i].roomNumber);
+                            if (this.listRooms.indexOf(this.listRoom[i].roomNumber) !== -1) {
+                                this.listRoom.splice(i, 1);
+                                i--;
                             }
-                        });
+                        }
+                        this.listRooms = [];
+                        this._success = "Đặt phòng thành công.";
+                    });
                 }
             }
         }
