@@ -38,6 +38,11 @@ public class HotelServiceImpl implements IHotelService {
 	}
 
 	@Override
+	public long countHotelAll() {
+		return hotelRepository.count();
+	}
+
+	@Override
 	public void updateHotel(HotelEntity hotelEntity) {
 		hotelRepository.save(hotelEntity);
 	}

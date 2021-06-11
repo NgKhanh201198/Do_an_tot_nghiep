@@ -12,19 +12,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import nguyenkhanh.backend.dto.CheckRoomEmptyDTO;
+import nguyenkhanh.backend.dto.CountDTO;
 import nguyenkhanh.backend.entity.BookingRoomEntity;
 import nguyenkhanh.backend.entity.HotelEntity;
 import nguyenkhanh.backend.entity.RoomEntity;
+import nguyenkhanh.backend.entity.UserTypeEntity;
 import nguyenkhanh.backend.services.impl.BookingRoomServiceImpl;
 import nguyenkhanh.backend.services.impl.HotelServiceImpl;
 import nguyenkhanh.backend.services.impl.RoomServiceImpl;
 import nguyenkhanh.backend.services.impl.UserServiceImpl;
+import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -41,6 +45,9 @@ public class AppController {
 
 	@Autowired
 	RoomServiceImpl roomServiceImpl;
+	
+	@Autowired
+	UserTypeServiceImpl userTypeServiceImpl;
 
 	@PostMapping("/checkRoomEmpty")
 	public ResponseEntity<?> checkRoomEmpty(@RequestBody @Valid CheckRoomEmptyDTO roomEmptyDTO) {
@@ -75,5 +82,24 @@ public class AppController {
 		}
 
 		return new ResponseEntity<>(listRoomEtity, HttpStatus.OK);
+	}
+
+
+	@GetMapping("/count")
+	public ResponseEntity<CountDTO> countCustomer() {
+		UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName("customer")
+				.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại người dùng!"));
+		long customer = userServiceImpl.countByUserType(userTypeEntity);		
+		long order = bookingRoomServiceImpl.countByStatus("Đã đặt");
+		long hotel = hotelServiceImpl.countHotelAll();
+		long room = roomServiceImpl.countRoomAll();
+		
+		CountDTO countDTO = new CountDTO();
+		countDTO.setCustomer(customer);
+		countDTO.setOrder(order);
+		countDTO.setHotel(hotel);
+		countDTO.setRoom(room);
+
+		return new ResponseEntity<CountDTO>(countDTO, HttpStatus.OK);
 	}
 }

@@ -23,6 +23,8 @@ public interface IRoomService {
 
 	public List<String> getListRoomNumber(HotelEntity hotelEntity);
 
+	public long countRoomAll();
+
 	// Update
 	public void updateRoom(RoomEntity roomEntity);
 

@@ -55,8 +55,12 @@ public class BookingRoomServiceImpl implements IBookingRoomService {
 
 	@Override
 	public boolean isBookingRoomExitsById(long id) {
-		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public long countByStatus(String status) {
+		return bookingRoomRepository.countByStatus(status);
 	}
 
 }

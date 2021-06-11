@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import nguyenkhanh.backend.entity.UserEntity;
+import nguyenkhanh.backend.entity.UserTypeEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
@@ -23,6 +24,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	public Boolean existsByUsername(String username);
 
 	public Boolean existsByPhoneNumber(String phoneNumber);
+	
+	public long countByUserType(UserTypeEntity userTypeEntity);
 
 	@Transactional
 	@Modifying

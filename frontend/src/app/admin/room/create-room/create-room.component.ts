@@ -70,8 +70,7 @@ export class CreateRoomComponent implements OnInit {
             discount: ['', [Validators.required, Validators.pattern('[0-9]{0,11}')]],
             numberOfPeople: ['', [Validators.required, Validators.pattern('[0-9]{0,11}')]],
             roomType: ['', [Validators.required]],
-            hotel: ['', [Validators.required]],
-            status: ['', [Validators.required]]
+            hotel: ['', [Validators.required]]
         });
 
     }

@@ -17,6 +17,8 @@ public interface BookingRoomRepository extends JpaRepository<BookingRoomEntity, 
 	public BookingRoomEntity findById(long id);
 
 	public List<BookingRoomEntity> findByUserOrderByStatus(UserEntity userEntity);
+	
+	public long countByStatus(String status);
 
 	@Transactional
 	@Modifying

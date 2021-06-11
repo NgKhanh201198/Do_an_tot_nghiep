@@ -4,15 +4,54 @@
     <div class="content-wrapper">
         <div class="content pt-3">
             <div class="container-fluid">
-                <div class="card">
-                    <h4 class="card-header">Thông tin tài khoản</h4>
-                    <div *ngIf="loading" class="ml-3 mt-3 mb-3 spinner-border spinner-border-sm"></div>
-                    <div class="card-body" *ngIf="currentUser">
-                        <p>Tên tài khoản: {{currentUser.fullName}}</p>
-                        <p>Email: {{currentUser.email}}</p>
-                        <span>Quyền hạn:</span>
-                        <div *ngFor="let item of currentUser.roles">
-                            <span class="nav-link">{{item}}</span>
+                <h2 class="pb-3">Bảng điều khiển</h2>
+                <div class="row">
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{countOrder}}</h3>
+                                <p>Đơn đặt mới</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion bi bi-clipboard-plus" style="top: 0px;"></i>
+                            </div>
+                            <a [routerLink]="['/admin-page','list-bookingroom']" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{countCustomer}}</h3>
+                                <p>Khách hàng</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion bi bi-person-plus-fill" style="top: 0px;"></i>
+                            </div>
+                            <a [routerLink]="['/admin-page','list-customer']" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>{{countHotel}}</h3>
+                                <p>Khách sạn</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion bi bi-building" style="top: 0px;"></i>
+                            </div>
+                            <a [routerLink]="['/admin-page','list-hotel']" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3>{{countRoom}}</h3>
+                                <p>Phòng</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion bi bi-door-open-fill" style="top: 0px;"></i>
+                            </div>
+                            <a [routerLink]="['/admin-page','list-room']" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                 </div>

@@ -15,6 +15,8 @@ public interface IBookingRoomService {
 	public List<BookingRoomEntity> getBookingRoomAll();
 
 	public List<BookingRoomEntity> getBookingRoomByUser(UserEntity userEntity);
+	
+	public long countByStatus(String status);
 
 	// Update
 	public void updateBookingRoom(BookingRoomEntity bookingRoomEntity);

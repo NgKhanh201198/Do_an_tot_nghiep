@@ -12,7 +12,7 @@ import { Path } from '../../_models/path.enum';
 export class HotelComponent implements OnInit {
     collection: Array<any> = [];
     _page: number = 1;
-    _itemsPage: number = 4;
+    _itemsPage: number = 6;
     _errorCheckRoom: any;
     cityName: any;
     _checkInDate:any;

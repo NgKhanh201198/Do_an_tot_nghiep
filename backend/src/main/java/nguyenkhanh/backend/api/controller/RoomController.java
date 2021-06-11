@@ -59,7 +59,7 @@ public class RoomController {
 			@RequestParam("roomNumber") String roomNumber, @RequestParam("contents") String contents,
 			@RequestParam("roomCost") Integer roomCost, @RequestParam("discount") Integer discount,
 			@RequestParam("numberOfPeople") Integer numberOfPeople, @RequestParam("roomType") String roomType,
-			@RequestParam("hotel") String hotel, @RequestParam("status") String status) {
+			@RequestParam("hotel") String hotel) {
 		try {
 			RoomTypeEntity roomTypeEntity = roomTypeServiceImpl.findByRoomTypeName(roomType)
 					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại phòng này!"));
@@ -99,7 +99,6 @@ public class RoomController {
 			roomEntity.setNumberOfPeople(numberOfPeople);
 			roomEntity.setRoomType(roomTypeEntity);
 			roomEntity.setHotel(hotelEntity);
-			roomEntity.setStatus(status);
 
 			roomServiceImpl.createRoom(roomEntity);
 			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm mới thành công!"));

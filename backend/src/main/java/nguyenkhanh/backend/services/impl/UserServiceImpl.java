@@ -15,6 +15,7 @@ import nguyenkhanh.backend.dto.UserCustomerDTO;
 import nguyenkhanh.backend.entity.EStatus;
 import nguyenkhanh.backend.entity.RegisterLogEntity;
 import nguyenkhanh.backend.entity.UserEntity;
+import nguyenkhanh.backend.entity.UserTypeEntity;
 import nguyenkhanh.backend.repository.TemplateRepository;
 import nguyenkhanh.backend.repository.UserRepository;
 import nguyenkhanh.backend.services.IUserService;
@@ -43,6 +44,9 @@ public class UserServiceImpl implements IUserService {
 	@Value("${system.baseUrl}")
 	private String BASE_URL;
 
+	@Value("${client.url}")
+	private String CLIENT_URL;
+
 	@Override
 	public void createAccount(UserEntity user) {
 		userRepository.save(user);
@@ -65,15 +69,13 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public void resetPassword(UserEntity user) {
-//		String token = UUID.randomUUID().toString();
-
 		RegisterLogEntity oldRegisterLogEntity = registerLogServiceImpl.findByUser(user);
 		oldRegisterLogEntity.setStatus(EStatus.INACTIVE.toString());
 		oldRegisterLogEntity.setDateActive(LocalDateTime.now().plusSeconds(DATE_EXPIED));
 
 		registerLogServiceImpl.save(oldRegisterLogEntity);
 
-		String link = "http://localhost:4200/user-reset-password?token=" + oldRegisterLogEntity.getToken();
+		String link = CLIENT_URL + "user-reset-password?token=" + oldRegisterLogEntity.getToken();
 
 		sendEmailService.sendResetPassword(user.getUsername(), buildResetPassword(user.getFullName(), link));
 	}
@@ -106,10 +108,6 @@ public class UserServiceImpl implements IUserService {
 			oldUser.setStatus(EStatus.INACTIVE.toString());
 			userRepository.save(oldUser);
 		}
-	}
-
-	@Override
-	public void deleteAndRestore(long id) {
 	}
 
 	@Override
@@ -176,4 +174,8 @@ public class UserServiceImpl implements IUserService {
 		return userRepository.findByFullName(fullName);
 	}
 
+	@Override
+	public long countByUserType(UserTypeEntity userTypeEntity) {
+		return userRepository.countByUserType(userTypeEntity);
+	}
 }

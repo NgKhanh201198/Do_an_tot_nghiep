@@ -18,6 +18,8 @@ public interface IHotelService {
 	public List<HotelEntity> getRoomByCity(CityEntity cityEntity);
 
 	public Optional<HotelEntity> findByHotelName(String hotelName);
+	
+	public long countHotelAll();
 
 	// Update
 	public void updateHotel(HotelEntity hotelEntity);

@@ -52,6 +52,11 @@ public class RoomServiceImpl implements IRoomService {
 		return roomRepository.getListRoomNumber(hotelEntity);
 	}
 
+
+	@Override
+	public long countRoomAll() {
+		return roomRepository.count();
+	}
 	@Override
 	public void updateRoom(RoomEntity roomEntity) {
 		roomRepository.save(roomEntity);

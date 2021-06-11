@@ -94,15 +94,6 @@
                                 <mat-error *ngIf="formValid.contents.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getContentsErrorMessage()}}</mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="form-group ">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Trạng thái</mat-label>
-                                <mat-select formControlName="status">
-                                    <mat-option *ngFor="let item of status" [value]="item.value">{{item.name}}</mat-option>
-                                </mat-select>
-                                <mat-error *ngIf="formValid.status.invalid"><i class="bi bi-exclamation-circle mr-1"></i>{{getStatusErrorMessage()}}</mat-error>
-                            </mat-form-field>
-                        </div>
                         <div *ngIf="_error" class="error-message"><i class="bi bi-exclamation-circle"></i>{{_error}}</div>
                         <button [disabled]="formUpdateData.invalid" class="btn btn-primary btn-block">Thêm mới</button>
                     </form>

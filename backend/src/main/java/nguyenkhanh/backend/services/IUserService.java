@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import nguyenkhanh.backend.dto.UserCustomerDTO;
 import nguyenkhanh.backend.entity.UserEntity;
+import nguyenkhanh.backend.entity.UserTypeEntity;
 
 public interface IUserService {
 
@@ -26,6 +27,8 @@ public interface IUserService {
 
 	public UserEntity getUserById(long id);
 
+	public long countByUserType(UserTypeEntity userTypeEntity);
+
 	// Update
 	public void update(UserEntity user);
 
@@ -40,7 +43,6 @@ public interface IUserService {
 	// Delete
 	public void deletes(long[] id);
 
-	public void deleteAndRestore(long id);
 
 	public boolean isUserExitsById(long id);
 
