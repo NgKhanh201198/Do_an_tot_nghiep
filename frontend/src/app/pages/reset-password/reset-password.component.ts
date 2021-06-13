@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
-import { AuthenticationService } from 'src/app/_services/authentication.service';
 import { LoggerService } from 'src/app/_services/logger.service';
-import { Path } from '../../_models/path.enum';
 import { UserService } from '../../_services/user.service';
 
 @Component({
@@ -25,14 +23,13 @@ export class ResetPasswordComponent implements OnInit {
 	token: any;
 
 	parentErrorMessage: any;
-	parentEmail: any = "oooooook";
+	parentEmail: any = "";
 	currentUser: User;
 
 	constructor(
 		private route: ActivatedRoute,
 		private formBuilder: FormBuilder,
 		private userService: UserService,
-		private authenticationService: AuthenticationService,
 		private router: Router,
 		private logger: LoggerService
 	) {
@@ -45,8 +42,6 @@ export class ResetPasswordComponent implements OnInit {
 				error: (err) => {
 					this.show = false;
 					this.parentErrorMessage = err.message;
-					this.logger.loggerError(err.message);
-					this.logger.loggerError(this.parentErrorMessage);
 				}
 			})
 	}
@@ -117,4 +112,6 @@ export class ResetPasswordComponent implements OnInit {
 				this.router.navigate(['/log-in']);
 			}, 3000)
 	}
+
+	
 }

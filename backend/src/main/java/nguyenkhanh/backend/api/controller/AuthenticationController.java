@@ -111,7 +111,7 @@ public class AuthenticationController {
 			// Save
 			userServiceImpl.save(userEntity);
 
-			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Đăng ký thành công!"));
+			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Bạn đã đăng ký thành công!"));
 		} catch (DataAccessException ex) {
 			return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
 					"Bad Request", "Tài khoản đã được sử dụng. Vui lòng thử tài khoản khác!"));
@@ -182,7 +182,7 @@ public class AuthenticationController {
 
 		if (dateActive.isBefore(LocalDateTime.now())
 				&& registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString())) {
-			throw new TimeoutException("Token của bạn đã hết hạn.");
+			throw new TimeoutException("Mã xác nhận của bạn đã hết hạn.");
 		}
 
 		if (registerLogServiceImpl.getStatus(token).equals(EStatus.ACTIVE.toString())) {

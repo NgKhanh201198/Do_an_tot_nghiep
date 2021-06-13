@@ -9,6 +9,7 @@ export enum Path {
     CHANGEPASSWORD = 'user-change-password',
     RESETPASSWORD = 'user-reset-password',
     FORGOTPASSWORD = 'forgot-password',
+    VERIFYEMAIL = 'verify-email',
     BOOKINGROOM = 'user-bookingroom',
     HOTEL = 'hotel',
     ROOM = 'room',

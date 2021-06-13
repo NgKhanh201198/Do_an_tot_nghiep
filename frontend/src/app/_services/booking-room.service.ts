@@ -68,7 +68,6 @@ export class BookingRoomService {
     public cancelBookingRoomById(id: any): Observable<any> {
         const formData: FormData = new FormData();
         formData.append('id', id);
-        // const params = new HttpParams().append('id', id);
         return this.http.put<any>(`${this.url + '/cancelBookingRoom'}`, formData)
             .pipe(
                 catchError(this.handleError)

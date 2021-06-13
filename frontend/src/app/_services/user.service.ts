@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -80,6 +80,13 @@ export class UserService {
     }
 
     public resetPassword(email: any): Observable<any> {
+
+        // const params = new HttpParams().append('email', email);
+        // return this.http.post(`${this.url + '/resetPassword'}`, { params })
+        //     .pipe(
+        //         catchError(this.handleError)
+        //     );
+
         return this.http.post(`${this.url + '/resetPassword?email='}${email}`, httpOptions)
             .pipe(
                 catchError(this.handleError)

@@ -4,7 +4,14 @@
 <main role="main">
     <div class="container">
         <div class="col-md-6 offset-md-3" style="margin-top: 50px;">
-            <div class="card badge-link elevation-2">
+            <div *ngIf="register">
+                <div class="report-register">
+                    <i style="font-size: 1.25rem;" class="bi bi-check-circle-fill"></i>&nbsp; {{success}}
+                </div>
+                <div class="note-register">Vui lòng vào email để xác nhận.</div>
+            </div>
+
+            <div class="card badge-link elevation-2" *ngIf="!register">
                 <h1 class="card-header text-center">Đăng ký</h1>
                 <div class="card-body">
                     <form #myForm="ngForm" [formGroup]="formData" (ngSubmit)="onSubmit();">
@@ -57,6 +64,9 @@
                     <div class="text-right mt-3">Bạn đã có tài khoản? <a [routerLink]="['/log-in']">Đăng nhập</a></div>
                 </div>
             </div>
+
+
+
         </div>
     </div>
 </main>

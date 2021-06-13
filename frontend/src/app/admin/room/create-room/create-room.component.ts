@@ -124,12 +124,6 @@ export class CreateRoomComponent implements OnInit {
         }
         return this.formValid.numberOfPeople.errors.pattern ? 'Số người không hợp lệ, vui lòng kiểm tra lại.' : '';
     }
-    getStatusErrorMessage(): string {
-        if (this.formValid.status.errors.required) {
-            return 'Vui lòng chọn trạng thái.';
-        }
-        return '';
-    }
 
     onSelectFile(event) {
         if (event.target.files.length > 0) {

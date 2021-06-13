@@ -82,6 +82,7 @@ import { CreateCityComponent } from './admin/city/create-city/create-city.compon
 import { ListCityComponent } from './admin/city/list-city/list-city.component';
 import { UpdateCityComponent } from './admin/city/update-city/update-city.component';
 import { RoomComponent } from './pages/room/room.component';
+import { VerifyEmailComponent } from './pages/verify-email/verify-email.component';
 
 @NgModule({
     declarations: [
@@ -131,7 +132,8 @@ import { RoomComponent } from './pages/room/room.component';
         ResetPasswordComponent,
         ForgotPasswordComponent,
         FooterAdminComponent,
-        RoomComponent
+        RoomComponent,
+        VerifyEmailComponent
     ],
     imports: [
         BrowserModule,

@@ -63,7 +63,7 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
                         "browserTarget": "frontend:build",
-                        "port": 4231
+                        "port": 4220
                     },
                     "configurations": {
                         "production": {

@@ -13,6 +13,7 @@ export class RegisterComponent {
     // @ViewChild('myForm') myForm: NgForm;
     formData: FormGroup;
     loading = false;
+    register = false;
     submitted = false;
     success = '';
     error = '';
@@ -97,6 +98,7 @@ export class RegisterComponent {
             .subscribe({
                 next: (result) => {
                     this.loading = false;
+                    this.register = true;
                     this.submitted = false;
                     this.error = '';
                     this.success = result.message;
@@ -110,11 +112,6 @@ export class RegisterComponent {
             }),
             setTimeout(() => {
                 this.success = '';
-            }, 3000),
-            setTimeout(() => {
-                if (this.error == '') {
-                    this.router.navigate(['/log-in']);
-                }
             }, 3000);
     }
 }
