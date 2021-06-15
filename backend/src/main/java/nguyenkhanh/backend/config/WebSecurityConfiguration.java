@@ -42,16 +42,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		return bCryptPasswordEncoder;
 	}
+	
+	@Bean
+	public CustomAccessDeniedHandler customAccessDeniedHandler() {
+		return new CustomAccessDeniedHandler();
+	}
 
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
-	}
-
-	@Bean
-	public CustomAccessDeniedHandler customAccessDeniedHandler() {
-		return new CustomAccessDeniedHandler();
 	}
 
 	@Override

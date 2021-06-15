@@ -23,13 +23,13 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-		logger.error("Access error: {}", accessDeniedException.getMessage());
+		logger.error("Lỗi truy cập: {}", accessDeniedException.getMessage());
 
 		MessageResponse error = new MessageResponse();
 		error.setTimestamp(new Date());
 		error.setstatusCode(HttpServletResponse.SC_FORBIDDEN);
 		error.setError("Forbidden");
-		error.setMessage("Sorry, You're not authorized to access this resource.");
+		error.setMessage("Xin lỗi, bạn không được phép truy cập tài nguyên này.");
 		error.setPath(request.getRequestURI());
 		Gson gson = new Gson();
 		String errorMessage = gson.toJson(error);

@@ -114,7 +114,7 @@ public class AuthenticationController {
 			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Bạn đã đăng ký thành công!"));
 		} catch (DataAccessException ex) {
 			return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-					"Bad Request", "Tài khoản đã được sử dụng. Vui lòng thử tài khoản khác!"));
+					HttpStatus.BAD_REQUEST.name(), "Tài khoản đã được sử dụng. Vui lòng thử tài khoản khác!"));
 		}
 	}
 
@@ -136,7 +136,7 @@ public class AuthenticationController {
 
 			if (userDetailsImpl == null) {
 				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-						"Bad Request", "Không tìm thấy người dùng!"));
+						HttpStatus.BAD_REQUEST.name(), "Không tìm thấy người dùng!"));
 			}
 
 			List<String> roles = new ArrayList<String>();
@@ -192,7 +192,7 @@ public class AuthenticationController {
 			registerLogServiceImpl.updateStatus(token);
 			userServiceImpl.updateStatus(registerLogEntity.getUser().getUsername());
 			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.CONTINUE.value(),
-					"Địa chỉ email đã được xác minh. Đăng nhập để tiếp tục."));
+					"Xác minh địa chỉ email thành công."));
 		}
 	}
 

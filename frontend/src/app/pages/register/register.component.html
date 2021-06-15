@@ -4,11 +4,11 @@
 <main role="main">
     <div class="container">
         <div class="col-md-6 offset-md-3" style="margin-top: 50px;">
-            <div *ngIf="register">
+            <div *ngIf="register" class="w-100">
                 <div class="report-register">
                     <i style="font-size: 1.25rem;" class="bi bi-check-circle-fill"></i>&nbsp; {{success}}
                 </div>
-                <div class="note-register">Vui lòng vào email để xác nhận.</div>
+                <div class="note-register">Vui lòng vào email để xác nhận!</div>
             </div>
 
             <div class="card badge-link elevation-2" *ngIf="!register">

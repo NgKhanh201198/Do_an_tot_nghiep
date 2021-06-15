@@ -30,7 +30,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		messageResponse.setTimestamp(new Date());
 		messageResponse.setstatusCode(HttpServletResponse.SC_UNAUTHORIZED);
 		messageResponse.setError("Unauthorized");
-		messageResponse.setMessage("Sorry, you need full authentication to access this resource");
+		messageResponse.setMessage("Xin lỗi, bạn cần xác thực để truy cập tài nguyên này");
 		messageResponse.setPath(request.getRequestURI());
 		Gson gson = new Gson();
 		String errorMessage = gson.toJson(messageResponse);

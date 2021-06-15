@@ -79,6 +79,13 @@ export class UserService {
             );
     }
 
+    public registerToken(email: any): Observable<any> {
+        return this.http.post(`${this.url + '/registerToken?email='}${email}`, httpOptions)
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
     public resetPassword(email: any): Observable<any> {
 
         // const params = new HttpParams().append('email', email);

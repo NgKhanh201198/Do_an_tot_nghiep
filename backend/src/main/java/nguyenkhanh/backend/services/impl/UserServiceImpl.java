@@ -63,9 +63,21 @@ public class UserServiceImpl implements IUserService {
 		registerLogServiceImpl.save(registerLogEntity);
 
 		String link = CLIENT_URL + "verify-email?token=" + token;
-//		String link = BASE_URL + "api/auth/verifyEmail?token=" + token;
 
 		sendEmailService.sendConfirmEmail(user.getUsername(), buildVerifyEmail(user.getFullName(), link));
+	}
+
+	@Override
+	public void registerToken(UserEntity user) {
+		RegisterLogEntity oldRegisterLogEntity = registerLogServiceImpl.findByUser(user);
+		oldRegisterLogEntity.setDateActive(LocalDateTime.now().plusSeconds(DATE_EXPIED));
+
+		registerLogServiceImpl.save(oldRegisterLogEntity);
+
+		String link = CLIENT_URL + "verify-email?token=" + oldRegisterLogEntity.getToken();
+
+		sendEmailService.sendConfirmEmail(user.getUsername(), buildVerifyEmail(user.getFullName(), link));
+
 	}
 
 	@Override

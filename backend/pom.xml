@@ -10,7 +10,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.nguyenkhanh</groupId>
-	<artifactId>back-end</artifactId>
+	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>backend</name>
 	<description>Do an tot nghiep</description>
@@ -88,5 +88,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

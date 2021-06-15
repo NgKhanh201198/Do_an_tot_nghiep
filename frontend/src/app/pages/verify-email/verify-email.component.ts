@@ -23,6 +23,7 @@ export class VerifyEmailComponent implements OnInit {
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private appService: AppService,
+        private userService: UserService,
         private logger: LoggerService
     ) { }
 
@@ -31,12 +32,14 @@ export class VerifyEmailComponent implements OnInit {
         this.appService.verifyEmail(this.token)
             .subscribe({
                 next: (res) => {
+                    this.logger.logger("res: ");
                     this.logger.logger(res);
                     this.success = res.message;
                 },
                 error: (err) => {
                     this.show = false;
                     this.error = err.message;
+                    console.log("err");
                     console.log(err);
                     
                 }
@@ -59,22 +62,19 @@ export class VerifyEmailComponent implements OnInit {
     }
 
     onSubmit() {
-        // if (this.formEmail.valid) {
-        //     this.loading = true;
-        //     return this.userService.resetPassword(this.formEmail.value.email)
-        //         .subscribe({
-        //             next: (res) => {
-        //                 this.logger.logger(res);
-        //                 this.success = res.message;
-        //             },
-        //             error: (err) => {
-        //                 this.logger.logger(err);
-        //             }
-        //         })
-        //         , setTimeout(() => {
-
-        //         }, 2000);
-        // }
+        if (this.formEmail.valid) {
+            this.loading = true;
+            return this.userService.registerToken(this.formEmail.value.email)
+                .subscribe({
+                    next: (res) => {
+                        this.logger.logger(res);
+                        this.success = res.message;
+                    },
+                    error: (err) => {
+                        this.logger.logger(err);
+                    }
+                });
+        }
     }
 
 }

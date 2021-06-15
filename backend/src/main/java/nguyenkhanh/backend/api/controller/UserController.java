@@ -328,7 +328,7 @@ public class UserController {
 		userServiceImpl.resetPassword(userEntity);
 
 		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
-				"Chúng tôi đã gửi một hướng dẫn đến " + email + ". Vui lòng kiểm tra email để đặt lại mật khẩu!"));
+				"Chúng tôi đã gửi một link xác nhận đến " + email + ". Vui lòng kiểm tra email để đặt lại mật khẩu!"));
 	}
 
 	@PostMapping("/user/updatePassword")
@@ -407,4 +407,15 @@ public class UserController {
 		}
 	}
 
+	@PostMapping("/user/registerToken")
+	public ResponseEntity<?> registerToken(@RequestParam("email") String email) {
+
+		UserEntity userEntity = userServiceImpl.findByUsername(email)
+				.orElseThrow(() -> new UsernameNotFoundException("Tài khoản không tồn tại trên hệ thống!"));
+
+		userServiceImpl.registerToken(userEntity);
+
+		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
+				"Chúng tôi đã gửi một link xác nhận đến " + email + ". Vui lòng kiểm tra email để xác nhận!"));
+	}
 }

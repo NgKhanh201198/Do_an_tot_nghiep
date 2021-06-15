@@ -39,6 +39,8 @@ public interface IUserService {
 	public void updateStatus(String username);
 
 	public void resetPassword(UserEntity user);
+	
+	public void registerToken(UserEntity user);
 
 	// Delete
 	public void deletes(long[] id);

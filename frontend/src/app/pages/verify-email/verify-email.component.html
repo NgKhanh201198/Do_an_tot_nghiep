@@ -13,33 +13,50 @@
 </div>
 
 <div class="container mt-3">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="row" style="overflow: hidden;">
-                <div style="overflow: hidden;" class="col-100 w-100" [ngClass]="{ 'moveLeft': show }">
-                    <div class="error-forgot-password">
-                        <i class="bi bi-exclamation-circle"></i>
-                        <span>{{error}}</span>
-                    </div>
-                    <button class="btn-token" (click)="show = true">Đăng ký mã xác nhận</button>
-                </div>
-
-                <div style="overflow:hidden;" class="col-100" [ngClass]="{ 'moveTop': show,'d-none':!show }">
-                    <h1 class="mt-3">Đăng ký mã xác nhận?</h1>
-                    <div class="mb-5">Chúng tôi sẽ gửi link xác nhận. Vui lòng nhập địa chỉ email bạn dùng để đăng nhập Ehotel</div>
-                    <form [formGroup]="formEmail" (ngSubmit)="onSubmit()">
-                        <div class="form-group">
-                            <label>Nhập địa chỉ email của bạn?</label>
-                            <mat-form-field class="w-100">
-                                <mat-label>Email</mat-label>
-                                <input formControlName="email" #email matInput maxlength="50" class="input-height" type="email">
-                                <mat-icon matSuffix>email</mat-icon>
-                                <mat-hint align="end">{{email.value.length}} / 50</mat-hint>
-                                <mat-error *ngIf="formValid.email.invalid"><i class="ml-1 bi bi-exclamation-circle mr-1"></i>{{getEmailErrorMessage()}}</mat-error>
-                            </mat-form-field>
+    <div class="row">
+        <div class="col-12">
+            <div class="row justify-content-center">
+                <div class="col-md-9">
+                    <div class="row" style="overflow: hidden;">
+                        <div *ngIf="success" class="w-100">
+                            <div class="report-register">
+                                <i style="font-size: 1.25rem;" class="bi bi-check-circle-fill"></i>&nbsp; {{success}}
+                            </div>
                         </div>
-                        <button class="btn btn-primary btn-block btn-token rounded-0"><span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Đăng ký mã xác nhận</button>
-                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <div class="row" style="overflow: hidden;">
+                        <div *ngIf="error" style="overflow: hidden;" class="col-100 w-100" [ngClass]="{ 'moveLeft': show }">
+                            <div class="error-forgot-password">
+                                <i class="bi bi-exclamation-circle"></i>
+                                <span>{{error}}</span>
+                            </div>
+                            <button class="btn-token" (click)="show = true">Đăng ký mã xác nhận</button>
+                        </div>
+
+                        <div *ngIf="!success" style="overflow:hidden;" class="col-100" [ngClass]="{ 'moveTop': show,'d-none':!show }">
+                            <h1 class="mt-3">Đăng ký mã xác nhận?</h1>
+                            <div class="mb-5">Chúng tôi sẽ gửi link xác nhận. Vui lòng nhập địa chỉ email bạn dùng để đăng nhập Ehotel</div>
+                            <form [formGroup]="formEmail" (ngSubmit)="onSubmit()">
+                                <div class="form-group">
+                                    <label>Nhập địa chỉ email của bạn?</label>
+                                    <mat-form-field class="w-100">
+                                        <mat-label>Email</mat-label>
+                                        <input formControlName="email" #email matInput maxlength="50" class="input-height" type="email">
+                                        <mat-icon matSuffix>email</mat-icon>
+                                        <mat-hint align="end">{{email.value.length}} / 50</mat-hint>
+                                        <mat-error *ngIf="formValid.email.invalid"><i class="ml-1 bi bi-exclamation-circle mr-1"></i>{{getEmailErrorMessage()}}</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <button class="btn btn-primary btn-block btn-token rounded-0"><span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Đăng ký mã xác nhận</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
