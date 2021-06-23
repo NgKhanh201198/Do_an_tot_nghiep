@@ -51,6 +51,7 @@ public class BookingRoomController {
 	HotelServiceImpl hotelServiceImpl;
 
 	@PostMapping("/bookingRoom")
+	//	@PreAuthorize("hasRole('create_bookingroom')")
 	public ResponseEntity<?> createBookingRoom(@RequestBody @Valid BookingRoomDTO bookingRoomDTO) {
 		try {
 			BookingRoomEntity bookingRoomEntity = new BookingRoomEntity();
@@ -108,6 +109,7 @@ public class BookingRoomController {
 	}
 
 	@GetMapping("/bookingRoom")
+	//	@PreAuthorize("hasRole('list_bookingroom')")
 	public ResponseEntity<?> getBookingRoomAll() {
 		List<BookingRoomEntity> listBookingRoom = bookingRoomServiceImpl.getBookingRoomAll();
 		return new ResponseEntity<List<BookingRoomEntity>>(listBookingRoom, HttpStatus.OK);
@@ -133,13 +135,14 @@ public class BookingRoomController {
 		return new ResponseEntity<List<BookingRoomEntity>>(listBookingRoom, HttpStatus.OK);
 	}
 
-	@PutMapping("/bookingRoom/cancelBookingRoom")
-	public ResponseEntity<?> cancelBookingRoom(@RequestParam("id") long id) {
-		bookingRoomServiceImpl.cancelBookingRoom(id, "Đã hủy");
-		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Đã hủy thành công!"));
+	@PutMapping("/bookingRoom/updateStatus")
+	public ResponseEntity<?> updateStatus(@RequestParam("id") long id, @RequestParam("status") String status) {
+		bookingRoomServiceImpl.updateStatusByID(id, status);
+		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thành công!"));
 	}
 
 	@PutMapping("/bookingRoom/{id}")
+	//	@PreAuthorize("hasRole('update_bookingroom')")
 	public ResponseEntity<?> updateBookingRoom(@PathVariable("id") long id,
 			@RequestBody @Valid BookingRoomDTO bookingRoomDTO) {
 		try {
@@ -203,6 +206,7 @@ public class BookingRoomController {
 	}
 
 	@DeleteMapping("/bookingRoom/{id}")
+	//	@PreAuthorize("hasRole('delete_bookingroom')")
 	public ResponseEntity<?> deleteBookingRoom(@PathVariable("id") long id) {
 		try {
 			bookingRoomServiceImpl.deleteBookingRoomById(id);

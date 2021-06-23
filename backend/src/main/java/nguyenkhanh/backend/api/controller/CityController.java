@@ -44,6 +44,7 @@ public class CityController {
 	UploadFileService uploadFileService;
 
 	@PostMapping("/city")
+	//	@PreAuthorize("hasRole('create_city')")
 	public ResponseEntity<?> createCity(@RequestParam("image") MultipartFile image,
 			@RequestParam("cityName") String cityName, @RequestParam("description") String description) {
 		try {
@@ -53,7 +54,7 @@ public class CityController {
 			}
 			CityEntity cityEntity = new CityEntity();
 
-			// Set Igame
+			// Set Image
 			String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
 
 			if (!ArrayUtils.contains(allowedMimeTypes, image.getContentType().toLowerCase())) {
@@ -79,6 +80,7 @@ public class CityController {
 	}
 
 	@GetMapping("/city")
+	//	@PreAuthorize("hasRole('list_city')")
 	public ResponseEntity<?> getCityAll() {
 		List<CityEntity> listCity = cityServiceImpl.getCityAll();
 		return new ResponseEntity<List<CityEntity>>(listCity, HttpStatus.OK);
@@ -103,6 +105,7 @@ public class CityController {
 	}
 
 	@PutMapping("/city/{id}")
+	//	@PreAuthorize("hasRole('update_city')")
 	public ResponseEntity<?> updateCity(@PathVariable("id") long id, @RequestBody CityDTO cityDTO) {
 		try {
 			if (cityServiceImpl.isCityExitsById(id) == false) {
@@ -149,12 +152,11 @@ public class CityController {
 
 				String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
 				String image = BASE_URL + "api/files/" + uuidImage;
-
+				uploadFileService.save(file, uuidImage);
 				if (oldCityEntity.getImage() != null) {
 					uploadFileService.deleteByName(
 							oldCityEntity.getImage().substring(oldCityEntity.getImage().length() - uuidImage.length()));
 				}
-				uploadFileService.save(file, uuidImage);
 				cityServiceImpl.updateImage(id, image);
 
 				response = "Đã tải tệp '" + file.getOriginalFilename() + "' lên thành công.";
@@ -168,6 +170,7 @@ public class CityController {
 	}
 
 	@DeleteMapping("/room/{id}")
+	//	@PreAuthorize("hasRole('delete_city')")
 	public ResponseEntity<?> deleteCity(@Valid @PathVariable("id") long id) {
 		try {
 			cityServiceImpl.deleteCityById(id);

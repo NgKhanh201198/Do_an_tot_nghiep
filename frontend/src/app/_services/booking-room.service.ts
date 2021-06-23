@@ -65,10 +65,11 @@ export class BookingRoomService {
             );
     }
 
-    public cancelBookingRoomById(id: any): Observable<any> {
+    public cancelBookingRoomById(id: any, status:any): Observable<any> {
         const formData: FormData = new FormData();
         formData.append('id', id);
-        return this.http.put<any>(`${this.url + '/cancelBookingRoom'}`, formData)
+        formData.append('status', status);
+        return this.http.put<any>(`${this.url + '/updateStatus'}`, formData)
             .pipe(
                 catchError(this.handleError)
             );

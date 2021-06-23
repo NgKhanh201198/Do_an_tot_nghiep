@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { Path } from '../_models/path.enum';
-import { Permission } from '../_models/permission.enum';
 import { CreateAccountComponent } from './account/create-account/create-account.component';
 import { ListAccountComponent } from './account/list-account/list-account.component';
 import { UpdateAccountComponent } from './account/update-account/update-account.component';

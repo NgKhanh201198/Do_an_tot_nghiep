@@ -50,6 +50,7 @@ public class HotelController {
 	CityServiceImpl cityServiceImpl;
 
 	@PostMapping("/hotel")
+//	@PreAuthorize("hasRole('create_hotel')")
 	public ResponseEntity<?> createCity(@RequestParam("image") MultipartFile image,
 			@RequestParam("hotelName") String hotelName, @RequestParam("address") String address,
 			@RequestParam("email") String email, @RequestParam("phoneNumber") String phoneNumber,
@@ -107,6 +108,7 @@ public class HotelController {
 	}
 
 	@GetMapping("/hotel")
+	//	@PreAuthorize("hasRole('list_hotel')")
 	public ResponseEntity<?> getHotelAll() {
 		List<HotelEntity> listHotel = hotelServiceImpl.getHotelAll();
 		return new ResponseEntity<List<HotelEntity>>(listHotel, HttpStatus.OK);
@@ -140,6 +142,7 @@ public class HotelController {
 	}
 
 	@PutMapping("/hotel/{id}")
+	//	@PreAuthorize("hasRole('update_hotel')")
 	public ResponseEntity<?> updateCity(@PathVariable("id") long id, @RequestBody @Valid HotelDTO hotelDTO) {
 		try {
 			if (hotelServiceImpl.isHotelExitsById(id) == false) {
@@ -232,6 +235,7 @@ public class HotelController {
 	}
 
 	@DeleteMapping("/hotel/{id}")
+	//	@PreAuthorize("hasRole('delete_hotel')")
 	public ResponseEntity<?> deleteCity(@Valid @PathVariable("id") long id) {
 		try {
 			hotelServiceImpl.deleteHotelById(id);

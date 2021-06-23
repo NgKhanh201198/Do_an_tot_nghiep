@@ -43,8 +43,8 @@ public class BookingRoomServiceImpl implements IBookingRoomService {
 	}
 
 	@Override
-	public void cancelBookingRoom(long id, String status) {
-		bookingRoomRepository.cancelBookingRoomById(id, status);
+	public void updateStatusByID(long id, String status) {
+		bookingRoomRepository.updateStatusById(id, status);
 	}
 
 	@Override

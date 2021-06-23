@@ -10,34 +10,34 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "room_booked")
 public class RoomBookedEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name = "bookingroomid", nullable = false)
-	private Long bookingroomid;
+    @Id
+    @Column(name = "bookingroomid", nullable = false)
+    private Long id;
 
-	@Id
-	@Column(name = "roomid", nullable = false)
-	private Long roomid;
+    @Id
+    @Column(name = "roomid", nullable = false)
+    private Long roomid;
 
-	public RoomBookedEntity() {
-		super();
-	}
+    public RoomBookedEntity() {
+        super();
+    }
 
-	public Long getBookingroomid() {
-		return bookingroomid;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setBookingroomid(Long bookingroomid) {
-		this.bookingroomid = bookingroomid;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Long getRoomid() {
-		return roomid;
-	}
+    public Long getRoomid() {
+        return roomid;
+    }
 
-	public void setRoomid(Long roomid) {
-		this.roomid = roomid;
-	}
+    public void setRoomid(Long roomid) {
+        this.roomid = roomid;
+    }
 
 }

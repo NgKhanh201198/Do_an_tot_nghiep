@@ -28,5 +28,5 @@ public interface BookingRoomRepository extends JpaRepository<BookingRoomEntity, 
 	@Transactional
 	@Modifying
 	@Query("UPDATE BookingRoomEntity rb SET rb.status = ?2 WHERE rb.id = ?1")
-	void cancelBookingRoomById(long id, String status);
+	void updateStatusById(long id, String status);
 }

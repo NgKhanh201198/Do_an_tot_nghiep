@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { User } from '../_models/user';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -12,7 +11,8 @@ const httpOptions = {
     providedIn: 'root'
 })
 export class UserService {
-    url = `${environment.baseUrlServer}` + 'api/user';
+    url = `${environment.baseUrlServer}` + 'api/account';
+    urlEmployee = `${environment.baseUrlServer}` + 'api/employee';
     urlCustomer = `${environment.baseUrlServer}` + 'api/customer';
     urlAccount = `${environment.baseUrlServer}` + 'api/account';
     urlGetUserType = `${environment.baseUrlServer}` + 'api/userType';
@@ -33,8 +33,14 @@ export class UserService {
             );
     }
 
-    public getAllUser(): Observable<any> {
-        return this.http.get<any>(`${this.url}`)
+    public getAllEmployee(): Observable<any> {
+        return this.http.get<any>(`${this.urlEmployee}`)
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+    public getAllCustomer(): Observable<any> {
+        return this.http.get<any>(`${this.urlCustomer}`)
             .pipe(
                 catchError(this.handleError)
             );
@@ -61,8 +67,8 @@ export class UserService {
             );
     }
 
-    public updateAccountById(id: any, data: any): Observable<any> {
-        return this.http.put(`${this.urlAccount}/${id}`, data, httpOptions)
+    public updateEmployeeById(id: any, data: any): Observable<any> {
+        return this.http.put(`${this.urlEmployee}/${id}`, data, httpOptions)
             .pipe(
                 catchError(this.handleError)
             );

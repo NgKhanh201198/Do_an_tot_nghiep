@@ -28,6 +28,7 @@ export class ListBookingRoomComponent implements OnInit {
     checkInDate: string;
     checkOutDate: string;
     totalRoom: any;
+    status: string;
 
     constructor(
         private bookingRoomService: BookingRoomService,
@@ -54,6 +55,9 @@ export class ListBookingRoomComponent implements OnInit {
     showDeltailsBooking(id: any) {
         this.showDetails = false;
         this.bookingRoomService.getBookingRoomById(id).subscribe((data) => {
+            this.logger.loggerData(data);
+
+            this._id = data.id;
             this.fullName = data.user.fullName;
             this.email = data.user.username;
             this.dateOfBirth = this.coverStringToDate(data.user.dateOfBirth);
@@ -63,6 +67,7 @@ export class ListBookingRoomComponent implements OnInit {
             this.checkOutDate = this.coverStringToDate(data.checkOutDate);
             this.rooms = data.rooms;
             this.totalRoom = data.rooms.length;
+            this.status = data.status;
         });
     }
 
@@ -87,6 +92,22 @@ export class ListBookingRoomComponent implements OnInit {
             this._success = '';
             this.router.navigate(['/admin-page/list-bookingroom'])
         }, 2500);
+    }
+
+    confim(id) {
+        this._success = "";
+        if (confirm("Xác nhận đơn đặt phòng?")) {
+            this.bookingRoomService.cancelBookingRoomById(id, 'Đã nhận').subscribe((reponse) => {
+                for (var i = 0; i < this.collection.length; i++) {
+                    if (this.collection[i].id === id) {
+                        this.collection[i].status = "Đã nhận";
+                    }
+                }
+                this.showDetails = true;
+                this._success = "Xác nhận thành công!";
+            });
+        }
+
     }
 }
 

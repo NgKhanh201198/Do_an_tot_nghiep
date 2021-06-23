@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -53,369 +54,375 @@ import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
 @RestController
 @RequestMapping("/api")
 public class UserController {
-	@Value("${system.baseUrl}")
-	private String BASE_URL;
-
-	@Autowired
-	UserServiceImpl userServiceImpl;
-
-	@Autowired
-	RoleServiceImpl roleServiceImpl;
-
-	@Autowired
-	UserTypeServiceImpl userTypeServiceImpl;
-
-	@Autowired
-	UploadFileService uploadFileService;
-
-	@Autowired
-	JwtTokenUtils jwtTokenUtils;
-
-	@Autowired
-	RegisterLogServiceImpl registerLogServiceImpl;
-
-	@Autowired
-	PasswordEncoder passwordEncoder;
-
-	@PostMapping("/account")
-	public ResponseEntity<?> createAccount(@RequestBody @Valid UserDTO userDTO) {
-		try {
-			if (userServiceImpl.isUserExitsByUsername(userDTO.getUsername())) {
-				return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.name(), "Email này đã được sử dụng, vui lòng thử email khác!"));
-			}
-
-			UserEntity userEntity = new UserEntity();
-
-			// Set User type
-			UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName(userDTO.getUserType())
-					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại người dùng!"));
-			userEntity.setUserType(userTypeEntity);
-
-			// Set Roles
-			Set<String> strRoles = userDTO.getRoles();
-			Set<RoleEntity> roleEntity = new HashSet<RoleEntity>();
-
-			if (strRoles == null) {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
-						HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), "Vai trò không được để trống"));
-			} else {
-				strRoles.forEach(role -> {
-
-					switch (role) {
-					case "ADMIN":
-						RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.ADMIN.toString())
-								.orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
-						roleEntity.add(managerRole);
-						break;
-					case "EMPLOYEE":
-						RoleEntity adminRole = roleServiceImpl.finByKeyName(ERoles.EMPLOYEE.toString())
-								.orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
-						roleEntity.add(adminRole);
-						break;
-					default:
-						RoleEntity defaultRole = roleServiceImpl.finByKeyName(ERoles.CUSTOMER.toString())
-								.orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
-						roleEntity.add(defaultRole);
-						break;
-					}
-				});
-			}
-			userEntity.setRoles(roleEntity);
-
-			// Set DateOfBirth
-			String dateOfBirth = userDTO.getDateOfBirth();
-			Common common = new Common();
-			Date date = common.stringToDate(dateOfBirth);
-			userEntity.setDateOfBirth(date);
-
-			userEntity.setFullName(userDTO.getFullName());
-			userEntity.setUsername(userDTO.getUsername());
-			userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-			userEntity.setGender(userDTO.getGender());
-			userEntity.setStatus(userDTO.getStatus());
-//			userEntity.setStatus(userDTO.getStatus());
-
-			// Save
-			userServiceImpl.createAccount(userEntity);
-
-			return ResponseEntity
-					.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm tài khoản thành công!"));
-		} catch (Exception ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
-					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
-		}
-	}
-
-	@GetMapping("/user")
-//	@PreAuthorize("hasRole('GetUserAll')")
-	public ResponseEntity<?> listUser() {
-		List<UserEntity> userEntity = userServiceImpl.getUserAll();
-		return new ResponseEntity<List<UserEntity>>(userEntity, HttpStatus.OK);
-	}
-
-	@GetMapping("/customer")
-//	@PreAuthorize("hasRole('GetUserAll')")
-	public ResponseEntity<?> listCustomer() {
-		Set<String> userTypename = new HashSet<String>();
-		userTypename.add("customer");
-
-		Set<String> status = new HashSet<String>();
-		status.add("ACTIVE");
-
-		List<UserEntity> userEntity = userServiceImpl.getUserAll();
-		List<UserEntity> customer = new ArrayList<UserEntity>();
-
-		for (int i = 0; i < userEntity.size(); i++) {
-			if (userTypename.contains(userEntity.get(i).getUserType().getKeyName())
-					&& status.contains(userEntity.get(i).getStatus())) {
-				customer.add(userEntity.get(i));
-			}
-		}
-		return new ResponseEntity<>(customer, HttpStatus.OK);
-	}
-
-	@GetMapping("/user/{id}")
-	public ResponseEntity<?> getUserById(@Valid @PathVariable("id") long id) {
-		if (userServiceImpl.isUserExitsById(id) == false) {
-			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
-					HttpStatus.NOT_FOUND.name(), "Không tìm thấy người dùng có id=" + id);
-			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-		} else {
-			UserEntity user = userServiceImpl.getUserById(id);
-			return new ResponseEntity<UserEntity>(user, HttpStatus.OK);
-		}
-	}
-
-	@PutMapping("/account/{id}")
-	public ResponseEntity<?> updateAccount(@RequestBody @Valid UserAccountDTO userAccountDTO,
-			@PathVariable("id") long id) {
-		try {
-			if (userServiceImpl.isUserExitsById(id) == false) {
-				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
-						HttpStatus.NOT_FOUND.name(), "Not found ID = " + id);
-				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-
-			} else {
-				UserEntity oldUserEntity = userServiceImpl.getUserById(id);
-
-				if (userServiceImpl.isUserExitsByPhoneNumber(userAccountDTO.getPhoneNumber())
-						&& !(userAccountDTO.getPhoneNumber().equals(oldUserEntity.getPhoneNumber()))) {
-					return ResponseEntity.badRequest()
-							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-									HttpStatus.BAD_REQUEST.name(),
-									"Số điện thoại đã được sử dụng! Vui lòng thử số điện thoại khác!"));
-				}
-
-				// Set Roles
-				Set<String> strRoles = userAccountDTO.getRoles();
-				Set<RoleEntity> roles = new HashSet<>();
-
-				if (strRoles == null) {
-					return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-									HttpStatus.BAD_REQUEST.name(), "Vai trò không được để trống"));
-				} else {
-					strRoles.forEach(role -> {
-						switch (role) {
-						case "ADMIN":
-							RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.ADMIN.toString())
-									.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-							roles.add(managerRole);
-							break;
-						case "EMPLOYEE":
-							RoleEntity adminRole = roleServiceImpl.finByKeyName(ERoles.EMPLOYEE.toString())
-									.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-							roles.add(adminRole);
-							break;
-						default:
-							RoleEntity defaultRole = roleServiceImpl.finByKeyName(ERoles.CUSTOMER.toString())
-									.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-							roles.add(defaultRole);
-							break;
-						}
-					});
-				}
-				oldUserEntity.setRoles(roles);
-
-				// Set DateOfBirth
-				String dateOfBirth = userAccountDTO.getDateOfBirth();
-				Common controller = new Common();
-				Date date = controller.stringToDate(dateOfBirth);
-				oldUserEntity.setDateOfBirth(date);
-
-				// Set UserType
-				UserTypeEntity typeEntity = userTypeServiceImpl.findByKeyName(userAccountDTO.getUserType())
-						.orElseThrow(() -> new UsernameNotFoundException("Loại người dùng này không tồn tại!"));
-				oldUserEntity.setUserType(typeEntity);
-
-				oldUserEntity.setId(id);
-				oldUserEntity.setUsername(userAccountDTO.getUsername());
-				oldUserEntity.setFullName(userAccountDTO.getFullName());
-				oldUserEntity.setPhoneNumber(userAccountDTO.getPhoneNumber());
-				oldUserEntity.setGender(userAccountDTO.getGender());
-				oldUserEntity.setStatus(userAccountDTO.getStatus());
-
-				userServiceImpl.updateAccount(oldUserEntity);
-
-				return ResponseEntity
-						.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
-			}
-		} catch (Exception ex) {
-			System.out.println(ex.getLocalizedMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
-							"Đã có lỗi xảy ra, vui lòng thử lại!"));
-		}
-	}
-
-	@PutMapping("/customer/{id}")
-	public ResponseEntity<?> updateCustomer(@RequestBody @Valid UserCustomerDTO userCustomerDTO,
-			@PathVariable("id") long id) {
-		try {
-			if (userServiceImpl.isUserExitsById(id) == false) {
-				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
-						HttpStatus.NOT_FOUND.name(), "Không tìm thấy người dùng có id=" + id);
-				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-
-			} else {
-				UserCustomerDTO oldUser = userServiceImpl.getOneUser(id);
-
-				if (userServiceImpl.isUserExitsByPhoneNumber(userCustomerDTO.getPhoneNumber())
-						&& !(userCustomerDTO.getPhoneNumber().equals(oldUser.getPhoneNumber()))) {
-					return ResponseEntity.badRequest()
-							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-									HttpStatus.BAD_REQUEST.name(),
-									"Số điện thoại đã được sử dụng! Vui lòng thử số điện thoại khác!"));
-				}
-
-				UserEntity userEntity = new UserEntity();
-
-				// Set DateOfBirth
-				String dateOfBirth = userCustomerDTO.getDateOfBirth();
-				Date date;
-				try {
-					date = DateUtils.parseDate(dateOfBirth, new String[] { "yyyy-MM-dd", "dd-MM-yyyy" });
-					userEntity.setDateOfBirth(date);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-
-				userEntity.setId(id);
-				userEntity.setFullName(userCustomerDTO.getFullName());
-				userEntity.setPhoneNumber(userCustomerDTO.getPhoneNumber());
-				userEntity.setGender(userCustomerDTO.getGender());
-
-				userServiceImpl.update(userEntity);
-
-				return ResponseEntity
-						.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
-			}
-		} catch (Exception ex) {
-			System.out.println(ex.getLocalizedMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
-							"Đã có lỗi xảy ra, vui lòng thử lại!"));
-		}
-	}
-
-	@PostMapping("/user/resetPassword")
-	public ResponseEntity<?> resetPassword(@RequestParam("email") String email) {
-
-		UserEntity userEntity = userServiceImpl.findByUsername(email)
-				.orElseThrow(() -> new UsernameNotFoundException("Tài khoản không tồn tại trên hệ thống!"));
-
-		userServiceImpl.resetPassword(userEntity);
-
-		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
-				"Chúng tôi đã gửi một link xác nhận đến " + email + ". Vui lòng kiểm tra email để đặt lại mật khẩu!"));
-	}
-
-	@PostMapping("/user/updatePassword")
-	public ResponseEntity<?> updatePassword(@RequestParam(required = false) String token) {
-
-		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
-				.orElseThrow(() -> new NotFoundException("Mã xác nhận của bạn không hợp lệ."));
-
-		LocalDateTime dateActive = registerLogEntity.getDateActive();
-
-		if (registerLogServiceImpl.getStatus(token).equals(EStatus.ACTIVE.toString())
-				|| (dateActive.isBefore(LocalDateTime.now())
-						&& registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString()))) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
-							"Mã xác nhận của bạn đã hết hạn. Hoặc đã được sử dụng!"));
-		} else {
-			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Mã xác nhận hợp lệ"));
-		}
-	}
-
-	@PutMapping("/user/savePassword")
-	public ResponseEntity<?> savePassword(@RequestParam("token") String token,
-			@RequestParam("newPassword") String newPassword) {
-		RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
-				.orElseThrow(() -> new NotFoundException("Token không hợp lệ."));
-
-		UserEntity userEntity = userServiceImpl.getUserById(registerLogEntity.getUser().getId());
-
-		userServiceImpl.savePassword(userEntity.getId(), passwordEncoder.encode(newPassword));
-		registerLogServiceImpl.updateStatus(token);
-
-		return ResponseEntity
-				.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thay đổi mật khẩu thành công."));
-	}
-
-	@PutMapping("/user/updateAvatar/{id}")
-	public ResponseEntity<?> updateAvatar(@PathVariable("id") long id, @RequestParam("file") MultipartFile file) {
-		String response = "";
-		try {
-			if (userServiceImpl.isUserExitsById(id) == false) {
-				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
-						HttpStatus.NOT_FOUND.name(), "Không tìm thấy người dùng có id=" + id);
-				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-
-			} else {
-				UserEntity oldUserEntity = userServiceImpl.getUserById(id);
-
-				String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
-
-				if (!ArrayUtils.contains(allowedMimeTypes, file.getContentType().toLowerCase())) {
-					throw new BadRequestException("Tệp không hợp lệ, các tệp hợp lệ bao gồm: .jpg, .png, .gif");
-				}
-				String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
-						file.getOriginalFilename().length());
-
-				String uuidAvatar = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "")
-						+ fileName.toLowerCase();
-				String avatar = BASE_URL + "api/files/" + uuidAvatar;
-
-				if (oldUserEntity.getAvatar() != null) {
-					uploadFileService.deleteByName(oldUserEntity.getAvatar()
-							.substring(oldUserEntity.getAvatar().length() - uuidAvatar.length()));
-				}
-
-				uploadFileService.save(file, uuidAvatar);
-				userServiceImpl.updateAvatar(id, avatar);
-
-				response = "Đã tải tệp '" + file.getOriginalFilename() + "' lên thành công.";
-				return ResponseEntity.status(HttpStatus.OK)
-						.body(new MessageResponse(new Date(), HttpStatus.OK.value(), response));
-			}
-		} catch (BadRequestException ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
-					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
-		}
-	}
-
-	@PostMapping("/user/registerToken")
-	public ResponseEntity<?> registerToken(@RequestParam("email") String email) {
-
-		UserEntity userEntity = userServiceImpl.findByUsername(email)
-				.orElseThrow(() -> new UsernameNotFoundException("Tài khoản không tồn tại trên hệ thống!"));
-
-		userServiceImpl.registerToken(userEntity);
-
-		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
-				"Chúng tôi đã gửi một link xác nhận đến " + email + ". Vui lòng kiểm tra email để xác nhận!"));
-	}
+    @Value("${system.baseUrl}")
+    private String BASE_URL;
+
+    @Autowired
+    UserServiceImpl userServiceImpl;
+
+    @Autowired
+    RoleServiceImpl roleServiceImpl;
+
+    @Autowired
+    UserTypeServiceImpl userTypeServiceImpl;
+
+    @Autowired
+    UploadFileService uploadFileService;
+
+    @Autowired
+    JwtTokenUtils jwtTokenUtils;
+
+    @Autowired
+    RegisterLogServiceImpl registerLogServiceImpl;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @PostMapping("/account")
+//    @PreAuthorize("hasRole('create_account')")
+    public ResponseEntity<?> createAccount(@RequestBody @Valid UserDTO userDTO) {
+        try {
+            if (userServiceImpl.isUserExitsByUsername(userDTO.getUsername())) {
+                return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+                        HttpStatus.BAD_REQUEST.name(), "Email này đã được sử dụng, vui lòng thử email khác!"));
+            }
+
+            UserEntity userEntity = new UserEntity();
+
+            // Set User type
+            UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName(userDTO.getUserType())
+                    .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại người dùng!"));
+            userEntity.setUserType(userTypeEntity);
+
+            // Set Roles
+            Set<String> strRoles = userDTO.getRoles();
+            Set<RoleEntity> roleEntity = new HashSet<RoleEntity>();
+
+            if (strRoles == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+                        HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), "Vai trò không được để trống"));
+            } else {
+                strRoles.forEach(role -> {
+
+                    switch (role) {
+                        case "ADMIN":
+                            RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.ADMIN.toString())
+                                    .orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
+                            roleEntity.add(managerRole);
+                            break;
+                        case "EMPLOYEE":
+                            RoleEntity adminRole = roleServiceImpl.finByKeyName(ERoles.EMPLOYEE.toString())
+                                    .orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
+                            roleEntity.add(adminRole);
+                            break;
+                        default:
+                            RoleEntity defaultRole = roleServiceImpl.finByKeyName(ERoles.CUSTOMER.toString())
+                                    .orElseThrow(() -> new RuntimeException("Không tìm thấy quyền này."));
+                            roleEntity.add(defaultRole);
+                            break;
+                    }
+                });
+            }
+            userEntity.setRoles(roleEntity);
+
+            // Set DateOfBirth
+            String dateOfBirth = userDTO.getDateOfBirth();
+            Common common = new Common();
+            Date date = common.stringToDate(dateOfBirth);
+            userEntity.setDateOfBirth(date);
+
+            userEntity.setFullName(userDTO.getFullName());
+            userEntity.setUsername(userDTO.getUsername());
+            userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+            userEntity.setGender(userDTO.getGender());
+            userEntity.setStatus(userDTO.getStatus());
+
+            // Save
+            userServiceImpl.createAccount(userEntity);
+
+            return ResponseEntity
+                    .ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm tài khoản thành công!"));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+                    HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
+        }
+    }
+
+    @GetMapping("/employee")
+//	@PreAuthorize("hasRole('list_employee')")
+    public ResponseEntity<?> listUser() {
+        List<UserEntity> employee = new ArrayList<>();
+        List<UserEntity> userEntity = userServiceImpl.getUserAll();
+        UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName("employee").orElseThrow(() -> new RuntimeException("Không tìm thấy loại người dùng này."));
+
+        userEntity.forEach((item) -> {
+            if (item.getUserType() == userTypeEntity) {
+                employee.add(item);
+            }
+        });
+
+        return new ResponseEntity<>(employee, HttpStatus.OK);
+    }
+
+    @GetMapping("/customer")
+//	@PreAuthorize("hasRole('list_customer')")
+    public ResponseEntity<?> listCustomer() {
+        List<UserEntity> customer = new ArrayList<>();
+        List<UserEntity> userEntity = userServiceImpl.getUserAll();
+        UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName("customer").orElseThrow(() -> new RuntimeException("Không tìm thấy loại người dùng này."));
+
+        userEntity.forEach((item) -> {
+            if (item.getUserType() == userTypeEntity) {
+                customer.add(item);
+            }
+        });
+
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
+    @GetMapping("/account/{id}")
+    public ResponseEntity<?> getUserById(@Valid @PathVariable("id") long id) {
+        if (userServiceImpl.isUserExitsById(id) == false) {
+            MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+                    HttpStatus.NOT_FOUND.name(), "Không tìm thấy người dùng có id=" + id);
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else {
+            UserEntity user = userServiceImpl.getUserById(id);
+            return new ResponseEntity<UserEntity>(user, HttpStatus.OK);
+        }
+    }
+
+    @PutMapping("/employee/{id}")
+//	@PreAuthorize("hasRole('update_employee')")
+    public ResponseEntity<?> updateAccount(@RequestBody @Valid UserAccountDTO userAccountDTO,
+                                           @PathVariable("id") long id) {
+        try {
+            if (userServiceImpl.isUserExitsById(id) == false) {
+                MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.name(), "Not found ID = " + id);
+                return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+
+            } else {
+                UserEntity oldUserEntity = userServiceImpl.getUserById(id);
+
+                if (userServiceImpl.isUserExitsByPhoneNumber(userAccountDTO.getPhoneNumber())
+                        && !(userAccountDTO.getPhoneNumber().equals(oldUserEntity.getPhoneNumber()))) {
+                    return ResponseEntity.badRequest()
+                            .body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+                                    HttpStatus.BAD_REQUEST.name(),
+                                    "Số điện thoại đã được sử dụng! Vui lòng thử số điện thoại khác!"));
+                }
+
+                // Set Roles
+                Set<String> strRoles = userAccountDTO.getRoles();
+                Set<RoleEntity> roles = new HashSet<>();
+
+                if (strRoles == null) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+                                    HttpStatus.BAD_REQUEST.name(), "Vai trò không được để trống"));
+                } else {
+                    strRoles.forEach(role -> {
+                        switch (role) {
+                            case "ADMIN":
+                                RoleEntity managerRole = roleServiceImpl.finByKeyName(ERoles.ADMIN.toString())
+                                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                roles.add(managerRole);
+                                break;
+                            case "EMPLOYEE":
+                                RoleEntity adminRole = roleServiceImpl.finByKeyName(ERoles.EMPLOYEE.toString())
+                                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                roles.add(adminRole);
+                                break;
+                            default:
+                                RoleEntity defaultRole = roleServiceImpl.finByKeyName(ERoles.CUSTOMER.toString())
+                                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                roles.add(defaultRole);
+                                break;
+                        }
+                    });
+                }
+                oldUserEntity.setRoles(roles);
+
+                // Set DateOfBirth
+                String dateOfBirth = userAccountDTO.getDateOfBirth();
+                Common controller = new Common();
+                Date date = controller.stringToDate(dateOfBirth);
+                oldUserEntity.setDateOfBirth(date);
+
+                // Set UserType
+                UserTypeEntity typeEntity = userTypeServiceImpl.findByKeyName(userAccountDTO.getUserType())
+                        .orElseThrow(() -> new UsernameNotFoundException("Loại người dùng này không tồn tại!"));
+                oldUserEntity.setUserType(typeEntity);
+
+                oldUserEntity.setId(id);
+                oldUserEntity.setUsername(userAccountDTO.getUsername());
+                oldUserEntity.setFullName(userAccountDTO.getFullName());
+                oldUserEntity.setPhoneNumber(userAccountDTO.getPhoneNumber());
+                oldUserEntity.setGender(userAccountDTO.getGender());
+                oldUserEntity.setStatus(userAccountDTO.getStatus());
+
+                userServiceImpl.updateAccount(oldUserEntity);
+
+                return ResponseEntity
+                        .ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
+                            "Đã có lỗi xảy ra, vui lòng thử lại!"));
+        }
+    }
+
+    @PutMapping("/customer/{id}")
+    //	@PreAuthorize("hasRole('update_customer')")
+    public ResponseEntity<?> updateCustomer(@RequestBody @Valid UserCustomerDTO userCustomerDTO,
+                                            @PathVariable("id") long id) {
+        try {
+            if (userServiceImpl.isUserExitsById(id) == false) {
+                MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.name(), "Không tìm thấy người dùng có id=" + id);
+                return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+
+            } else {
+                UserCustomerDTO oldUser = userServiceImpl.getOneUser(id);
+
+                if (userServiceImpl.isUserExitsByPhoneNumber(userCustomerDTO.getPhoneNumber())
+                        && !(userCustomerDTO.getPhoneNumber().equals(oldUser.getPhoneNumber()))) {
+                    return ResponseEntity.badRequest()
+                            .body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+                                    HttpStatus.BAD_REQUEST.name(),
+                                    "Số điện thoại đã được sử dụng! Vui lòng thử số điện thoại khác!"));
+                }
+
+                UserEntity userEntity = new UserEntity();
+
+                // Set DateOfBirth
+                String dateOfBirth = userCustomerDTO.getDateOfBirth();
+                Date date;
+                try {
+                    date = DateUtils.parseDate(dateOfBirth, new String[]{"yyyy-MM-dd", "dd-MM-yyyy"});
+                    userEntity.setDateOfBirth(date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                userEntity.setId(id);
+                userEntity.setFullName(userCustomerDTO.getFullName());
+                userEntity.setPhoneNumber(userCustomerDTO.getPhoneNumber());
+                userEntity.setGender(userCustomerDTO.getGender());
+
+                userServiceImpl.update(userEntity);
+
+                return ResponseEntity
+                        .ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
+                            "Đã có lỗi xảy ra, vui lòng thử lại!"));
+        }
+    }
+
+    @PostMapping("/account/resetPassword")
+    public ResponseEntity<?> resetPassword(@RequestParam("email") String email) {
+
+        UserEntity userEntity = userServiceImpl.findByUsername(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Tài khoản không tồn tại trên hệ thống!"));
+
+        userServiceImpl.resetPassword(userEntity);
+
+        return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
+                "Chúng tôi đã gửi một link xác nhận đến " + email + ". Vui lòng kiểm tra email để đặt lại mật khẩu!"));
+    }
+
+    @PostMapping("/account/updatePassword")
+    public ResponseEntity<?> updatePassword(@RequestParam(required = false) String token) {
+
+        RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
+                .orElseThrow(() -> new NotFoundException("Mã xác nhận của bạn không hợp lệ."));
+
+        LocalDateTime dateActive = registerLogEntity.getDateActive();
+
+        if (registerLogServiceImpl.getStatus(token).equals(EStatus.ACTIVE.toString())
+                || (dateActive.isBefore(LocalDateTime.now())
+                && registerLogEntity.getStatus().equals(EStatus.INACTIVE.toString()))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
+                            "Mã xác nhận của bạn đã hết hạn. Hoặc đã được sử dụng!"));
+        } else {
+            return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Mã xác nhận hợp lệ"));
+        }
+    }
+
+    @PutMapping("/account/savePassword")
+    public ResponseEntity<?> savePassword(@RequestParam("token") String token,
+                                          @RequestParam("newPassword") String newPassword) {
+        RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
+                .orElseThrow(() -> new NotFoundException("Token không hợp lệ."));
+
+        UserEntity userEntity = userServiceImpl.getUserById(registerLogEntity.getUser().getId());
+
+        userServiceImpl.savePassword(userEntity.getId(), passwordEncoder.encode(newPassword));
+        registerLogServiceImpl.updateStatus(token);
+
+        return ResponseEntity
+                .ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thay đổi mật khẩu thành công."));
+    }
+
+    @PutMapping("/account/updateAvatar/{id}")
+    public ResponseEntity<?> updateAvatar(@PathVariable("id") long id, @RequestParam("file") MultipartFile file) {
+        String response = "";
+        try {
+            if (userServiceImpl.isUserExitsById(id) == false) {
+                MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.name(), "Không tìm thấy người dùng có id=" + id);
+                return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+
+            } else {
+                UserEntity oldUserEntity = userServiceImpl.getUserById(id);
+
+                String[] allowedMimeTypes = new String[]{"image/gif", "image/png", "image/jpeg"};
+
+                if (!ArrayUtils.contains(allowedMimeTypes, file.getContentType().toLowerCase())) {
+                    throw new BadRequestException("Tệp không hợp lệ, các tệp hợp lệ bao gồm: .jpg, .png, .gif");
+                }
+                String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
+                        file.getOriginalFilename().length());
+
+                String uuidAvatar = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "")
+                        + fileName.toLowerCase();
+                String avatar = BASE_URL + "api/files/" + uuidAvatar;
+
+                if (oldUserEntity.getAvatar() != null) {
+                    uploadFileService.deleteByName(oldUserEntity.getAvatar()
+                            .substring(oldUserEntity.getAvatar().length() - uuidAvatar.length()));
+                }
+
+                uploadFileService.save(file, uuidAvatar);
+                userServiceImpl.updateAvatar(id, avatar);
+
+                response = "Đã tải tệp '" + file.getOriginalFilename() + "' lên thành công.";
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new MessageResponse(new Date(), HttpStatus.OK.value(), response));
+            }
+        } catch (BadRequestException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+                    HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
+        }
+    }
+
+    @PostMapping("/account/registerToken")
+    public ResponseEntity<?> registerToken(@RequestParam("email") String email) {
+
+        UserEntity userEntity = userServiceImpl.findByUsername(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Tài khoản không tồn tại trên hệ thống!"));
+
+        userServiceImpl.registerToken(userEntity);
+
+        return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(),
+                "Chúng tôi đã gửi một link xác nhận đến " + email + ". Vui lòng kiểm tra email để xác nhận!"));
+    }
 }

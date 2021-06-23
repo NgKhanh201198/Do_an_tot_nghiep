@@ -14,9 +14,9 @@ export class BookingRoomComponent implements OnInit {
     currentUser: User;
     collection: Array<any> = [];
     _success = '';
+    _error:any;
     _page: number = 1;
     _itemsPage: number = 5;
-    _change = false;
 
     //details
     showDetails = true;
@@ -42,8 +42,12 @@ export class BookingRoomComponent implements OnInit {
         this.currentUser = this.authenticationService.currentUserValue;
 
         this.bookingRoomService.getBookingRoomByUser(this.currentUser.fullName).subscribe((result) => {
-            this.collection = result;
             this.logger.loggerData(this.collection);
+            if (result.length === 0) {
+                this._error = " Bạn chưa có đơn đặt phòng nào!";
+            } else {
+                this.collection = result;
+            }
         });
     }
 
@@ -76,9 +80,13 @@ export class BookingRoomComponent implements OnInit {
 
     cancelBookingRoom(id) {
         if (confirm("Bạn có chắc muốn hủy đơn này?")) {
-            this.bookingRoomService.cancelBookingRoomById(id).subscribe((reponse) => {
-                this._change = true;
-                this._success = reponse.message
+            this.bookingRoomService.cancelBookingRoomById(id, 'Đã hủy').subscribe((reponse) => {
+                for (var i = 0; i < this.collection.length; i++) {
+                    if (this.collection[i].id === id) {
+                        this.collection[i].status = "Đã hủy";
+                    }
+                }
+                this._success = "Hủy đơn thành công!"
             });
         }
     }

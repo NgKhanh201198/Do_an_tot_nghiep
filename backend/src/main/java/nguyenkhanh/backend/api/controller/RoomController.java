@@ -39,201 +39,206 @@ import nguyenkhanh.backend.services.impl.RoomTypeServiceImpl;
 @RestController
 @RequestMapping("/api")
 public class RoomController {
-	@Value("${system.baseUrl}")
-	private String BASE_URL;
+    @Value("${system.baseUrl}")
+    private String BASE_URL;
 
-	@Autowired
-	RoomServiceImpl roomServiceImpl;
+    @Autowired
+    RoomServiceImpl roomServiceImpl;
 
-	@Autowired
-	RoomTypeServiceImpl roomTypeServiceImpl;
+    @Autowired
+    RoomTypeServiceImpl roomTypeServiceImpl;
 
-	@Autowired
-	HotelServiceImpl hotelServiceImpl;
+    @Autowired
+    HotelServiceImpl hotelServiceImpl;
 
-	@Autowired
-	UploadFileService uploadFileService;
+    @Autowired
+    UploadFileService uploadFileService;
 
-	@PostMapping("/room")
-	public ResponseEntity<?> createRoom(@RequestParam("image") MultipartFile image,
-			@RequestParam("roomNumber") String roomNumber, @RequestParam("contents") String contents,
-			@RequestParam("roomCost") Integer roomCost, @RequestParam("discount") Integer discount,
-			@RequestParam("numberOfPeople") Integer numberOfPeople, @RequestParam("roomType") String roomType,
-			@RequestParam("hotel") String hotel) {
-		try {
-			RoomTypeEntity roomTypeEntity = roomTypeServiceImpl.findByRoomTypeName(roomType)
-					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại phòng này!"));
+    @PostMapping("/room")
+    //	@PreAuthorize("hasRole('create_room')")
+    public ResponseEntity<?> createRoom(@RequestParam("image") MultipartFile image,
+                                        @RequestParam("roomNumber") String roomNumber, @RequestParam("contents") String contents,
+                                        @RequestParam("roomCost") Integer roomCost, @RequestParam("discount") Integer discount,
+                                        @RequestParam("numberOfPeople") Integer numberOfPeople, @RequestParam("roomType") String roomType,
+                                        @RequestParam("hotel") String hotel) {
+        try {
+            RoomTypeEntity roomTypeEntity = roomTypeServiceImpl.findByRoomTypeName(roomType)
+                    .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại phòng này!"));
 
-			HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(hotel)
-					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy khách sạn này!"));
+            HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(hotel)
+                    .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy khách sạn này!"));
 
-			List<String> list = roomServiceImpl.getListRoomNumber(hotelEntity);
-			if (roomServiceImpl.isRoomExitsByRoomNumber(roomNumber)) {
-				if (list.contains(roomNumber)) {
-					return ResponseEntity.badRequest().body(new MessageResponse(new Date(),
-							HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
-							"Khách sạn " + hotelEntity.getHotelName() + " đã có tên phòng: " + roomNumber + "!"));
-				}
-			}
+            List<String> list = roomServiceImpl.getListRoomNumber(hotelEntity);
+            if (roomServiceImpl.isRoomExitsByRoomNumber(roomNumber)) {
+                if (list.contains(roomNumber)) {
+                    return ResponseEntity.badRequest().body(new MessageResponse(new Date(),
+                            HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
+                            "Khách sạn " + hotelEntity.getHotelName() + " đã có tên phòng: " + roomNumber + "!"));
+                }
+            }
 
-			RoomEntity roomEntity = new RoomEntity();
+            RoomEntity roomEntity = new RoomEntity();
 
-			// Set Igame
-			String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
+            // Set Igame
+            String[] allowedMimeTypes = new String[]{"image/gif", "image/png", "image/jpeg"};
 
-			if (!ArrayUtils.contains(allowedMimeTypes, image.getContentType().toLowerCase())) {
-				throw new BadRequestException("Tệp không hợp lệ, các tệp hợp lệ bao gồm: .jpg, .png, .gif");
-			}
-			String fileName = image.getOriginalFilename().substring(image.getOriginalFilename().length() - 4,
-					image.getOriginalFilename().length());
+            if (!ArrayUtils.contains(allowedMimeTypes, image.getContentType().toLowerCase())) {
+                throw new BadRequestException("Tệp không hợp lệ, các tệp hợp lệ bao gồm: .jpg, .png, .gif");
+            }
+            String fileName = image.getOriginalFilename().substring(image.getOriginalFilename().length() - 4,
+                    image.getOriginalFilename().length());
 
-			String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
-			String imageURL = BASE_URL + "api/files/" + uuidImage;
-			uploadFileService.save(image, uuidImage);
-			roomEntity.setImage(imageURL);
+            String uuidImage = "image-" + UUID.randomUUID().toString().replaceAll("-", "") + fileName.toLowerCase();
+            String imageURL = BASE_URL + "api/files/" + uuidImage;
+            uploadFileService.save(image, uuidImage);
+            roomEntity.setImage(imageURL);
 
-			roomEntity.setRoomNumber(roomNumber);
-			roomEntity.setContents(contents);
-			roomEntity.setRoomCost(roomCost);
-			roomEntity.setDiscount(discount);
-			roomEntity.setNumberOfPeople(numberOfPeople);
-			roomEntity.setRoomType(roomTypeEntity);
-			roomEntity.setHotel(hotelEntity);
+            roomEntity.setRoomNumber(roomNumber);
+            roomEntity.setContents(contents);
+            roomEntity.setRoomCost(roomCost);
+            roomEntity.setDiscount(discount);
+            roomEntity.setNumberOfPeople(numberOfPeople);
+            roomEntity.setRoomType(roomTypeEntity);
+            roomEntity.setHotel(hotelEntity);
 
-			roomServiceImpl.createRoom(roomEntity);
-			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm mới thành công!"));
-		} catch (Exception ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
-					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
-		}
-	}
+            roomServiceImpl.createRoom(roomEntity);
+            return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm mới thành công!"));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+                    HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
+        }
+    }
 
-	@GetMapping("/room")
-	public ResponseEntity<?> getRoomAll() {
-		List<RoomEntity> listRoom = roomServiceImpl.getRoomAll();
-		return new ResponseEntity<List<RoomEntity>>(listRoom, HttpStatus.OK);
-	}
+    @GetMapping("/room")
+    //	@PreAuthorize("hasRole('list_room')")
+    public ResponseEntity<?> getRoomAll() {
+        List<RoomEntity> listRoom = roomServiceImpl.getRoomAll();
+        return new ResponseEntity<>(listRoom, HttpStatus.OK);
+    }
 
-	@GetMapping("/room/{id}")
-	public ResponseEntity<?> getRoomById(@PathVariable("id") long id) {
-		if (roomServiceImpl.isRoomExitsById(id) == false) {
-			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-					"Không tìm thấy phòng có id= " + id);
-			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-		} else {
-			RoomEntity roomEntity = roomServiceImpl.getRoomById(id);
-			return new ResponseEntity<RoomEntity>(roomEntity, HttpStatus.OK);
-		}
-	}
+    @GetMapping("/room/{id}")
+    public ResponseEntity<?> getRoomById(@PathVariable("id") long id) {
+        if (roomServiceImpl.isRoomExitsById(id) == false) {
+            MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
+                    "Không tìm thấy phòng có id= " + id);
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else {
+            RoomEntity roomEntity = roomServiceImpl.getRoomById(id);
+            return new ResponseEntity<RoomEntity>(roomEntity, HttpStatus.OK);
+        }
+    }
 
-	@GetMapping("/room/byHotel")
-	public ResponseEntity<?> getRoomByHotel(@RequestParam(name = "hotelName", defaultValue = "") String hotelName) {
-		HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(hotelName)
-				.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy khách sạn này!"));
-		List<RoomEntity> listRoom = roomServiceImpl.getRoomByHotel(hotelEntity);
-		return new ResponseEntity<List<RoomEntity>>(listRoom, HttpStatus.OK);
-	}
+    @GetMapping("/room/byHotel")
 
-	@PutMapping("/room/{id}")
-	public ResponseEntity<?> updateRoom(@PathVariable("id") long id, @RequestBody RoomDTO roomDTO) {
-		try {
-			if (roomServiceImpl.isRoomExitsById(id) == false) {
-				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-						"Không tìm thấy phòng có id= " + id);
-				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getRoomByHotel(@RequestParam(name = "hotelName", defaultValue = "") String hotelName) {
+        HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(hotelName)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy khách sạn này!"));
+        List<RoomEntity> listRoom = roomServiceImpl.getRoomByHotel(hotelEntity);
+        return new ResponseEntity<List<RoomEntity>>(listRoom, HttpStatus.OK);
+    }
 
-			} else {
-				RoomEntity oldRoomEntity = roomServiceImpl.getRoomById(id);
+    @PutMapping("/room/{id}")
+    //	@PreAuthorize("hasRole('update_hotel')")
+    public ResponseEntity<?> updateRoom(@PathVariable("id") long id, @RequestBody RoomDTO roomDTO) {
+        try {
+            if (roomServiceImpl.isRoomExitsById(id) == false) {
+                MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
+                        "Không tìm thấy phòng có id= " + id);
+                return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
-				HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(roomDTO.getHotel())
-						.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy khách sạn này!"));
-				List<String> list = roomServiceImpl.getListRoomNumber(hotelEntity);
-				list.removeIf(element -> element.equals(oldRoomEntity.getRoomNumber()));
-				if (roomServiceImpl.isRoomExitsByRoomNumber(roomDTO.getRoomNumber())
-						&& !(roomDTO.getRoomNumber().equals(oldRoomEntity.getRoomNumber()))) {
-					if (list.contains(roomDTO.getRoomNumber())) {
-						return ResponseEntity.badRequest()
-								.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-										HttpStatus.BAD_REQUEST.name(), "Khách sạn " + hotelEntity.getHotelName()
-												+ " đã có tên phòng: " + roomDTO.getRoomNumber() + "!"));
-					}
-				}
+            } else {
+                RoomEntity oldRoomEntity = roomServiceImpl.getRoomById(id);
 
-				oldRoomEntity.setRoomNumber(roomDTO.getRoomNumber());
-				oldRoomEntity.setContents(roomDTO.getContents());
-				oldRoomEntity.setNumberOfPeople(roomDTO.getNumberOfPeople());
-				oldRoomEntity.setRoomCost(roomDTO.getRoomCost());
-				oldRoomEntity.setDiscount(roomDTO.getDiscount());
+                HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(roomDTO.getHotel())
+                        .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy khách sạn này!"));
+                List<String> list = roomServiceImpl.getListRoomNumber(hotelEntity);
+                list.removeIf(element -> element.equals(oldRoomEntity.getRoomNumber()));
+                if (roomServiceImpl.isRoomExitsByRoomNumber(roomDTO.getRoomNumber())
+                        && !(roomDTO.getRoomNumber().equals(oldRoomEntity.getRoomNumber()))) {
+                    if (list.contains(roomDTO.getRoomNumber())) {
+                        return ResponseEntity.badRequest()
+                                .body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+                                        HttpStatus.BAD_REQUEST.name(), "Khách sạn " + hotelEntity.getHotelName()
+                                        + " đã có tên phòng: " + roomDTO.getRoomNumber() + "!"));
+                    }
+                }
 
-				RoomTypeEntity roomTypeEntity = roomTypeServiceImpl.findByRoomTypeName(roomDTO.getRoomType())
-						.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại phòng này!"));
-				oldRoomEntity.setRoomType(roomTypeEntity);
+                oldRoomEntity.setRoomNumber(roomDTO.getRoomNumber());
+                oldRoomEntity.setContents(roomDTO.getContents());
+                oldRoomEntity.setNumberOfPeople(roomDTO.getNumberOfPeople());
+                oldRoomEntity.setRoomCost(roomDTO.getRoomCost());
+                oldRoomEntity.setDiscount(roomDTO.getDiscount());
 
-				oldRoomEntity.setHotel(hotelEntity);
-				oldRoomEntity.setStatus(roomDTO.getStatus());
+                RoomTypeEntity roomTypeEntity = roomTypeServiceImpl.findByRoomTypeName(roomDTO.getRoomType())
+                        .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại phòng này!"));
+                oldRoomEntity.setRoomType(roomTypeEntity);
 
-				roomServiceImpl.updateRoom(oldRoomEntity);
-				return ResponseEntity
-						.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
-			}
-		} catch (BadRequestException ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
-					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
-		}
+                oldRoomEntity.setHotel(hotelEntity);
+                oldRoomEntity.setStatus(roomDTO.getStatus());
 
-	}
+                roomServiceImpl.updateRoom(oldRoomEntity);
+                return ResponseEntity
+                        .ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
+            }
+        } catch (BadRequestException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+                    HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
+        }
 
-	@PutMapping("/room/updateImage/{id}")
-	public ResponseEntity<?> updateAvatar(@PathVariable("id") long id, @RequestParam("image") MultipartFile file) {
-		String response = "";
-		try {
-			if (roomServiceImpl.isRoomExitsById(id) == false) {
-				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-						"Không tìm thấy phòng có id=" + id);
-				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
 
-			} else {
-				RoomEntity oldRoomEntity = roomServiceImpl.getRoomById(id);
+    @PutMapping("/room/updateImage/{id}")
+    public ResponseEntity<?> updateAvatar(@PathVariable("id") long id, @RequestParam("image") MultipartFile file) {
+        String response = "";
+        try {
+            if (roomServiceImpl.isRoomExitsById(id) == false) {
+                MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
+                        "Không tìm thấy phòng có id=" + id);
+                return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
-				String[] allowedMimeTypes = new String[] { "image/gif", "image/png", "image/jpeg" };
+            } else {
+                RoomEntity oldRoomEntity = roomServiceImpl.getRoomById(id);
 
-				if (!ArrayUtils.contains(allowedMimeTypes, file.getContentType().toLowerCase())) {
-					throw new BadRequestException("Tệp không hợp lệ, các tệp hợp lệ bao gồm: .jpg, .png, .gif");
-				}
-				String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
-						file.getOriginalFilename().length());
+                String[] allowedMimeTypes = new String[]{"image/gif", "image/png", "image/jpeg"};
 
-				String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "")
-						+ fileName.toLowerCase();
-				String image = BASE_URL + "api/files/" + uuidImage;
+                if (!ArrayUtils.contains(allowedMimeTypes, file.getContentType().toLowerCase())) {
+                    throw new BadRequestException("Tệp không hợp lệ, các tệp hợp lệ bao gồm: .jpg, .png, .gif");
+                }
+                String fileName = file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4,
+                        file.getOriginalFilename().length());
 
-				if (oldRoomEntity.getImage() != null) {
-					uploadFileService.deleteByName(
-							oldRoomEntity.getImage().substring(oldRoomEntity.getImage().length() - uuidImage.length()));
-				}
+                String uuidImage = "avatar-" + UUID.randomUUID().toString().replaceAll("-", "")
+                        + fileName.toLowerCase();
+                String image = BASE_URL + "api/files/" + uuidImage;
 
-				uploadFileService.save(file, uuidImage);
-				roomServiceImpl.updateImage(id, image);
+                if (oldRoomEntity.getImage() != null) {
+                    uploadFileService.deleteByName(
+                            oldRoomEntity.getImage().substring(oldRoomEntity.getImage().length() - uuidImage.length()));
+                }
 
-				response = "Đã tải tệp '" + file.getOriginalFilename() + "' lên thành công.";
-				return ResponseEntity.status(HttpStatus.OK)
-						.body(new MessageResponse(new Date(), HttpStatus.OK.value(), response));
-			}
-		} catch (BadRequestException ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
-					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
-		}
-	}
+                uploadFileService.save(file, uuidImage);
+                roomServiceImpl.updateImage(id, image);
 
-	@DeleteMapping("/city/{id}")
-	public ResponseEntity<?> deleteCity(@Valid @PathVariable("id") long id) {
-		try {
-			roomServiceImpl.deleteRoomById(id);
-			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Xóa thành công!"));
-		} catch (Exception e) {
-			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-					"Không tìm thấy thành phố có id= " + id);
-			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-		}
-	}
+                response = "Đã tải tệp '" + file.getOriginalFilename() + "' lên thành công.";
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new MessageResponse(new Date(), HttpStatus.OK.value(), response));
+            }
+        } catch (BadRequestException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+                    HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/city/{id}")
+    //	@PreAuthorize("hasRole('delete_hotel')")
+    public ResponseEntity<?> deleteCity(@Valid @PathVariable("id") long id) {
+        try {
+            roomServiceImpl.deleteRoomById(id);
+            return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Xóa thành công!"));
+        } catch (Exception e) {
+            MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
+                    "Không tìm thấy thành phố có id= " + id);
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+    }
 }

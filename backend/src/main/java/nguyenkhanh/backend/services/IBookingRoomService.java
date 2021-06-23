@@ -21,7 +21,7 @@ public interface IBookingRoomService {
 	// Update
 	public void updateBookingRoom(BookingRoomEntity bookingRoomEntity);
 
-	public void cancelBookingRoom(long id, String status);
+	public void updateStatusByID(long id, String status);
 
 	// Delete
 	public void deleteBookingRoomById(long id);

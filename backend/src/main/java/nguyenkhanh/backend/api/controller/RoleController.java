@@ -23,6 +23,6 @@ public class RoleController {
 	@GetMapping("/role")
 	public ResponseEntity<?> listUser() {
 		List<RoleEntity> roleEntity= roleServiceImpl.getRoleAll();
-		return new ResponseEntity<List<RoleEntity>>(roleEntity, HttpStatus.OK);
+		return new ResponseEntity<>(roleEntity, HttpStatus.OK);
 	}
 }

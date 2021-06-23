@@ -32,13 +32,14 @@ export class ListCustomerComponent implements OnInit {
     ) { };
 
     ngOnInit() {
-        this.userService.getAllUser().subscribe((result: any) => {
+        this.userService.getAllCustomer().subscribe((result: any) => {
             this.logger.logger(result);
-            for (const item of result) {
-                if (item.userType.keyName === 'customer') {
-                    this.collection.push(item);
-                }
-            }
+            this.collection = result;
+            // for (const item of result) {
+            //     if (item.userType.keyName === 'customer') {
+            //         this.collection.push(item);
+            //     }
+            // }
         });
     };
 }

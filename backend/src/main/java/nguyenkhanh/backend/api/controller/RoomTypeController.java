@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class RoomTypeController {
 	RoomTypeServiceImpl roomTypeServiceImpl;
 
 	@PostMapping("/roomtype")
+	//	@PreAuthorize("hasRole('create_roomtype')")
 	public ResponseEntity<?> createRoomType(@RequestBody @Valid RoomTypeDTO roomTypeDTO) {
 		try {
 			if(roomTypeServiceImpl.isRoomTypeExitsByRoomTypeName(roomTypeDTO.getRoomTypeName())) {
@@ -53,18 +55,21 @@ public class RoomTypeController {
 	}
 
 	@GetMapping(path = "/roomtype")
+	//	@PreAuthorize("hasRole('list_roomtype')")
 	public ResponseEntity<?> getRoomTypeAll() {
 		List<RoomTypeEntity> listRoomType = roomTypeServiceImpl.getRoomTypeAll();
 		return new ResponseEntity<List<RoomTypeEntity>>(listRoomType, HttpStatus.OK);
 	}
 
 	@GetMapping(path = "/roomtype/{id}")
+//		@PreAuthorize("hasRole('get_roomtype_byID')")
 	public ResponseEntity<?> getRoomTypeById(@PathVariable("id") long id) {
 		RoomTypeEntity listRoomType = roomTypeServiceImpl.getRoomTypeById(id);
 		return new ResponseEntity<RoomTypeEntity>(listRoomType, HttpStatus.OK);
 	}
 
 	@PutMapping("/roomtype/{id}")
+	//	@PreAuthorize("hasRole('update_roomtype')")
 	public ResponseEntity<?> updateRoomType(@PathVariable("id") long id, @RequestBody RoomTypeDTO roomTypeDTO) {
 		try {
 			if (roomTypeServiceImpl.isRoomTypeExitsById(id) == false) {
@@ -97,6 +102,7 @@ public class RoomTypeController {
 	}
 	
 	@DeleteMapping("/roomtype/{id}")
+	//	@PreAuthorize("hasRole('delete_roomtype')")
 	public ResponseEntity<?> deleteRoomType(@Valid @PathVariable("id") long id) {
 		try {
 			roomTypeServiceImpl.deleteRoomTypeById(id);

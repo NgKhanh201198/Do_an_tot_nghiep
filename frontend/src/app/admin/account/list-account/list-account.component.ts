@@ -28,12 +28,13 @@ export class ListAccountComponent implements OnInit {
     ) { };
 
     ngOnInit() {
-        this.userService.getAllUser().subscribe((result: any) => {
-            for (const item of result) {
-                if (item.userType.keyName != 'customer') {
-                    this.collection.push(item);
-                }
-            }
+        this.userService.getAllEmployee().subscribe((result: any) => {
+            // for (const item of result) {
+            //     if (item.userType.keyName != 'customer') {
+            //         this.collection.push(item);
+            //     }
+            // }
+            this.collection = result;
         });
     };
 }

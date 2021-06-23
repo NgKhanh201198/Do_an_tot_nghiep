@@ -12,7 +12,7 @@
                 <div class="col-sm-12">
                     <h1>Đơn đặt phòng</h1>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-12" *ngIf="!_error">
                     <div class="card" [ngClass]="{ 'd-none': !showDetails }">
                         <div class="card-body">
                             <table class="table table-hover">
@@ -33,13 +33,13 @@
                                         <td style="color: rgb(0, 255, 0);">{{item.checkInDate | date:'dd-MM-yyyy'}}</td>
                                         <td style="color: red;">{{item.checkOutDate | date:'dd-MM-yyyy'}}</td>
                                         <td>
-                                            <div class="status-locked" *ngIf="item.status=='Đã hủy' || _change">Đã hủy</div>
+                                            <div class="status-locked" *ngIf="item.status=='Đã hủy'">Đã hủy</div>
                                             <div class="status-inactive" *ngIf="item.status=='Đã nhận'">Đã nhận</div>
-                                            <div class="status-active" *ngIf="item.status=='Đã đặt'" [ngClass]="{'d-none':_change}">Đã đặt</div>
+                                            <div class="status-active" *ngIf="item.status=='Đã đặt'">Đã đặt</div>
                                         </td>
                                         <td>
                                             <button (click)="showDeltailsBooking(item.id)" class="btn-edit btn btn-outline-info" matTooltip="Chi tiết" [matTooltipPosition]="'left'"><i class="bi bi-clipboard-check"></i></button>
-                                            <button [ngClass]="{'d-none':item.status!='Đã đặt'||_change}" (click)="cancelBookingRoom(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Hủy đơn" [matTooltipPosition]="'right'"><i class="bi bi-clipboard-x"></i></button>
+                                            <button [ngClass]="{'d-none':item.status!='Đã đặt'}" (click)="cancelBookingRoom(item.id)" class="btn-delete btn btn-outline-danger ml-3" matTooltip="Hủy đơn" [matTooltipPosition]="'right'"><i class="bi bi-clipboard-x"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -114,6 +114,11 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 mt-3" *ngIf="_error">
+                    <div class="alert alert-warning text-center elevation-2" role="alert">
+                        {{_error}}
                     </div>
                 </div>
             </div>
