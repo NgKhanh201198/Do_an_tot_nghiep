@@ -171,7 +171,7 @@ export class UpdateCustomerComponent implements OnInit {
     onSubmit() {
         this.loggerService.logger(this.formUpdateData.value);
 
-        return this.userService.updateAccountById(this._id, this.formUpdateData.value)
+        return this.userService.updateEmployeeById(this._id, this.formUpdateData.value)
             .subscribe({
                 next: (res) => {
                     this._error = '';

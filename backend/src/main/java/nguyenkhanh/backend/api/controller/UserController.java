@@ -205,8 +205,12 @@ public class UserController {
             } else {
                 UserEntity oldUserEntity = userServiceImpl.getUserById(id);
 
-                if (userServiceImpl.isUserExitsByPhoneNumber(userAccountDTO.getPhoneNumber())
-                        && !(userAccountDTO.getPhoneNumber().equals(oldUserEntity.getPhoneNumber()))) {
+                if (userServiceImpl.isUserExitsByUsername(userAccountDTO.getUsername()) && !(userAccountDTO.getUsername().equals(oldUserEntity.getUsername()))) {
+                    return ResponseEntity.badRequest().body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+                            HttpStatus.BAD_REQUEST.name(), "Email này đã được sử dụng, vui lòng thử email khác!"));
+                }
+
+                if (userServiceImpl.isUserExitsByPhoneNumber(userAccountDTO.getPhoneNumber()) && !(userAccountDTO.getPhoneNumber().equals(oldUserEntity.getPhoneNumber()))) {
                     return ResponseEntity.badRequest()
                             .body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
                                     HttpStatus.BAD_REQUEST.name(),

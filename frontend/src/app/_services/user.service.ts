@@ -1,12 +1,13 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable, throwError} from 'rxjs';
+import {catchError, map, tap} from 'rxjs/operators';
+import {environment} from 'src/environments/environment';
 
 const httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
+
 @Injectable({
     providedIn: 'root'
 })
@@ -20,9 +21,10 @@ export class UserService {
 
     constructor(
         private http: HttpClient
-    ) { }
+    ) {
+    }
 
-    handleError(error: HttpErrorResponse) {
+    handleError(error: HttpErrorResponse): Observable<never> {
         return throwError(error);
     }
 
@@ -39,6 +41,7 @@ export class UserService {
                 catchError(this.handleError)
             );
     }
+
     public getAllCustomer(): Observable<any> {
         return this.http.get<any>(`${this.urlCustomer}`)
             .pipe(
@@ -53,11 +56,11 @@ export class UserService {
             );
     }
 
-    public getNameCustomer() {
+    public getNameCustomer(): Observable<any> {
         return this.http.get(`${this.urlCustomer}`)
             .pipe(
                 map((response: []) => response.map(item => item['username']))
-            )
+            );
     }
 
     public updateUserById(id: any, data: any): Observable<any> {
@@ -80,7 +83,8 @@ export class UserService {
 
         return this.http.put(`${this.url + '/updateAvatar'}/${id}`, formData)
             .pipe(
-                tap(response => { }),
+                tap(response => {
+                }),
                 catchError(this.handleError)
             );
     }
@@ -128,7 +132,7 @@ export class UserService {
             );
     }
 
-    //Role
+    // Role
     public getAllRole(): Observable<any> {
         return this.http.get<any>(`${this.urlGetRoles}`)
             .pipe(

@@ -24,7 +24,7 @@ const routes: Routes = [
     {
         path: Path.ADMIN_PAGE,
         loadChildren: () => import('./admin/admin.module').then(module => module.AdminModule),
-        canActivate:[AuthenticationateGuard],
+        // canActivate:[AuthenticationateGuard],
         data: { permission: Permission.ADMIN_PAGE }
     },
     {

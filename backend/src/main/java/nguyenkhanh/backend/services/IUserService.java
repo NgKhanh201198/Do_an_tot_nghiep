@@ -45,7 +45,7 @@ public interface IUserService {
 	// Delete
 	public void deletes(long[] id);
 
-
+	//Check
 	public boolean isUserExitsById(long id);
 
 	public boolean isUserExitsByUsername(String username);
