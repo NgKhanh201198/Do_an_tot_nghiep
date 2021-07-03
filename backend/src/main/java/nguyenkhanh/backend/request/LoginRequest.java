@@ -11,18 +11,8 @@ public class LoginRequest {
 	private String username;
 
 	@NotBlank(message = "{Password.NotBlank}")
-	@Size(min = 8, max = 20, message = "{Password.Size}")
+	@Size(min = 6, max = 20, message = "{Password.Size}")
 	private String password;
-
-	public LoginRequest() {
-		super();
-	}
-
-	public LoginRequest(String username, String password) {
-		super();
-		this.username = username;
-		this.password = password;
-	}
 
 	public String getUsername() {
 		return username;

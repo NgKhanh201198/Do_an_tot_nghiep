@@ -29,7 +29,7 @@ const routes: Routes = [
         component: AdminComponent
     },
 
-    //account
+    // account
     {
         path: Path.LIST_ACCOUNT,
         component: ListAccountComponent,
@@ -45,7 +45,7 @@ const routes: Routes = [
         // data: { permission: Permission.CREATE_ACCOUNT }
     },
 
-    //customer
+    // customer
     {
         path: Path.LIST_CUSTOMER,
         component: ListCustomerComponent,
@@ -57,7 +57,7 @@ const routes: Routes = [
         // data: { permission: Permission.UPDATED_CUSTOMER }
     },
 
-    //city
+    // city
     {
         path: Path.LIST_CITY,
         component: ListCityComponent,
@@ -90,7 +90,7 @@ const routes: Routes = [
         // data: { permission: Permission.CREATE_ACCOUNT }
     },
 
-    //room type
+    // room type
     {
         path: Path.LIST_ROOMTYPE,
         component: ListRoomTypeComponent,
@@ -106,7 +106,7 @@ const routes: Routes = [
         // data: { permission: Permission.CREATE_ACCOUNT }
     },
 
-    //room 
+    // room
     {
         path: Path.LIST_ROOM,
         component: ListRoomComponent,
@@ -122,7 +122,7 @@ const routes: Routes = [
         // data: { permission: Permission.CREATE_ACCOUNT }
     },
 
-    //bookingroom
+    // bookingroom
     {
         path: Path.LIST_BOOKINGROOM,
         component: ListBookingRoomComponent,

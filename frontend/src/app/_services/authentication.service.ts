@@ -1,10 +1,10 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
-import { User } from '../_models/user';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
+import {environment} from 'src/environments/environment';
+import {User} from '../_models/user';
 
 
 const API_LOGIN = `${environment.baseUrlServer}` + 'api/auth/login';
@@ -12,7 +12,7 @@ const API_REGISTER = `${environment.baseUrlServer}` + 'api/auth/register';
 const TOKEN_KEY = 'TOKEN';
 const USER_KEY = 'CURRENT_USER';
 const httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
 
 @Injectable({
@@ -25,33 +25,30 @@ export class AuthenticationService {
     constructor(private http: HttpClient, private router: Router) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(window.sessionStorage.getItem(USER_KEY)));
         this.currentUser = this.currentUserSubject.asObservable();
-        // this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(window.localStorage.getItem(USER_KEY)));
-        // this.currentUser = this.currentUserSubject.asObservable();        
     }
 
+    // tslint:disable-next-line:typedef
     handleError(error: HttpErrorResponse) {
         return throwError(error);
     }
 
-    public storeToken(token: string) {
+    public storeToken(token: string): void {
         window.sessionStorage.removeItem(TOKEN_KEY);
         window.sessionStorage.setItem(TOKEN_KEY, token);
-        // window.localStorage.removeItem(TOKEN_KEY);
-        // window.localStorage.setItem(TOKEN_KEY, token);
     }
+
     public getToken(): string {
         return window.sessionStorage.getItem(TOKEN_KEY);
         // return window.localStorage.getItem(TOKEN_KEY);
     }
-    public storeUser(user: string) {
+
+    public storeUser(user: string): void {
         window.sessionStorage.removeItem(USER_KEY);
         window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
-    //     window.localStorage.removeItem(USER_KEY);
-    //     window.localStorage.setItem(USER_KEY, JSON.stringify(user));
     }
+
     public getUser(): any {
         return JSON.parse(window.sessionStorage.getItem(USER_KEY));
-        // return JSON.parse(window.localStorage.getItem(USER_KEY));
     }
 
     public get currentUserValue(): User {
@@ -59,7 +56,7 @@ export class AuthenticationService {
     }
 
     login(username: any, password: any): Observable<any> {
-        return this.http.post(API_LOGIN, { username, password }, httpOptions)
+        return this.http.post(API_LOGIN, {username, password}, httpOptions)
             .pipe(
                 map((user: any) => {
                     this.storeToken(user.token);
@@ -73,9 +70,8 @@ export class AuthenticationService {
             );
     }
 
-    logout() {
+    logout(): void {
         window.sessionStorage.clear();
-        // window.localStorage.clear();
         this.currentUserSubject.next(null);
     }
 
@@ -86,7 +82,7 @@ export class AuthenticationService {
             );
     }
 
-    isLoggedIn(): Boolean {
+    isLoggedIn(): boolean {
         return !!this.getToken();
     }
 }

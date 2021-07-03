@@ -97,13 +97,6 @@ export class UserService {
     }
 
     public resetPassword(email: any): Observable<any> {
-
-        // const params = new HttpParams().append('email', email);
-        // return this.http.post(`${this.url + '/resetPassword'}`, { params })
-        //     .pipe(
-        //         catchError(this.handleError)
-        //     );
-
         return this.http.post(`${this.url + '/resetPassword?email='}${email}`, httpOptions)
             .pipe(
                 catchError(this.handleError)

@@ -79,7 +79,6 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping("/account")
-//    @PreAuthorize("hasRole('create_account')")
     public ResponseEntity<?> createAccount(@RequestBody @Valid UserDTO userDTO) {
         try {
             if (userServiceImpl.isUserExitsByUsername(userDTO.getUsername())) {
@@ -149,7 +148,6 @@ public class UserController {
     }
 
     @GetMapping("/employee")
-//	@PreAuthorize("hasRole('list_employee')")
     public ResponseEntity<?> listUser() {
         List<UserEntity> employee = new ArrayList<>();
         List<UserEntity> userEntity = userServiceImpl.getUserAll();
@@ -165,7 +163,6 @@ public class UserController {
     }
 
     @GetMapping("/customer")
-//	@PreAuthorize("hasRole('list_customer')")
     public ResponseEntity<?> listCustomer() {
         List<UserEntity> customer = new ArrayList<>();
         List<UserEntity> userEntity = userServiceImpl.getUserAll();
@@ -193,7 +190,6 @@ public class UserController {
     }
 
     @PutMapping("/employee/{id}")
-//	@PreAuthorize("hasRole('update_employee')")
     public ResponseEntity<?> updateAccount(@RequestBody @Valid UserAccountDTO userAccountDTO,
                                            @PathVariable("id") long id) {
         try {
@@ -280,7 +276,6 @@ public class UserController {
     }
 
     @PutMapping("/customer/{id}")
-    //	@PreAuthorize("hasRole('update_customer')")
     public ResponseEntity<?> updateCustomer(@RequestBody @Valid UserCustomerDTO userCustomerDTO,
                                             @PathVariable("id") long id) {
         try {

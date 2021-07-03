@@ -169,7 +169,7 @@ public class CityController {
 		}
 	}
 
-	@DeleteMapping("/room/{id}")
+	@DeleteMapping("/city/{id}")
 	//	@PreAuthorize("hasRole('delete_city')")
 	public ResponseEntity<?> deleteCity(@Valid @PathVariable("id") long id) {
 		try {

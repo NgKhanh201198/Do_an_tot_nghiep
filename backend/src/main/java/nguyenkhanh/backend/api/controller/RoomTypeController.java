@@ -62,7 +62,6 @@ public class RoomTypeController {
 	}
 
 	@GetMapping(path = "/roomtype/{id}")
-//		@PreAuthorize("hasRole('get_roomtype_byID')")
 	public ResponseEntity<?> getRoomTypeById(@PathVariable("id") long id) {
 		RoomTypeEntity listRoomType = roomTypeServiceImpl.getRoomTypeById(id);
 		return new ResponseEntity<RoomTypeEntity>(listRoomType, HttpStatus.OK);

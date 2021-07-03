@@ -138,7 +138,7 @@ public class RoomController {
     }
 
     @PutMapping("/room/{id}")
-    //	@PreAuthorize("hasRole('update_hotel')")
+    //	@PreAuthorize("hasRole('update_room')")
     public ResponseEntity<?> updateRoom(@PathVariable("id") long id, @RequestBody RoomDTO roomDTO) {
         try {
             if (roomServiceImpl.isRoomExitsById(id) == false) {
@@ -188,6 +188,7 @@ public class RoomController {
     }
 
     @PutMapping("/room/updateImage/{id}")
+    //	@PreAuthorize("hasRole('update_room')")
     public ResponseEntity<?> updateAvatar(@PathVariable("id") long id, @RequestParam("image") MultipartFile file) {
         String response = "";
         try {
@@ -229,8 +230,8 @@ public class RoomController {
         }
     }
 
-    @DeleteMapping("/city/{id}")
-    //	@PreAuthorize("hasRole('delete_hotel')")
+    @DeleteMapping("/room/{id}")
+    //	@PreAuthorize("hasRole('delete_room')")
     public ResponseEntity<?> deleteCity(@Valid @PathVariable("id") long id) {
         try {
             roomServiceImpl.deleteRoomById(id);

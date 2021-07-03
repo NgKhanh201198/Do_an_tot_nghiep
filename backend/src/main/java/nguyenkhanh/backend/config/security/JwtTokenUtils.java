@@ -31,34 +31,23 @@ public class JwtTokenUtils {
 		// Truy xuất thông tin người dùng đang đặng nhập.
 		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();// xác thực
 
-		return Jwts.builder().setSubject(userPrincipal.getUsername()).setIssuedAt(new Date())
+		return Jwts.builder()
+				.setSubject(userPrincipal.getUsername())
+				.setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + JWT_EXPIRATIONTIME))
 				.signWith(SignatureAlgorithm.HS512, JWT_SECRETKEY).compact();
 	}
 
-	private Claims getAllClaimsFromToken(String token) {
-		return Jwts.parser().setSigningKey(JWT_SECRETKEY).parseClaimsJws(token).getBody();
-	}
-
 	// Lấy username từ jwt
 	public String getUsernameFromJWT(String token) {
-		return getAllClaimsFromToken(token).getSubject();
-	}
-
-	public Date getExpirationDateFromToken(String token) {
-		return getAllClaimsFromToken(token).getExpiration();
-	}
-
-	private boolean isTokenExpired(String token) {
-		final Date expiration = getExpirationDateFromToken(token);
-		return expiration.before(new Date());
+		return Jwts.parser().setSigningKey(JWT_SECRETKEY).parseClaimsJws(token).getBody().getSubject();
 	}
 
 	// Kiểm tra token
-	public boolean validateJwtToken(String token) {
+	public boolean validateJwtToken(String authToken) {
 		try {
-			if (isTokenExpired(token))
-				return true;
+			Jwts.parser().setSigningKey(JWT_SECRETKEY).parseClaimsJws(authToken);
+			return true;
 		} catch (SignatureException e) {
 			logger.error("Invalid JWT signature: {}", e.getMessage());
 		} catch (MalformedJwtException e) {
@@ -72,5 +61,4 @@ public class JwtTokenUtils {
 		}
 		return false;
 	}
-
 }

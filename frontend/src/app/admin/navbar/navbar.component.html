@@ -11,7 +11,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <div class="brand-link">
-        <img src="assets/adminlte/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="assets/adminlte/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
+             class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Trang quản trị</span>
     </div>
 
@@ -19,8 +20,10 @@
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img *ngIf="!currentUser.avatar" src="../../../assets/customs/images/user.png" class="img-circle elevation-2" alt="User Image">
-                <img *ngIf="currentUser.avatar" [src]="currentUser.avatar" class="img-circle elevation-2" alt="User Image">
+                <img *ngIf="!currentUser.avatar" src="../../../assets/customs/images/user.png"
+                     class="img-circle elevation-2" alt="User Image">
+                <img *ngIf="currentUser.avatar" [src]="currentUser.avatar" class="img-circle elevation-2"
+                     alt="User Image">
             </div>
             <div class="info">
                 <div class="d-block text-white">{{currentUser.fullName}}</div>
@@ -28,7 +31,7 @@
         </div>
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item" [routerLinkActive]="['menu-open']">
+                <li class="nav-item" [routerLinkActive]="['menu-open']" *ngIf="accountManagement">
                     <a href="#" class="nav-link active">
                         <i class="nav-icon bi bi-person-check-fill"></i>
                         <p>
@@ -38,19 +41,22 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a [routerLink]="['/admin-page','create-account']" [routerLinkActive]="['active']" class="nav-link">
+                            <a [routerLink]="['/admin-page','create-account']" [routerLinkActive]="['active']"
+                               class="nav-link">
                                 <i class="nav-icon bi bi-person-plus-fill"></i>
                                 <p>Thêm tài khoản</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/admin-page','list-account']" [routerLinkActive]="['active']" class="nav-link">
+                            <a [routerLink]="['/admin-page','list-account']" [routerLinkActive]="['active']"
+                               class="nav-link">
                                 <i class="nav-icon bi bi-person-fill"></i>
                                 <p>Nhân viên</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/admin-page','list-customer']" [routerLinkActive]="['active']" class="nav-link">
+                            <a [routerLink]="['/admin-page','list-customer']" [routerLinkActive]="['active']"
+                               class="nav-link">
                                 <i class="nav-icon bi bi-people-fill"></i>
                                 <p>Khách hàng</p>
                             </a>
@@ -67,31 +73,36 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a [routerLink]="['/admin-page','list-city']" [routerLinkActive]="['active']" class="nav-link">
+                            <a [routerLink]="['/admin-page','list-city']" [routerLinkActive]="['active']"
+                               class="nav-link">
                                 <i class="nav-icon bi bi-grid-3x3-gap-fill"></i>
                                 <p>Thành phố</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/admin-page','list-hotel']" [routerLinkActive]="['active']" class="nav-link">
+                            <a [routerLink]="['/admin-page','list-hotel']" [routerLinkActive]="['active']"
+                               class="nav-link">
                                 <i class="nav-icon bi bi-grid-3x3-gap-fill"></i>
                                 <p>Khách sạn</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/admin-page','list-roomtype']" [routerLinkActive]="['active']" class="nav-link">
+                            <a [routerLink]="['/admin-page','list-roomtype']" [routerLinkActive]="['active']"
+                               class="nav-link">
                                 <i class="nav-icon bi bi-grid-3x3-gap-fill"></i>
                                 <p>Loại phòng</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/admin-page','list-room']" [routerLinkActive]="['active']" class="nav-link">
+                            <a [routerLink]="['/admin-page','list-room']" [routerLinkActive]="['active']"
+                               class="nav-link">
                                 <i class="nav-icon bi bi-grid-3x3-gap-fill"></i>
                                 <p>Phòng</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/admin-page','list-bookingroom']" [routerLinkActive]="['active']" class="nav-link">
+                            <a [routerLink]="['/admin-page','list-bookingroom']" [routerLinkActive]="['active']"
+                               class="nav-link">
                                 <i class="nav-icon bi bi-grid-3x3-gap-fill"></i>
                                 <p>Đơn đặt phòng</p>
                             </a>

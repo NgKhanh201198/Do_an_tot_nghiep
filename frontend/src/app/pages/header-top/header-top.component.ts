@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Permission } from 'src/app/_models/permission.enum';
-import { User } from 'src/app/_models/user';
-import { AuthenticationService } from 'src/app/_services/authentication.service';
-import { UserService } from 'src/app/_services/user.service';
-import { Path } from '../../_models/path.enum';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {Permission} from 'src/app/_models/permission.enum';
+import {User} from 'src/app/_models/user';
+import {AuthenticationService} from 'src/app/_services/authentication.service';
+import {UserService} from 'src/app/_services/user.service';
+import {Path} from '../../_models/path.enum';
 
 @Component({
     selector: 'app-header-top',
@@ -32,15 +32,17 @@ export class HeaderTopComponent implements OnInit {
         }
     }
 
-    logout() {
+    logout(): void {
         this.authenticationService.logout();
         this.router.navigate([Path.LOGIN]);
     }
 
-    get isAdmin() {
+    get isAdmin(): boolean {
+        // tslint:disable-next-line:prefer-for-of
         for (let index = 0; index < this.currentUser.permissions.length; index++) {
-            if (this.currentUser && this.currentUser.permissions[index] === Permission.ADMIN_PAGE)
+            if (this.currentUser && this.currentUser.permissions[index] === Permission.ADMIN_PAGE) {
                 return true;
+            }
         }
         return false;
     }
