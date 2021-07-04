@@ -1,0 +1,8 @@
+CREATE TABLE TEMPLATES (TEMPLATEID SERIAL PRIMARY KEY,
+			DESCRIPTIONS CHARACTER VARYING(255),
+			CONTENTS TEXT);
+INSERT INTO TEMPLATES DESCRIPTIONS, CONTENTS)
+VALUES('Gửi email xác nhận tài khoản','sendEmailVerifile.txt');
+VALUES('Gửi email thay đổi mật khẩu','sendEmailConfirmPass.txt');
+
+Note: Nên insert bằng tay vì biểu mẫu trong file .txt có nhiều ký tự đặc biệt!

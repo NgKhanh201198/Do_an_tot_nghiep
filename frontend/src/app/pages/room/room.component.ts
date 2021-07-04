@@ -1,13 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { ThemePalette } from '@angular/material/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { User } from 'src/app/_models/user';
-import { AuthenticationService } from 'src/app/_services/authentication.service';
-import { BookingRoomService } from 'src/app/_services/booking-room.service';
-import { HotelService } from 'src/app/_services/hotel.service';
-import { LoggerService } from 'src/app/_services/logger.service';
-import { RoomService } from 'src/app/_services/room.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {ThemePalette} from '@angular/material/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {User} from 'src/app/_models/user';
+import {AuthenticationService} from 'src/app/_services/authentication.service';
+import {BookingRoomService} from 'src/app/_services/booking-room.service';
+import {HotelService} from 'src/app/_services/hotel.service';
+import {LoggerService} from 'src/app/_services/logger.service';
+import {RoomService} from 'src/app/_services/room.service';
 import * as moment from 'moment';
 
 @Component({
@@ -18,17 +18,17 @@ import * as moment from 'moment';
 export class RoomComponent implements OnInit {
     currentUser: User;
     listRoom: Array<any> = [];
-    _page: number = 1;
-    _itemsPage: number = 4;
+    _page: any = 1;
+    _itemsPage: any = 4;
     _errorCheckRoom: any;
     _minCheckInDate: Date = new Date();
     _minCheckOutDate: Date = new Date();
     _status = true;
-    _success: String = "";
-    _error: String = "";
+    _success: String = '';
+    _error: String = '';
 
 
-    //hotel
+    // hotel
     idHotel: any;
     hotel = [];
     hotelName: any;
@@ -37,8 +37,8 @@ export class RoomComponent implements OnInit {
     description: any;
 
     formData = this.formBuilder.group({
-        checkInDate: ['', [Validators.required,]],
-        checkOutDate: ['', [Validators.required,]],
+        checkInDate: ['', [Validators.required]],
+        checkOutDate: ['', [Validators.required]],
     });
 
     constructor(
@@ -50,7 +50,8 @@ export class RoomComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private loggerService: LoggerService
-    ) { }
+    ) {
+    }
 
     ngOnInit(): void {
         this.currentUser = this.authenticationService.currentUserValue;
@@ -69,7 +70,7 @@ export class RoomComponent implements OnInit {
 
                     this.roomService.getRoomByHotel(result.hotelName).subscribe((result) => {
                         if (result.length === 0) {
-                            this._errorCheckRoom = " Khách sạn " + this.hotelName + " hiện tại chưa có phòng!";
+                            this._errorCheckRoom = ' Khách sạn ' + this.hotelName + ' hiện tại chưa có phòng!';
                         } else {
                             this.listRoom = result;
                         }
@@ -80,14 +81,18 @@ export class RoomComponent implements OnInit {
 
     }
 
-    //Invalid error message
-    get formValid() { return this.formData.controls; }
+    // Invalid error message
+    get formValid() {
+        return this.formData.controls;
+    }
+
     getCheckInDateErrorMessage(): string {
         if (this.formValid.checkInDate.errors.required) {
             return 'Vui lòng nhập ngày nhận phòng.';
         }
         return 'Vui lòng nhập ngày nhận phòng hợp lệ.';
     }
+
     getCheckOutDateErrorMessage(): string {
         if (this.formValid.checkOutDate.errors.required) {
             return 'Vui lòng nhập ngày trả phòng.';
@@ -95,22 +100,22 @@ export class RoomComponent implements OnInit {
         return 'Vui lòng nhập ngày trả phòng hợp lệ.';
     }
 
-    changeCheckInDate(even) {
-        var date = new Date(even.value);
+    changeCheckInDate(even): void {
+        const date = new Date(even.value);
         date.setDate(even.value.toDate().getDate() + 1);
         this._minCheckOutDate = date;
-        this.formData.get("checkOutDate").setValue(moment(date).utc().format());
+        this.formData.get('checkOutDate').setValue(moment(date).utc().format());
     }
 
-    //Check box
+    // Check box
     listRooms: any = [];
     listId: any = [];
     numberOfPeople = 0;
     color: ThemePalette = 'primary';
     allComplete: boolean = false;
 
-    //Kiểm tra id nào đã được checked
-    isCheckSelectedId() {
+    // Kiểm tra id nào đã được checked
+    isCheckSelectedId(): void {
         this.listRooms = [];
         this.listId = [];
         this.numberOfPeople = 0;
@@ -122,24 +127,31 @@ export class RoomComponent implements OnInit {
             }
         });
     }
-    updateAllComplete() {
+
+    updateAllComplete(): void {
         this.allComplete = this.listRoom != null && this.listRoom.every(t => t.isSelected);
         this.isCheckSelectedId();
     }
+
     someComplete(): boolean {
         if (this.listRoom == null) {
             return false;
         }
         return this.listRoom.filter(t => t.isSelected).length > 0 && !this.allComplete;
     }
-    //end
 
-    onSubmit() {
-        console.log(this.listRooms);
+    // end
+
+    onSubmit(): void {
+        this.loggerService.logger(this.listRooms);
 
         this.listRooms = [];
         this._status = true;
-        this._errorCheckRoom = "";
+        this._errorCheckRoom = '';
+
+
+        this.formData.get('checkInDate').setValue(moment(this.formData.value.checkInDate).utc().format());
+        this.formData.get('checkOutDate').setValue(moment(this.formData.value.checkOutDate).utc().format());
 
         this.roomService.checkRoomEmpty(
             this.hotelName,
@@ -149,7 +161,7 @@ export class RoomComponent implements OnInit {
             next: (result) => {
                 // this.loggerService.logger(result);
                 if (result.length === 0) {
-                    this._errorCheckRoom = " Khách sạn " + this.hotelName + " hết phòng trong thời gian này!";
+                    this._errorCheckRoom = ' Khách sạn ' + this.hotelName + ' hết phòng trong thời gian này!';
                 } else {
                     this._status = false;
                     this.listRoom = result;
@@ -161,21 +173,21 @@ export class RoomComponent implements OnInit {
         });
     }
 
-    bookingRoom() {
+    bookingRoom(): void {
         console.log(this._status);
         this.loggerService.loggerData(this.listRooms);
 
-        this._success = "";
-        if (this.listRooms.length == 0) {
-            alert("Vui lòng chọn phòng.");
+        this._success = '';
+        if (this.listRooms.length === 0) {
+            alert('Vui lòng chọn phòng.');
         } else {
             if (this.currentUser == null) {
-                if (confirm("Bạn cần đăng nhập để tiếp tục...?")) {
+                if (confirm('Bạn cần đăng nhập để tiếp tục...?')) {
                     this.router.navigate(['/log-in']);
                 }
             } else {
                 if (this._status) {
-                    alert("Vui lòng chọn kiểm tra phòng trống trước khi đặt phòng.");
+                    alert('Vui lòng chọn kiểm tra phòng trống trước khi đặt phòng.');
                 } else {
                     this.bookingRoomService.createBookingRoom(
                         this.formData.value.checkInDate,
@@ -186,7 +198,7 @@ export class RoomComponent implements OnInit {
                         this.listRooms
                     ).subscribe((result) => {
                         this.loggerService.loggerData(this.listRoom.length);
-                        for (var i = 0; i < this.listRoom.length; i++) {
+                        for (let i = 0; i < this.listRoom.length; i++) {
                             this.loggerService.loggerData(this.listRoom[i].roomNumber);
                             if (this.listRooms.indexOf(this.listRoom[i].roomNumber) !== -1) {
                                 this.listRoom.splice(i, 1);
@@ -194,7 +206,7 @@ export class RoomComponent implements OnInit {
                             }
                         }
                         this.listRooms = [];
-                        this._success = "Đặt phòng thành công.";
+                        this._success = 'Đặt phòng thành công.';
                     });
                 }
             }

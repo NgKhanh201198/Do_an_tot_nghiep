@@ -1,8 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable, throwError} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
+import {environment} from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -13,14 +13,15 @@ export class BookingRoomService {
 
     constructor(
         private http: HttpClient
-    ) { }
+    ) {
+    }
 
-    handleError(error: HttpErrorResponse) {
+    handleError(error: HttpErrorResponse): Observable<never> {
         return throwError(error);
     }
 
     public createBookingRoom(checkInDate: any, checkOutDate: any, numberofPeople: any, user: any, hotel: any, rooms: any): Observable<any> {
-        const data = {
+        const data: any = {
             user: user,
             hotel: hotel,
             checkInDate: checkInDate,
@@ -50,7 +51,7 @@ export class BookingRoomService {
 
     public getBookingRoomByUser(fullName: any): Observable<any> {
         const params = new HttpParams().append('name', fullName);
-        return this.http.get<any>(`${this.url + '/user'}`, { params })
+        return this.http.get<any>(`${this.url + '/user'}`, {params})
             .pipe(
                 catchError(this.handleError)
             );
@@ -60,12 +61,13 @@ export class BookingRoomService {
 
         return this.http.put(`${this.url}/${id}`, data)
             .pipe(
-                tap(response => { }),
+                tap(response => {
+                }),
                 catchError(this.handleError)
             );
     }
 
-    public cancelBookingRoomById(id: any, status:any): Observable<any> {
+    public cancelBookingRoomById(id: any, status: any): Observable<any> {
         const formData: FormData = new FormData();
         formData.append('id', id);
         formData.append('status', status);
@@ -78,7 +80,8 @@ export class BookingRoomService {
     public deleteBookingRoom(id: any): Observable<any> {
         return this.http.delete(`${this.url}/${id}`)
             .pipe(
-                tap(response => { }),
+                tap(response => {
+                }),
                 catchError(this.handleError)
             );
     }

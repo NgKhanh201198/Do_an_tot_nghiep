@@ -1,6 +1,5 @@
 -- DATABASE POSTGRESQL
---TRUNCATE <table name> RESTART IDENTITY CASCADE; reset table
---TRUNCATE register_log RESTART IDENTITY CASCADE;
+--TRUNCATE <table name> RESTART IDENTITY CASCADE; //reset table
 
 -- DROP TABLE USER_ROLE;
 -- DROP TABLE ROOM_BOOKED;
@@ -123,6 +122,8 @@ CREATE TABLE USER_TYPE (USERTYPEID SERIAL PRIMARY KEY,
 -- 						DESCRIPTIONS CHARACTER VARYING(255),
 -- 						CONTENTS TEXT);
 
+TRUNCATE register_log RESTART IDENTITY CASCADE;
+
 ALTER TABLE USER_ROLE ADD CONSTRAINT FK_USER_ROLE_USERS
 FOREIGN KEY (USERID) REFERENCES USERS (USERID);
 ALTER TABLE USER_ROLE ADD CONSTRAINT FK_USER_ROLE_ROLES
@@ -158,45 +159,61 @@ FOREIGN KEY (ROOMID) REFERENCES ROOMS (ROOMID);
 ALTER TABLE ROOM_BOOKED ADD CONSTRAINT FK_ROOM_BOOKED_BOOKINGROOM
 FOREIGN KEY (BOOKINGROOMID) REFERENCES BOOKINGROOM (BOOKINGROOMID);
 
-INSERT INTO ROLES(ROLENAME, KEYNAME,STATUS)
-VALUES('Quản trị viên','ADMIN','ACTIVE');
-VALUES('Nhân viên','EMPLOYEE','ACTIVE');
-VALUES('Khách hàng','CUSTOMER','ACTIVE');
+INSERT INTO ROLES(ROLENAME, KEYNAME,STATUS) VALUES
+('Quản trị viên','ADMIN','ACTIVE'),
+('Nhân viên','EMPLOYEE','ACTIVE'),
+('Khách hàng','CUSTOMER','ACTIVE');	
 
-INSERT INTO PERMISSIONS(PERMISSIONNAME, PERMISSIONKEY)
-VALUES('trang quản trị','admin_page');
-VALUES('trang thông tin người dùng','profile');
-VALUES('quản lý tài khoản','account');
-VALUES('quản lý danh mục','category');
+INSERT INTO PERMISSIONS(PERMISSIONNAME, PERMISSIONKEY) VALUES
+('quản lý tài khoản','account'),
+('quản lý danh mục','category'),
+('trang quản trị','admin_page'),
+('trang thông tin người dùng','profile');
 
-VALUES('tạo tài khoản','create_account');
-VALUES('danh sách tài khoản','list_account');
-VALUES('cập nhật tài khoản','updated_account');
-VALUES('xóa tài khoản','deleted_account');
+INSERT INTO ROLE_PERMISSION(ROLEID, PERMISSIONID) VALUES
+(1,1),
+(1,2),
+(1,3),
+(2,2),
+(2,3),
+(3,4);
 
-INSERT INTO ROLE_PERMISSION(ROLEID, PERMISSIONID)
-VALUES(1,1);
-VALUES(1,2);
-VALUES(1,3);
-VALUES(1,4);
-VALUES(1,5);
-VALUES(1,6);
-VALUES(2,1);
-VALUES(2,2);
-VALUES(2,3);
-VALUES(2,4);
-VALUES(2,5);
-VALUES(2,6);
-VALUES(3,2);
+INSERT INTO USER_TYPE(USERTYPENAME, KEYNAME) VALUES
+('Quản trị viên','admin'),
+('Nhân viên','employee'),
+('Khách hàng','customer');
 
-INSERT INTO USER_TYPE(USERTYPENAME, KEYNAME)
-VALUES('Quản trị viên','admin');
-VALUES('Nhân viên','employee');
-VALUES('Khách hàng','customer');
-
+--TK admin: admin@gmail.com - 123123123
 INSERT INTO USERS(EMAIL, PASSWORD, FULLNAME, STATUS, USERTYPEID)
 VALUES('admin@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Quản trị viên','ACTIVE',1);
 INSERT INTO USER_ROLE(USERID, ROLEID)
 VALUES(1,1);
 
+--TK employee: pass: 123123123
+INSERT INTO USERS(EMAIL, PASSWORD, FULLNAME, STATUS, USERTYPEID) VALUES
+('nhanvien1@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Nhân viên 1','ACTIVE',2),
+('nhanvien2@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Nhân viên 2','ACTIVE',2),
+('nhanvien3@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Nhân viên 3','ACTIVE',2),
+('nhanvien4@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Nhân viên 4','ACTIVE',2),
+('nhanvien5@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Nhân viên 5','ACTIVE',2);
+INSERT INTO USER_ROLE(USERID, ROLEID) VALUES
+(2,2),
+(3,2),
+(4,2),
+(5,2),
+(6,2);
+	   
+--TK cumtomer: pass:123123123
+INSERT INTO USERS(EMAIL, PASSWORD, FULLNAME, STATUS, USERTYPEID) VALUES
+('khachhang1@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Khách hàng 1','ACTIVE',3),
+('khachhang2@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Khách hàng 2','ACTIVE',3),
+('khachhang3@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Khách hàng 3','ACTIVE',3),
+('khachhang4@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Khách hàng 4','ACTIVE',3),
+('khachhang5@gmail.com','$2a$10$IvZtUldlF7F4KLWEIz5HEutcfs8nSC4nwbBBIiu667mdShCk.84Iq', 'Khách hàng 5','ACTIVE',3);
+INSERT INTO USER_ROLE(USERID, ROLEID) VALUES
+(7,3),
+(8,3),
+(9,3),
+(10,3),
+(11,3);
 

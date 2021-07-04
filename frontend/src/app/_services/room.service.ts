@@ -1,13 +1,14 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
-import { LoggerService } from './logger.service';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable, throwError} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
+import {environment} from 'src/environments/environment';
+import {LoggerService} from './logger.service';
 
 const httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
+
 @Injectable({
     providedIn: 'root'
 })
@@ -19,18 +20,21 @@ export class RoomService {
     constructor(
         private http: HttpClient,
         private logger: LoggerService
-    ) { }
+    ) {
+    }
 
-    handleError(error: HttpErrorResponse) {
+    handleError(error: HttpErrorResponse): Observable<never> {
         return throwError(error);
     }
 
     public checkRoomEmpty(hotel: any, checkInDate: any, checkOutDate: any): Observable<any> {
+        this.logger.loggerData('đã đến đây');
         const body = {
             hotel: hotel,
             checkInDate: checkInDate,
             checkOutDate: checkOutDate
         };
+        this.logger.loggerData(body);
         return this.http.post<any>(`${this.urlCheckRoomEmpty}`, body)
             .pipe(
                 catchError(this.handleError)
@@ -74,7 +78,7 @@ export class RoomService {
 
     public getRoomByHotel(hotelName: any): Observable<any> {
         const params = new HttpParams().append('hotelName', hotelName);
-        return this.http.get<any>(`${this.url + '/byHotel'}`, { params })
+        return this.http.get<any>(`${this.url + '/byHotel'}`, {params})
             .pipe(
                 catchError(this.handleError)
             );
@@ -83,7 +87,8 @@ export class RoomService {
     public updateRoom(id: any, data: any): Observable<any> {
         return this.http.put(`${this.url}/${id}`, data)
             .pipe(
-                tap(response => { }),
+                tap(response => {
+                }),
                 catchError(this.handleError)
             );
     }
@@ -94,7 +99,8 @@ export class RoomService {
 
         return this.http.put(`${this.url + '/updateImage'}/${id}`, formData)
             .pipe(
-                tap(response => { }),
+                tap(response => {
+                }),
                 catchError(this.handleError)
             );
     }
@@ -102,7 +108,8 @@ export class RoomService {
     public deleteRoom(id: any): Observable<any> {
         return this.http.delete(`${this.url}/${id}`)
             .pipe(
-                tap(response => { }),
+                tap(response => {
+                }),
                 catchError(this.handleError)
             );
     }
