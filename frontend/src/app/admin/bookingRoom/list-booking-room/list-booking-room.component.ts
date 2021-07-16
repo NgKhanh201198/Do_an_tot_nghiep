@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { formatDate } from '@angular/common';
-import { BookingRoomService } from 'src/app/_services/booking-room.service';
-import { LoggerService } from 'src/app/_services/logger.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {formatDate} from '@angular/common';
+import {BookingRoomService} from 'src/app/_services/booking-room.service';
+import {LoggerService} from 'src/app/_services/logger.service';
 
 @Component({
     selector: 'app-list-booking-room',
@@ -11,11 +11,11 @@ import { LoggerService } from 'src/app/_services/logger.service';
 })
 export class ListBookingRoomComponent implements OnInit {
     collection: Array<any> = [];
-    _page: number = 1;
+    _page = 1;
     _itemsPage = 5;
-    _success = "";
+    _success = '';
 
-    //details
+    // details
     showDetails = true;
     collectionDetails: any;
     rooms: any;
@@ -28,6 +28,7 @@ export class ListBookingRoomComponent implements OnInit {
     checkInDate: string;
     checkOutDate: string;
     totalRoom: any;
+    totalCost = 0;
     status: string;
 
     constructor(
@@ -35,7 +36,8 @@ export class ListBookingRoomComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private logger: LoggerService
-    ) { }
+    ) {
+    }
 
     ngOnInit(): void {
         this.bookingRoomService.getBookingRoomAll().subscribe((result) => {
@@ -44,15 +46,16 @@ export class ListBookingRoomComponent implements OnInit {
         });
     }
 
-    coverStringToDate(str: any) {
-        var date = formatDate(str, 'yyyy-MM-dd', 'en');
-        var splitString = date.split("-")
-        var reverseArray = splitString.reverse();
-        var joinArray = reverseArray.join("/");
+    coverStringToDate(str: any): string {
+        const date = formatDate(str, 'yyyy-MM-dd', 'en');
+        const splitString = date.split('-');
+        const reverseArray = splitString.reverse();
+        const joinArray = reverseArray.join('/');
         return joinArray;
     }
 
-    showDeltailsBooking(id: any) {
+    showDeltailsBooking(id: any): void {
+        this.totalCost = 0;
         this.showDetails = false;
         this.bookingRoomService.getBookingRoomById(id).subscribe((data) => {
             this.logger.loggerData(data);
@@ -68,17 +71,25 @@ export class ListBookingRoomComponent implements OnInit {
             this.rooms = data.rooms;
             this.totalRoom = data.rooms.length;
             this.status = data.status;
+            data.rooms.forEach(item => {
+                if (item.discount) {
+                    this.totalCost += (item.roomCost - item.discount);
+                } else {
+                    this.totalCost += item.roomCost;
+                }
+            });
+
         });
     }
 
-    hiddenDeltailsBooking() {
+    hiddenDeltailsBooking(): void {
         this.showDetails = true;
     }
 
-    deleteBookingRoom(id: any) {
-        if (confirm("Bạn có chắc muốn xóa đơn đặt phòng này?")) {
+    deleteBookingRoom(id: any): void {
+        if (confirm('Bạn có chắc muốn xóa đơn đặt phòng này?')) {
             this.bookingRoomService.deleteBookingRoom(id).subscribe((result: any) => {
-                for (var i = 0; i < this.collection.length; i++) {
+                for (let i = 0; i < this.collection.length; i++) {
                     if (this.collection[i].id === id) {
                         this.collection.splice(i, 1);
                     }
@@ -90,24 +101,40 @@ export class ListBookingRoomComponent implements OnInit {
         }
         setTimeout(() => {
             this._success = '';
-            this.router.navigate(['/admin-page/list-bookingroom'])
+            this.router.navigate(['/admin-page/list-bookingroom']);
         }, 2500);
     }
 
-    confim(id) {
-        this._success = "";
-        if (confirm("Xác nhận đơn đặt phòng?")) {
+    confim(id): void {
+        this._success = '';
+        if (confirm('Xác nhận đơn đặt phòng?')) {
             this.bookingRoomService.cancelBookingRoomById(id, 'Đã nhận').subscribe((reponse) => {
-                for (var i = 0; i < this.collection.length; i++) {
+                // tslint:disable-next-line:prefer-for-of
+                for (let i = 0; i < this.collection.length; i++) {
                     if (this.collection[i].id === id) {
-                        this.collection[i].status = "Đã nhận";
+                        this.collection[i].status = 'Đã nhận';
                     }
                 }
                 this.showDetails = true;
-                this._success = "Xác nhận thành công!";
+                this._success = 'Xác nhận thành công!';
             });
         }
 
+    }
+
+    thanhtoan(id): void {
+        if (confirm('Tổng tiền cần phải thanh toán là: ' + this.totalCost + ' VNĐ')) {
+            this.bookingRoomService.cancelBookingRoomById(id, 'Đã thanh toán').subscribe((reponse) => {
+                // tslint:disable-next-line:prefer-for-of
+                for (let i = 0; i < this.collection.length; i++) {
+                    if (this.collection[i].id === id) {
+                        this.collection[i].status = 'Đã thanh toán';
+                    }
+                }
+                this.showDetails = true;
+                this._success = 'Thanh toán thành công!';
+            });
+        }
     }
 }
 

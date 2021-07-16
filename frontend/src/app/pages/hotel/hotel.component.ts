@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HotelService } from 'src/app/_services/hotel.service';
-import { LoggerService } from 'src/app/_services/logger.service';
-import { Path } from '../../_models/path.enum';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {HotelService} from 'src/app/_services/hotel.service';
+import {LoggerService} from 'src/app/_services/logger.service';
 
 @Component({
     selector: 'app-hotel',
@@ -11,26 +10,27 @@ import { Path } from '../../_models/path.enum';
 })
 export class HotelComponent implements OnInit {
     collection: Array<any> = [];
-    _page: number = 1;
-    _itemsPage: number = 6;
-    _errorCheckRoom: any;
+    page = 1;
+    itemsPage = 4;
+    errorCheckRoom: any;
     cityName: any;
-    _checkInDate:any;
-    _checkOutDate:any;
+    checkInDate: any;
+    checkOutDate: any;
 
     constructor(
         private hotelService: HotelService,
         private router: Router,
         private route: ActivatedRoute,
         private logger: LoggerService
-    ) { }
+    ) {
+    }
 
     ngOnInit(): void {
         this.route.queryParamMap
             .subscribe((params) => {
                 this.cityName = params.get('cityName');
-                this._checkInDate = params.get('checkInDate');
-                this._checkOutDate = params.get('checkOutDate');
+                this.checkInDate = params.get('checkInDate');
+                this.checkOutDate = params.get('checkOutDate');
 
                 this.logger.loggerData(params.get('cityName'));
                 this.logger.loggerData(params.get('checkInDate'));
@@ -40,24 +40,24 @@ export class HotelComponent implements OnInit {
         if (this.cityName) {
             this.hotelService.getHotelbyCity(this.cityName).subscribe((result) => {
                 if (result.length === 0) {
-                    this._errorCheckRoom = "Thành phố " + this.cityName + " hiện tại chưa có khách sạn nào!";
+                    this.errorCheckRoom = 'Thành phố ' + this.cityName + ' hiện tại chưa có khách sạn nào!';
                 } else {
-                    this.collection = result
+                    this.collection = result;
                 }
             });
         } else {
             this.hotelService.getHotelAll().subscribe((result) => {
-                this.collection = result
+                this.collection = result;
             });
         }
     }
 
-    redirectRoom(hotelName){
+    redirectRoom(hotelName): void {
         this.router.navigate(['/room'], {
             queryParams: {
-                hotelName: hotelName, 
-                checkInDate: this._checkInDate,
-                checkOutDate: this._checkOutDate 
+                hotelName,
+                checkInDate: this.checkInDate,
+                checkOutDate: this.checkOutDate
             }
         });
     }

@@ -458,7 +458,7 @@ input.input-upload {
     margin: 10px auto;
     text-decoration: none;
     font-weight: 100;
-    background: linear-gradient( 90deg, #3a9bed 0%, #235ecf 100%);
+    background: linear-gradient(90deg, #3a9bed 0%, #235ecf 100%);
     color: #ffffff;
     width: 100%;
     line-height: 25px;
@@ -511,7 +511,7 @@ input.input-upload {
     padding: .5rem .75rem !important;
     margin-left: -2px;
     line-height: 1.25;
-    border: 1px solid #dee2e6!important;
+    border: 1px solid #dee2e6 !important;
 }
 
 ul.ngx-pagination .disabled:first-child {
@@ -546,6 +546,7 @@ ul.ngx-pagination .pagination-next.disabled::after {
 
 .status-active,
 .status-inactive,
+.status-thanhtoan,
 .status-locked {
     color: white;
     padding: 8px 1px;
@@ -564,6 +565,10 @@ ul.ngx-pagination .pagination-next.disabled::after {
 
 .status-locked {
     background-color: #696969;
+}
+
+.status-thanhtoan {
+    background-color: #7fff00;
 }
 
 .user-panel img {
@@ -619,6 +624,7 @@ ul.ngx-pagination .pagination-next.disabled::after {
     .nav-bottom ul.navbar-nav li {
         margin-right: 3rem !important;
     }
+
     .owl-carousel .owl-item img {
         height: 182px;
     }
@@ -631,6 +637,7 @@ ul.ngx-pagination .pagination-next.disabled::after {
         position: absolute;
         bottom: 0;
     }
+
     .error-upload {
         position: relative;
         top: 0px;
@@ -638,10 +645,12 @@ ul.ngx-pagination .pagination-next.disabled::after {
         color: red;
         margin: 10px 0px;
     }
+
     .img-details {
         height: 9rem;
         width: 14rem;
     }
+
     .owl-carousel .owl-item img {
         height: 231.672px;
     }
@@ -651,12 +660,15 @@ ul.ngx-pagination .pagination-next.disabled::after {
     .my-search {
         padding: 30px 40px !important;
     }
+
     .content-1 {
         height: 350px;
     }
+
     h2.text-search {
         font-size: 20px;
     }
+
     .img-fluid {
         width: 47% !important;
     }
@@ -666,19 +678,24 @@ ul.ngx-pagination .pagination-next.disabled::after {
     .my-search {
         padding: 16px 15px !important;
     }
+
     .logo {
         margin: auto;
         font-size: 20px !important;
     }
+
     .login-register {
         margin-right: 0%;
     }
+
     .img-hotel {
         height: 200px;
     }
+
     .btn-edit {
         padding-bottom: 10px;
     }
+
     .avatar-default {
         background-color: rgba(0, 0, 0, 0.768);
         border-radius: 50%;
@@ -687,19 +704,23 @@ ul.ngx-pagination .pagination-next.disabled::after {
         margin: auto;
         margin-bottom: 15px;
     }
+
     .avatar-default i {
         top: 3px;
         left: 103px;
         font-size: 60px;
     }
+
     .avatar-upload {
         width: 100px;
         height: 100px;
         margin-bottom: 15px;
     }
+
     .avatar {
         margin: auto;
     }
+
     .img-details {
         height: 12rem;
         width: 100%;

@@ -37,6 +37,8 @@
                                         <div class="status-locked" *ngIf="item.status=='Đã hủy'">Đã hủy</div>
                                         <div class="status-inactive" *ngIf="item.status=='Đã nhận'">Đã nhận</div>
                                         <div class="status-active" *ngIf="item.status=='Đã đặt'">Đã đặt</div>
+                                        <div class="status-thanhtoan" *ngIf="item.status=='Đã thanh toán'">Hoàn thành
+                                        </div>
                                     </td>
                                     <td>
                                         <button (click)="showDeltailsBooking(item.id)"

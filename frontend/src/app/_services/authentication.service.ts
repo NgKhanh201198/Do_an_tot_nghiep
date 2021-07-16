@@ -6,7 +6,6 @@ import {catchError, map} from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
 import {User} from '../_models/user';
 
-
 const API_LOGIN = `${environment.baseUrlServer}` + 'api/auth/login';
 const API_REGISTER = `${environment.baseUrlServer}` + 'api/auth/register';
 const TOKEN_KEY = 'TOKEN';
@@ -62,6 +61,7 @@ export class AuthenticationService {
                     this.storeToken(user.token);
                     this.storeUser(user);
                     this.currentUserSubject.next(user);
+                     // truyền user vào currentUserSubject
                     return user;
                 }),
                 catchError((error) => {

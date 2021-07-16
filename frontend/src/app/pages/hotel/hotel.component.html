@@ -9,11 +9,11 @@
                 <div class="py-3">
                     <h2 class="">Các khách sạn tìm thấy {{(cityName)?'tại '+cityName:''}}</h2>
                 </div>
-                <div *ngIf="_errorCheckRoom" class="alert alert-warning text-center elevation-2" role="alert">
-                    {{_errorCheckRoom}}
+                <div *ngIf="errorCheckRoom" class="alert alert-warning text-center elevation-2" role="alert">
+                    {{errorCheckRoom}}
                 </div>
                 <div class="row">
-                    <div class="col-md-6" *ngFor="let item of collection | paginate: { itemsPerPage: _itemsPage, currentPage: _page}">
+                    <div class="col-md-6" *ngFor="let item of collection | paginate: { itemsPerPage: itemsPage, currentPage: page}">
                         <div class="card p-3">
                             <div class="row">
                                 <div class="col-sm-4">
@@ -37,8 +37,8 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!_errorCheckRoom">
-                    <pagination-controls class="text-center" (pageChange)="_page = $event" maxSize="5"></pagination-controls>
+                <div *ngIf="!errorCheckRoom">
+                    <pagination-controls class="text-center" (pageChange)="page = $event" maxSize="5"></pagination-controls>
                 </div>
             </div>
         </div>
