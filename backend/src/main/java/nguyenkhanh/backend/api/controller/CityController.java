@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import nguyenkhanh.backend.services.ICityService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,7 @@ public class CityController {
 	private String BASE_URL;
 
 	@Autowired
-	CityServiceImpl cityServiceImpl;
+	ICityService cityServiceImpl;
 
 	@Autowired
 	UploadFileService uploadFileService;

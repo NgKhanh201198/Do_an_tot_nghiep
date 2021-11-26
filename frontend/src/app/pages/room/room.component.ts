@@ -27,6 +27,12 @@ export class RoomComponent implements OnInit {
     _success: String = '';
     _error: String = '';
 
+    // Check box
+    listRooms: any = [];
+    listId: any = [];
+    numberOfPeople = 0;
+    color: ThemePalette = 'primary';
+    allComplete = false;
 
     // hotel
     idHotel: any;
@@ -68,6 +74,7 @@ export class RoomComponent implements OnInit {
                     this.address = result.address;
                     this.description = result.description;
 
+                    // tslint:disable-next-line:no-shadowed-variable
                     this.roomService.getRoomByHotel(result.hotelName).subscribe((result) => {
                         if (result.length === 0) {
                             this._errorCheckRoom = ' Khách sạn ' + this.hotelName + ' hiện tại chưa có phòng!';
@@ -82,6 +89,7 @@ export class RoomComponent implements OnInit {
     }
 
     // Invalid error message
+    // tslint:disable-next-line:typedef
     get formValid() {
         return this.formData.controls;
     }
@@ -106,13 +114,6 @@ export class RoomComponent implements OnInit {
         this._minCheckOutDate = date;
         this.formData.get('checkOutDate').setValue(moment(date).utc().format());
     }
-
-    // Check box
-    listRooms: any = [];
-    listId: any = [];
-    numberOfPeople = 0;
-    color: ThemePalette = 'primary';
-    allComplete: boolean = false;
 
     // Kiểm tra id nào đã được checked
     isCheckSelectedId(): void {
@@ -153,24 +154,30 @@ export class RoomComponent implements OnInit {
         this.formData.get('checkInDate').setValue(moment(this.formData.value.checkInDate).utc().format());
         this.formData.get('checkOutDate').setValue(moment(this.formData.value.checkOutDate).utc().format());
 
-        this.roomService.checkRoomEmpty(
-            this.hotelName,
-            this.formData.value.checkInDate,
-            this.formData.value.checkOutDate
-        ).subscribe({
-            next: (result) => {
-                // this.loggerService.logger(result);
-                if (result.length === 0) {
-                    this._errorCheckRoom = ' Khách sạn ' + this.hotelName + ' hết phòng trong thời gian này!';
-                } else {
-                    this._status = false;
-                    this.listRoom = result;
+        this.loggerService.logger(this.formData.value);
+        this.loggerService.logger(this.formData.value.checkInDate);
+        this.loggerService.logger(this.formData.value.checkOutDate);
+
+        if (this.formData.value.checkInDate !== 'Invalid date' || this.formData.value.checkOutDate !== 'Invalid date') {
+            this.roomService.checkRoomEmpty(
+                this.hotelName,
+                this.formData.value.checkInDate,
+                this.formData.value.checkOutDate
+            ).subscribe({
+                next: (result) => {
+                    // this.loggerService.logger(result);
+                    if (result.length === 0) {
+                        this._errorCheckRoom = 'Khách sạn ' + this.hotelName + ' hết phòng trong thời gian này!';
+                    } else {
+                        this._status = false;
+                        this.listRoom = result;
+                    }
+                },
+                error: (error) => {
+                    this.loggerService.loggerError(error);
                 }
-            },
-            error: (error) => {
-                this.loggerService.loggerError(error);
-            }
-        });
+            });
+        }
     }
 
     bookingRoom(): void {

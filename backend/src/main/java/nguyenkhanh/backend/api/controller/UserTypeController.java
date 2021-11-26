@@ -2,6 +2,7 @@ package nguyenkhanh.backend.api.controller;
 
 import java.util.List;
 
+import nguyenkhanh.backend.services.IUserTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,11 @@ import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
 public class UserTypeController {
 
 	@Autowired
-	UserTypeServiceImpl userTypeServiceImpl;
+	IUserTypeService userTypeServiceImpl;
 	
 	@GetMapping("/userType")
 	public ResponseEntity<?> listUser() {
 		List<UserTypeEntity> userTypeEntity = userTypeServiceImpl.getUserTypeAll();
-		return new ResponseEntity<List<UserTypeEntity>>(userTypeEntity, HttpStatus.OK);
+		return new ResponseEntity<>(userTypeEntity, HttpStatus.OK);
 	}
 }

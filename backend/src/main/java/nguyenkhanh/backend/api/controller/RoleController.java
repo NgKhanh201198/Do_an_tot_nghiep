@@ -2,6 +2,7 @@ package nguyenkhanh.backend.api.controller;
 
 import java.util.List;
 
+import nguyenkhanh.backend.services.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import nguyenkhanh.backend.services.impl.RoleServiceImpl;
 @RequestMapping("/api")
 public class RoleController {
 	@Autowired
-	RoleServiceImpl roleServiceImpl ;
+	IRoleService roleServiceImpl ;
 	
 	@GetMapping("/role")
 	public ResponseEntity<?> listUser() {

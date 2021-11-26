@@ -59,6 +59,11 @@ public class BookingRoomServiceImpl implements IBookingRoomService {
 	}
 
 	@Override
+	public String Hello() {
+		return "TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT";
+	}
+
+	@Override
 	public long countByStatus(String status) {
 		return bookingRoomRepository.countByStatus(status);
 	}

@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import nguyenkhanh.backend.services.IHotelService;
+import nguyenkhanh.backend.services.IRoomService;
+import nguyenkhanh.backend.services.IRoomTypeService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,13 +46,13 @@ public class RoomController {
     private String BASE_URL;
 
     @Autowired
-    RoomServiceImpl roomServiceImpl;
+    IRoomService roomServiceImpl;
 
     @Autowired
-    RoomTypeServiceImpl roomTypeServiceImpl;
+    IRoomTypeService roomTypeServiceImpl;
 
     @Autowired
-    HotelServiceImpl hotelServiceImpl;
+    IHotelService hotelServiceImpl;
 
     @Autowired
     UploadFileService uploadFileService;

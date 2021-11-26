@@ -10,6 +10,4 @@ import nguyenkhanh.backend.entity.RoleEntity;
 @Repository
 public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 	Optional<RoleEntity> findByKeyName(String keyName);
-
-//	RoleEntity findById(long id);
 }

@@ -28,4 +28,7 @@ public interface IBookingRoomService {
 
 	// Check
 	public boolean isBookingRoomExitsById(long id);
+	
+	// Test
+	public String Hello();
 }

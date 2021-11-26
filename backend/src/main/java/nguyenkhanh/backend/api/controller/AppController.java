@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import nguyenkhanh.backend.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,19 +36,19 @@ import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
 @RequestMapping("/api")
 public class AppController {
     @Autowired
-    UserServiceImpl userServiceImpl;
+    IUserService userService;
 
     @Autowired
-    HotelServiceImpl hotelServiceImpl;
+    IHotelService hotelService;
 
     @Autowired
-    BookingRoomServiceImpl bookingRoomServiceImpl;
+    IBookingRoomService bookingRoomService;
 
     @Autowired
-    RoomServiceImpl roomServiceImpl;
+    IRoomService roomService;
 
     @Autowired
-    UserTypeServiceImpl userTypeServiceImpl;
+    IUserTypeService userTypeService;
 
     @PostMapping("/checkRoomEmpty")
     public ResponseEntity<?> checkRoomEmpty(@RequestBody @Valid CheckRoomEmptyDTO roomEmptyDTO) {
@@ -57,7 +58,7 @@ public class AppController {
         Date checkInDate = common.stringToDate(roomEmptyDTO.getCheckInDate());
         Date checkOutDate = common.stringToDate(roomEmptyDTO.getCheckOutDate());
 
-        List<BookingRoomEntity> listBookingrate = bookingRoomServiceImpl.getBookingRoomAll();
+        List<BookingRoomEntity> listBookingrate = bookingRoomService.getBookingRoomAll();
         listBookingrate.forEach(item -> {
             if (item.getStatus().equals("Đã đặt") && (checkInDate.before(item.getCheckOutDate()) || item.getCheckInDate().after(checkOutDate))) {
                 item.getRooms().forEach(room -> {
@@ -68,10 +69,10 @@ public class AppController {
             }
         });
 
-        HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(roomEmptyDTO.getHotel()).orElseThrow(
+        HotelEntity hotelEntity = hotelService.findByHotelName(roomEmptyDTO.getHotel()).orElseThrow(
                 () -> new UsernameNotFoundException("Không tìm thấy khách sạn: " + roomEmptyDTO.getHotel()));
 
-        List<RoomEntity> listRoomEtity = roomServiceImpl.getRoomByHotel(hotelEntity);
+        List<RoomEntity> listRoomEtity = roomService.getRoomByHotel(hotelEntity);
 
         for (int i = 0; i < listRoomEtity.size(); i++) {
             if (listRoomNameBookingrate.contains(listRoomEtity.get(i).getRoomNumber())) {
@@ -79,19 +80,18 @@ public class AppController {
                 i--;
             }
         }
-
         return new ResponseEntity<>(listRoomEtity, HttpStatus.OK);
     }
 
 
     @GetMapping("/count")
     public ResponseEntity<CountDTO> countCustomer() {
-        UserTypeEntity userTypeEntity = userTypeServiceImpl.findByKeyName("customer")
+        UserTypeEntity userTypeEntity = userTypeService.findByKeyName("customer")
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy loại người dùng!"));
-        long customer = userServiceImpl.countByUserType(userTypeEntity);
-        long order = bookingRoomServiceImpl.countByStatus("Đã đặt");
-        long hotel = hotelServiceImpl.countHotelAll();
-        long room = roomServiceImpl.countRoomAll();
+        long customer = userService.countByUserType(userTypeEntity);
+        long order = bookingRoomService.countByStatus("Đã đặt");
+        long hotel = hotelService.countHotelAll();
+        long room = roomService.countRoomAll();
 
         CountDTO countDTO = new CountDTO();
         countDTO.setCustomer(customer);

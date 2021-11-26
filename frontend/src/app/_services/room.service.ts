@@ -28,7 +28,6 @@ export class RoomService {
     }
 
     public checkRoomEmpty(hotel: any, checkInDate: any, checkOutDate: any): Observable<any> {
-        this.logger.loggerData('đã đến đây');
         const body = {
             hotel: hotel,
             checkInDate: checkInDate,

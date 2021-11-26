@@ -28,7 +28,7 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
 	public Boolean existsByHotel(HotelEntity hotelEntity);
 
 	@Transactional
-	@Query("SELECT roomNumber FROM RoomEntity r " + " WHERE r.hotel = ?1")
+	@Query("SELECT r.roomNumber FROM RoomEntity r " + " WHERE r.hotel = ?1")
 	public List<String> getListRoomNumber(HotelEntity hotelEntity);
 
 	@Transactional

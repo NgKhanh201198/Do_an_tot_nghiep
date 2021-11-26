@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import nguyenkhanh.backend.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,6 @@ import nguyenkhanh.backend.request.LoginRequest;
 import nguyenkhanh.backend.request.RegisterRequest;
 import nguyenkhanh.backend.response.JwtResponse;
 import nguyenkhanh.backend.response.MessageResponse;
-import nguyenkhanh.backend.services.UserDetailsImpl;
 import nguyenkhanh.backend.services.impl.RegisterLogServiceImpl;
 import nguyenkhanh.backend.services.impl.RoleServiceImpl;
 import nguyenkhanh.backend.services.impl.UserServiceImpl;
@@ -56,16 +56,16 @@ import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
 @RequestMapping("/api")
 public class AuthenticationController {
     @Autowired
-    UserServiceImpl userServiceImpl;
+    IUserService userServiceImpl;
 
     @Autowired
-    UserTypeServiceImpl userTypeServiceImpl;
+    IUserTypeService userTypeServiceImpl;
 
     @Autowired
-    RegisterLogServiceImpl registerLogServiceImpl;
+    IRegisterLogService registerLogServiceImpl;
 
     @Autowired
-    RoleServiceImpl roleServiceImpl;
+    IRoleService roleServiceImpl;
 
     @Autowired
     PasswordEncoder passwordEncoder;

@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import nguyenkhanh.backend.services.ICityService;
+import nguyenkhanh.backend.services.IHotelService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,10 +46,10 @@ public class HotelController {
 	UploadFileService uploadFileService;
 
 	@Autowired
-	HotelServiceImpl hotelServiceImpl;
+	IHotelService hotelServiceImpl;
 
 	@Autowired
-	CityServiceImpl cityServiceImpl;
+	ICityService cityServiceImpl;
 
 	@PostMapping("/hotel")
 //	@PreAuthorize("hasRole('create_hotel')")

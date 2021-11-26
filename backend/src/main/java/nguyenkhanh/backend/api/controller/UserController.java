@@ -11,6 +11,9 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import nguyenkhanh.backend.services.IRoleService;
+import nguyenkhanh.backend.services.IUserService;
+import nguyenkhanh.backend.services.IUserTypeService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,13 +61,13 @@ public class UserController {
     private String BASE_URL;
 
     @Autowired
-    UserServiceImpl userServiceImpl;
+    IUserService userServiceImpl;
 
     @Autowired
-    RoleServiceImpl roleServiceImpl;
+    IRoleService roleServiceImpl;
 
     @Autowired
-    UserTypeServiceImpl userTypeServiceImpl;
+    IUserTypeService userTypeServiceImpl;
 
     @Autowired
     UploadFileService uploadFileService;

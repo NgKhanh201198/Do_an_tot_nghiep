@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class Common {
+public class Common{
 	public Date stringToDate(String strDate) {
 		Date date = null;
 		if (isDateValid(strDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")) {

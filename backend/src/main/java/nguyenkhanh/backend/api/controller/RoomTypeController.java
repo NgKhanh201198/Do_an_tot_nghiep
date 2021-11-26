@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import nguyenkhanh.backend.services.IRoomTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ import nguyenkhanh.backend.services.impl.RoomTypeServiceImpl;
 @RequestMapping("/api")
 public class RoomTypeController {
 	@Autowired
-	RoomTypeServiceImpl roomTypeServiceImpl;
+	IRoomTypeService roomTypeServiceImpl;
 
 	@PostMapping("/roomtype")
 	//	@PreAuthorize("hasRole('create_roomtype')")

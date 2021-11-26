@@ -7,6 +7,10 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import nguyenkhanh.backend.services.IBookingRoomService;
+import nguyenkhanh.backend.services.IHotelService;
+import nguyenkhanh.backend.services.IRoomService;
+import nguyenkhanh.backend.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,183 +42,191 @@ import nguyenkhanh.backend.services.impl.UserServiceImpl;
 @RestController
 @RequestMapping("/api")
 public class BookingRoomController {
-	@Autowired
-	BookingRoomServiceImpl bookingRoomServiceImpl;
+    @Autowired
+    BookingRoomServiceImpl bookingRoomServiceImpl;
 
-	@Autowired
-	UserServiceImpl userServiceImpl;
+    @Autowired
+    IUserService userServiceImpl;
 
-	@Autowired
-	RoomServiceImpl roomServiceImpl;
+    @Autowired
+    IRoomService roomServiceImpl;
 
-	@Autowired
-	HotelServiceImpl hotelServiceImpl;
+    @Autowired
+    IHotelService hotelServiceImpl;
 
-	@PostMapping("/bookingRoom")
-	//	@PreAuthorize("hasRole('create_bookingroom')")
-	public ResponseEntity<?> createBookingRoom(@RequestBody @Valid BookingRoomDTO bookingRoomDTO) {
-		try {
-			BookingRoomEntity bookingRoomEntity = new BookingRoomEntity();
+    @Autowired
+    IBookingRoomService BookingRoomService;
 
-			UserEntity userEntity = userServiceImpl.findByUsername(bookingRoomDTO.getUser())
-					.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng này!"));
+    @GetMapping("test")
+    public String Hello() {
+        return BookingRoomService.Hello();
+    }
 
-			// Set Rooms
-			Set<String> strRoom = bookingRoomDTO.getRooms();
-			Set<RoomEntity> setRoomEntity = new HashSet<RoomEntity>();
+    @PostMapping("/bookingRoom")
+    //	@PreAuthorize("hasRole('create_bookingroom')")
+    public ResponseEntity<?> createBookingRoom(@RequestBody @Valid BookingRoomDTO bookingRoomDTO) {
+        try {
+            BookingRoomEntity bookingRoomEntity = new BookingRoomEntity();
 
-			HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(bookingRoomDTO.getHotel())
-					.orElseThrow(() -> new UsernameNotFoundException(
-							"Không tìm thấy khách sạn" + bookingRoomDTO.getHotel() + " này!"));
+            UserEntity userEntity = userServiceImpl.findByUsername(bookingRoomDTO.getUser())
+                    .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng này!"));
 
-			if (strRoom == null) {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-						.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-								HttpStatus.BAD_REQUEST.name(), "Phòng đặt không được để trống"));
-			} else {
-				strRoom.forEach(room -> {
-					RoomEntity roomEntity = roomServiceImpl.findByRoomNumberAndHotel(room, hotelEntity)
-							.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy " + room + " này!"));
+            // Set Rooms
+            Set<String> strRoom = bookingRoomDTO.getRooms();
+            Set<RoomEntity> setRoomEntity = new HashSet<RoomEntity>();
 
-					setRoomEntity.add(roomEntity);
-				});
-			}
+            HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(bookingRoomDTO.getHotel())
+                    .orElseThrow(() -> new UsernameNotFoundException(
+                            "Không tìm thấy khách sạn" + bookingRoomDTO.getHotel() + " này!"));
 
-			// Set CheckInDate
-			String strCheckInDate = bookingRoomDTO.getCheckInDate();
-			Common controller1 = new Common();
-			Date checkInDate = controller1.stringToDate(strCheckInDate);
-			bookingRoomEntity.setCheckInDate(checkInDate);
+            if (strRoom == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+                                HttpStatus.BAD_REQUEST.name(), "Phòng đặt không được để trống"));
+            } else {
+                strRoom.forEach(room -> {
+                    RoomEntity roomEntity = roomServiceImpl.findByRoomNumberAndHotel(room, hotelEntity)
+                            .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy " + room + " này!"));
 
-			// Set CheckOutDate
-			String strCheckOutDate = bookingRoomDTO.getCheckOutDate();
-			Common controller2 = new Common();
-			Date checkOutDate = controller2.stringToDate(strCheckOutDate);
-			bookingRoomEntity.setCheckOutDate(checkOutDate);
+                    setRoomEntity.add(roomEntity);
+                });
+            }
 
-			bookingRoomEntity.setTotalNumberOfPeople(bookingRoomDTO.getTotalNumberOfPeople());
-			bookingRoomEntity.setStatus("Đã đặt");
-			bookingRoomEntity.setUser(userEntity);
-			bookingRoomEntity.setRooms(setRoomEntity);
+            // Set CheckInDate
+            String strCheckInDate = bookingRoomDTO.getCheckInDate();
+            Common controller1 = new Common();
+            Date checkInDate = controller1.stringToDate(strCheckInDate);
+            bookingRoomEntity.setCheckInDate(checkInDate);
 
-			bookingRoomServiceImpl.createBookingRoom(bookingRoomEntity);
+            // Set CheckOutDate
+            String strCheckOutDate = bookingRoomDTO.getCheckOutDate();
+            Common controller2 = new Common();
+            Date checkOutDate = controller2.stringToDate(strCheckOutDate);
+            bookingRoomEntity.setCheckOutDate(checkOutDate);
 
-			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm đơn thành công!"));
+            bookingRoomEntity.setTotalNumberOfPeople(bookingRoomDTO.getTotalNumberOfPeople());
+            bookingRoomEntity.setStatus("Đã đặt");
+            bookingRoomEntity.setUser(userEntity);
+            bookingRoomEntity.setRooms(setRoomEntity);
 
-		} catch (BadRequestException ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
-					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
-		}
+            bookingRoomServiceImpl.createBookingRoom(bookingRoomEntity);
 
-	}
+            return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thêm đơn thành công!"));
 
-	@GetMapping("/bookingRoom")
-	//	@PreAuthorize("hasRole('list_bookingroom')")
-	public ResponseEntity<?> getBookingRoomAll() {
-		List<BookingRoomEntity> listBookingRoom = bookingRoomServiceImpl.getBookingRoomAll();
-		return new ResponseEntity<List<BookingRoomEntity>>(listBookingRoom, HttpStatus.OK);
-	}
+        } catch (BadRequestException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+                    HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
+        }
 
-	@GetMapping("/bookingRoom/{id}")
-	public ResponseEntity<?> getBookingRoomById(@PathVariable("id") long id) {
-		if (bookingRoomServiceImpl.isBookingRoomExitsById(id)) {
-			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
-					HttpStatus.NOT_FOUND.name(), "Không tìm thấy đơn đặt phòng có id= " + id);
-			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-		} else {
-			BookingRoomEntity listBookingRoom = bookingRoomServiceImpl.getBookingRoomById(id);
-			return new ResponseEntity<BookingRoomEntity>(listBookingRoom, HttpStatus.OK);
-		}
-	}
+    }
 
-	@GetMapping("/bookingRoom/user")
-	public ResponseEntity<?> getBookingRoomByUser(@RequestParam("name") String fullName) {
-		UserEntity userEntity = userServiceImpl.findUserByFullName(fullName)
-				.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng: " + fullName + " này!"));
-		List<BookingRoomEntity> listBookingRoom = bookingRoomServiceImpl.getBookingRoomByUser(userEntity);
-		return new ResponseEntity<List<BookingRoomEntity>>(listBookingRoom, HttpStatus.OK);
-	}
+    @GetMapping("/bookingRoom")
+    //	@PreAuthorize("hasRole('list_bookingroom')")
+    public ResponseEntity<?> getBookingRoomAll() {
+        List<BookingRoomEntity> listBookingRoom = bookingRoomServiceImpl.getBookingRoomAll();
+        return new ResponseEntity<List<BookingRoomEntity>>(listBookingRoom, HttpStatus.OK);
+    }
 
-	@PutMapping("/bookingRoom/updateStatus")
-	public ResponseEntity<?> updateStatus(@RequestParam("id") long id, @RequestParam("status") String status) {
-		bookingRoomServiceImpl.updateStatusByID(id, status);
-		return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thành công!"));
-	}
+    @GetMapping("/bookingRoom/{id}")
+    public ResponseEntity<?> getBookingRoomById(@PathVariable("id") long id) {
+        if (bookingRoomServiceImpl.isBookingRoomExitsById(id)) {
+            MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+                    HttpStatus.NOT_FOUND.name(), "Không tìm thấy đơn đặt phòng có id= " + id);
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else {
+            BookingRoomEntity listBookingRoom = bookingRoomServiceImpl.getBookingRoomById(id);
+            return new ResponseEntity<BookingRoomEntity>(listBookingRoom, HttpStatus.OK);
+        }
+    }
 
-	@PutMapping("/bookingRoom/{id}")
-	//	@PreAuthorize("hasRole('update_bookingroom')")
-	public ResponseEntity<?> updateBookingRoom(@PathVariable("id") long id,
-			@RequestBody @Valid BookingRoomDTO bookingRoomDTO) {
-		try {
-			if (bookingRoomServiceImpl.isBookingRoomExitsById(id)) {
-				MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
-						HttpStatus.NOT_FOUND.name(), "Không tìm thấy đơn đặt phòng có id= " + id);
-				return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-			} else {
-				BookingRoomEntity oldBookingRoomEntity = bookingRoomServiceImpl.getBookingRoomById(id);
+    @GetMapping("/bookingRoom/user")
+    public ResponseEntity<?> getBookingRoomByUser(@RequestParam("name") String fullName) {
+        UserEntity userEntity = userServiceImpl.findUserByFullName(fullName)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng: " + fullName + " này!"));
+        List<BookingRoomEntity> listBookingRoom = bookingRoomServiceImpl.getBookingRoomByUser(userEntity);
+        return new ResponseEntity<List<BookingRoomEntity>>(listBookingRoom, HttpStatus.OK);
+    }
 
-				UserEntity userEntity = userServiceImpl.findByUsername(bookingRoomDTO.getUser())
-						.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng này!"));
+    @PutMapping("/bookingRoom/updateStatus")
+    public ResponseEntity<?> updateStatus(@RequestParam("id") long id, @RequestParam("status") String status) {
+        bookingRoomServiceImpl.updateStatusByID(id, status);
+        return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Thành công!"));
+    }
 
-				// Set Rooms
-				Set<String> strRoom = bookingRoomDTO.getRooms();
-				Set<RoomEntity> setRoomEntity = new HashSet<RoomEntity>();
+    @PutMapping("/bookingRoom/{id}")
+    //	@PreAuthorize("hasRole('update_bookingroom')")
+    public ResponseEntity<?> updateBookingRoom(@PathVariable("id") long id,
+                                               @RequestBody @Valid BookingRoomDTO bookingRoomDTO) {
+        try {
+            if (bookingRoomServiceImpl.isBookingRoomExitsById(id)) {
+                MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.name(), "Không tìm thấy đơn đặt phòng có id= " + id);
+                return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+            } else {
+                BookingRoomEntity oldBookingRoomEntity = bookingRoomServiceImpl.getBookingRoomById(id);
 
-				HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(bookingRoomDTO.getHotel())
-						.orElseThrow(() -> new UsernameNotFoundException(
-								"Không tìm thấy khách sạn" + bookingRoomDTO.getHotel() + " này!"));
+                UserEntity userEntity = userServiceImpl.findByUsername(bookingRoomDTO.getUser())
+                        .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng này!"));
 
-				if (strRoom == null) {
-					return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-							.body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
-									HttpStatus.BAD_REQUEST.name(), "Phòng đặt không được để trống"));
-				} else {
-					strRoom.forEach(room -> {
-						RoomEntity roomEntity = roomServiceImpl.findByRoomNumberAndHotel(room, hotelEntity)
-								.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy" + room + " này!"));
+                // Set Rooms
+                Set<String> strRoom = bookingRoomDTO.getRooms();
+                Set<RoomEntity> setRoomEntity = new HashSet<RoomEntity>();
 
-						setRoomEntity.add(roomEntity);
-					});
-				}
+                HotelEntity hotelEntity = hotelServiceImpl.findByHotelName(bookingRoomDTO.getHotel())
+                        .orElseThrow(() -> new UsernameNotFoundException(
+                                "Không tìm thấy khách sạn" + bookingRoomDTO.getHotel() + " này!"));
 
-				// Set CheckInDate
-				String strCheckInDate = bookingRoomDTO.getCheckInDate();
-				Common controller1 = new Common();
-				Date checkInDate = controller1.stringToDate(strCheckInDate);
-				oldBookingRoomEntity.setCheckInDate(checkInDate);
+                if (strRoom == null) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(new MessageResponse(new Date(), HttpStatus.BAD_REQUEST.value(),
+                                    HttpStatus.BAD_REQUEST.name(), "Phòng đặt không được để trống"));
+                } else {
+                    strRoom.forEach(room -> {
+                        RoomEntity roomEntity = roomServiceImpl.findByRoomNumberAndHotel(room, hotelEntity)
+                                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy" + room + " này!"));
 
-				// Set CheckOutDate
-				String strCheckOutDate = bookingRoomDTO.getCheckOutDate();
-				Common controller2 = new Common();
-				Date checkOutDate = controller2.stringToDate(strCheckOutDate);
-				oldBookingRoomEntity.setCheckOutDate(checkOutDate);
+                        setRoomEntity.add(roomEntity);
+                    });
+                }
 
-				oldBookingRoomEntity.setTotalNumberOfPeople(bookingRoomDTO.getTotalNumberOfPeople());
-				oldBookingRoomEntity.setUser(userEntity);
-				oldBookingRoomEntity.setRooms(setRoomEntity);
-				oldBookingRoomEntity.setStatus(bookingRoomDTO.getStatus());
+                // Set CheckInDate
+                String strCheckInDate = bookingRoomDTO.getCheckInDate();
+                Common controller1 = new Common();
+                Date checkInDate = controller1.stringToDate(strCheckInDate);
+                oldBookingRoomEntity.setCheckInDate(checkInDate);
 
-				bookingRoomServiceImpl.updateBookingRoom(oldBookingRoomEntity);
-				return ResponseEntity
-						.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
-			}
-		} catch (BadRequestException ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
-					HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
-		}
+                // Set CheckOutDate
+                String strCheckOutDate = bookingRoomDTO.getCheckOutDate();
+                Common controller2 = new Common();
+                Date checkOutDate = controller2.stringToDate(strCheckOutDate);
+                oldBookingRoomEntity.setCheckOutDate(checkOutDate);
 
-	}
+                oldBookingRoomEntity.setTotalNumberOfPeople(bookingRoomDTO.getTotalNumberOfPeople());
+                oldBookingRoomEntity.setUser(userEntity);
+                oldBookingRoomEntity.setRooms(setRoomEntity);
+                oldBookingRoomEntity.setStatus(bookingRoomDTO.getStatus());
 
-	@DeleteMapping("/bookingRoom/{id}")
-	//	@PreAuthorize("hasRole('delete_bookingroom')")
-	public ResponseEntity<?> deleteBookingRoom(@PathVariable("id") long id) {
-		try {
-			bookingRoomServiceImpl.deleteBookingRoomById(id);
-			return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Xóa đơn thành công!"));
-		} catch (Exception e) {
-			MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
-					"Không tìm thấy đơn đặt phòng có id= " + id);
-			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-		}
-	}
+                bookingRoomServiceImpl.updateBookingRoom(oldBookingRoomEntity);
+                return ResponseEntity
+                        .ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Cập nhật thành công!"));
+            }
+        } catch (BadRequestException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(new Date(),
+                    HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
+        }
+
+    }
+
+    @DeleteMapping("/bookingRoom/{id}")
+    //	@PreAuthorize("hasRole('delete_bookingroom')")
+    public ResponseEntity<?> deleteBookingRoom(@PathVariable("id") long id) {
+        try {
+            bookingRoomServiceImpl.deleteBookingRoomById(id);
+            return ResponseEntity.ok(new MessageResponse(new Date(), HttpStatus.OK.value(), "Xóa đơn thành công!"));
+        } catch (Exception e) {
+            MessageResponse message = new MessageResponse(new Date(), HttpStatus.NOT_FOUND.value(), "Not Found",
+                    "Không tìm thấy đơn đặt phòng có id= " + id);
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+    }
 }

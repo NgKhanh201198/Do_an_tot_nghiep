@@ -1,6 +1,6 @@
 export enum Path {
 
-    //Pages
+    // Pages
     HOME = 'home',
     ADMIN_PAGE = 'admin-page',
     LOGIN = 'log-in',
