@@ -14,7 +14,7 @@ import nguyenkhanh.backend.services.ICityService;
 @Service
 public class CityServiceImpl implements ICityService {
 	@Autowired
-	CityRepository cityRepository;
+	private CityRepository cityRepository;
 
 	@Override
 	public void createCity(CityEntity cityEntity) {

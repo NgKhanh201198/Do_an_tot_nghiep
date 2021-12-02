@@ -6,5 +6,4 @@ import nguyenkhanh.backend.services.IPostService;
 
 @Service
 public class PostServiceImpl implements IPostService {
-
 }

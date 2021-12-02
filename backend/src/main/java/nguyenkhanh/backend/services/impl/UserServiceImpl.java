@@ -24,19 +24,19 @@ import nguyenkhanh.backend.services.SendEmailService;
 @Service
 public class UserServiceImpl implements IUserService {
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	TemplateRepository templateRepository;
+	private TemplateRepository templateRepository;
 
 	@Autowired
-	RegisterLogServiceImpl registerLogServiceImpl;
+	private RegisterLogServiceImpl registerLogServiceImpl;
 
 	@Autowired
-	SendEmailService sendEmailService;
+	private SendEmailService sendEmailService;
 
 	@Autowired
-	UserConverter userConverter;
+	private UserConverter userConverter;
 
 	@Value("${dateExpiedSeconds}")
 	private long DATE_EXPIED;

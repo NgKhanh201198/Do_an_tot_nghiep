@@ -61,25 +61,25 @@ public class UserController {
     private String BASE_URL;
 
     @Autowired
-    IUserService userServiceImpl;
+    private IUserService userServiceImpl;
 
     @Autowired
-    IRoleService roleServiceImpl;
+    private IRoleService roleServiceImpl;
 
     @Autowired
-    IUserTypeService userTypeServiceImpl;
+    private IUserTypeService userTypeServiceImpl;
 
     @Autowired
-    UploadFileService uploadFileService;
+    private UploadFileService uploadFileService;
 
     @Autowired
-    JwtTokenUtils jwtTokenUtils;
+    private JwtTokenUtils jwtTokenUtils;
 
     @Autowired
-    RegisterLogServiceImpl registerLogServiceImpl;
+    private RegisterLogServiceImpl registerLogServiceImpl;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/account")
     public ResponseEntity<?> createAccount(@RequestBody @Valid UserDTO userDTO) {
@@ -151,6 +151,7 @@ public class UserController {
     }
 
     @GetMapping("/employee")
+    @PreAuthorize("hasRole('create_roomtype')")
     public ResponseEntity<?> listUser() {
         List<UserEntity> employee = new ArrayList<>();
         List<UserEntity> userEntity = userServiceImpl.getUserAll();

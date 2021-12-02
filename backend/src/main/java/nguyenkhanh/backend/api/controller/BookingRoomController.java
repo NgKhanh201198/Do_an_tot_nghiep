@@ -43,19 +43,19 @@ import nguyenkhanh.backend.services.impl.UserServiceImpl;
 @RequestMapping("/api")
 public class BookingRoomController {
     @Autowired
-    BookingRoomServiceImpl bookingRoomServiceImpl;
+    private BookingRoomServiceImpl bookingRoomServiceImpl;
 
     @Autowired
-    IUserService userServiceImpl;
+    private IUserService userServiceImpl;
 
     @Autowired
-    IRoomService roomServiceImpl;
+    private IRoomService roomServiceImpl;
 
     @Autowired
-    IHotelService hotelServiceImpl;
+    private IHotelService hotelServiceImpl;
 
     @Autowired
-    IBookingRoomService BookingRoomService;
+    private IBookingRoomService BookingRoomService;
 
     @GetMapping("test")
     public String Hello() {

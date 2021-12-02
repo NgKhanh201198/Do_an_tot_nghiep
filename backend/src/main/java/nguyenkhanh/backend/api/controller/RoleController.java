@@ -19,7 +19,7 @@ import nguyenkhanh.backend.services.impl.RoleServiceImpl;
 @RequestMapping("/api")
 public class RoleController {
 	@Autowired
-	IRoleService roleServiceImpl ;
+	private IRoleService roleServiceImpl ;
 	
 	@GetMapping("/role")
 	public ResponseEntity<?> listUser() {

@@ -1,6 +1,5 @@
 package nguyenkhanh.backend.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,11 +24,16 @@ import nguyenkhanh.backend.services.UserDetailsServiceImpl;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+//    @Autowired
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+//    @Autowired
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    public WebSecurityConfiguration(UserDetailsServiceImpl userDetailsServiceImpl, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+    }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {

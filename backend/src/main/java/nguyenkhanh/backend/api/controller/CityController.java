@@ -39,10 +39,10 @@ public class CityController {
 	private String BASE_URL;
 
 	@Autowired
-	ICityService cityServiceImpl;
+	private ICityService cityServiceImpl;
 
 	@Autowired
-	UploadFileService uploadFileService;
+	private UploadFileService uploadFileService;
 
 	@PostMapping("/city")
 	//	@PreAuthorize("hasRole('create_city')")

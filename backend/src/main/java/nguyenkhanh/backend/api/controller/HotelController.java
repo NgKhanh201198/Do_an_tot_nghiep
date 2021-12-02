@@ -43,13 +43,13 @@ public class HotelController {
 	private String BASE_URL;
 
 	@Autowired
-	UploadFileService uploadFileService;
+	private UploadFileService uploadFileService;
 
 	@Autowired
-	IHotelService hotelServiceImpl;
+	private IHotelService hotelServiceImpl;
 
 	@Autowired
-	ICityService cityServiceImpl;
+	private ICityService cityServiceImpl;
 
 	@PostMapping("/hotel")
 //	@PreAuthorize("hasRole('create_hotel')")

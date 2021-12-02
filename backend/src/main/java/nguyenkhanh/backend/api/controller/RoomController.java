@@ -46,16 +46,16 @@ public class RoomController {
     private String BASE_URL;
 
     @Autowired
-    IRoomService roomServiceImpl;
+    private IRoomService roomServiceImpl;
 
     @Autowired
-    IRoomTypeService roomTypeServiceImpl;
+    private IRoomTypeService roomTypeServiceImpl;
 
     @Autowired
-    IHotelService hotelServiceImpl;
+    private IHotelService hotelServiceImpl;
 
     @Autowired
-    UploadFileService uploadFileService;
+    private UploadFileService uploadFileService;
 
     @PostMapping("/room")
     //	@PreAuthorize("hasRole('create_room')")

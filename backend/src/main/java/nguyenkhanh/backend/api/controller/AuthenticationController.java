@@ -56,25 +56,25 @@ import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
 @RequestMapping("/api")
 public class AuthenticationController {
     @Autowired
-    IUserService userServiceImpl;
+    private IUserService userServiceImpl;
 
     @Autowired
-    IUserTypeService userTypeServiceImpl;
+    private IUserTypeService userTypeServiceImpl;
 
     @Autowired
-    IRegisterLogService registerLogServiceImpl;
+    private IRegisterLogService registerLogServiceImpl;
 
     @Autowired
-    IRoleService roleServiceImpl;
+    private IRoleService roleServiceImpl;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    JwtTokenUtils jwtTokenUtils;
+    private JwtTokenUtils jwtTokenUtils;
 
     @PostMapping(path = "/auth/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest registerRequest) {

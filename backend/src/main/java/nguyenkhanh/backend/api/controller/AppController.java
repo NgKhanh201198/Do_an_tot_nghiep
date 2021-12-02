@@ -36,19 +36,19 @@ import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
 @RequestMapping("/api")
 public class AppController {
     @Autowired
-    IUserService userService;
+    private IUserService userService;
 
     @Autowired
-    IHotelService hotelService;
+    private IHotelService hotelService;
 
     @Autowired
-    IBookingRoomService bookingRoomService;
+    private IBookingRoomService bookingRoomService;
 
     @Autowired
-    IRoomService roomService;
+    private IRoomService roomService;
 
     @Autowired
-    IUserTypeService userTypeService;
+    private IUserTypeService userTypeService;
 
     @PostMapping("/checkRoomEmpty")
     public ResponseEntity<?> checkRoomEmpty(@RequestBody @Valid CheckRoomEmptyDTO roomEmptyDTO) {

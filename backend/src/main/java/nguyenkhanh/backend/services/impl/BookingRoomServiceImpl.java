@@ -14,7 +14,7 @@ import nguyenkhanh.backend.services.IBookingRoomService;
 @Service
 public class BookingRoomServiceImpl implements IBookingRoomService {
 	@Autowired
-	BookingRoomRepository bookingRoomRepository;
+	private BookingRoomRepository bookingRoomRepository;
 
 	@Override
 	public void createBookingRoom(BookingRoomEntity bookingRoomEntity) {

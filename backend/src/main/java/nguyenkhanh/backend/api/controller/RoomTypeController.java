@@ -31,7 +31,7 @@ import nguyenkhanh.backend.services.impl.RoomTypeServiceImpl;
 @RequestMapping("/api")
 public class RoomTypeController {
 	@Autowired
-	IRoomTypeService roomTypeServiceImpl;
+	private IRoomTypeService roomTypeServiceImpl;
 
 	@PostMapping("/roomtype")
 	//	@PreAuthorize("hasRole('create_roomtype')")

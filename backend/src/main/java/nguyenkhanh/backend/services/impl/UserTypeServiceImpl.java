@@ -14,7 +14,7 @@ import nguyenkhanh.backend.services.IUserTypeService;
 @Service
 public class UserTypeServiceImpl implements IUserTypeService {
 	@Autowired
-	UserTypeRepository userTypeRepository;
+	private UserTypeRepository userTypeRepository;
 
 	@Override
 	public Optional<UserTypeEntity> findByKeyName(String keyName) {

@@ -14,7 +14,7 @@ import nguyenkhanh.backend.services.IRoomTypeService;
 @Service
 public class RoomTypeServiceImpl implements IRoomTypeService {
 	@Autowired
-	RoomTypeRepository roomTypeRepository;
+	private RoomTypeRepository roomTypeRepository;
 
 	@Override
 	public void createRoomType(RoomTypeEntity roomTypeEntity) {

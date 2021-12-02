@@ -13,7 +13,7 @@ import nguyenkhanh.backend.services.IRegisterLogService;
 @Service
 public class RegisterLogServiceImpl implements IRegisterLogService {
 	@Autowired
-	RegisterLogRepository registerLogRepository;
+	private RegisterLogRepository registerLogRepository;
 
 	@Override
 	public void save(RegisterLogEntity registerLogEntity) {

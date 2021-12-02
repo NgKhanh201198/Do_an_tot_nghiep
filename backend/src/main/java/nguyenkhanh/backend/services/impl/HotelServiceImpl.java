@@ -15,7 +15,7 @@ import nguyenkhanh.backend.services.IHotelService;
 @Service
 public class HotelServiceImpl implements IHotelService {
 	@Autowired
-	HotelRepository hotelRepository;
+	private HotelRepository hotelRepository;
 
 	@Override
 	public void createHotel(HotelEntity hotelEntity) {

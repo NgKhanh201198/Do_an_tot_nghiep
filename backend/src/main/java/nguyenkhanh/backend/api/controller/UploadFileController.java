@@ -34,7 +34,7 @@ import nguyenkhanh.backend.services.UploadFileService;
 @RequestMapping("/api")
 public class UploadFileController {
 	@Autowired
-	UploadFileService uploadFileService;
+	private UploadFileService uploadFileService;
 
 	@PostMapping("/upload")
 	public ResponseEntity<?> uploadFiles(@RequestParam("files") MultipartFile[] files) {
