@@ -1,55 +1,29 @@
 package nguyenkhanh.backend.api.controller;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
-import nguyenkhanh.backend.services.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import nguyenkhanh.backend.config.security.JwtTokenUtils;
-import nguyenkhanh.backend.entity.ERoles;
-import nguyenkhanh.backend.entity.EStatus;
-import nguyenkhanh.backend.entity.RegisterLogEntity;
-import nguyenkhanh.backend.entity.RoleEntity;
-import nguyenkhanh.backend.entity.UserEntity;
-import nguyenkhanh.backend.entity.UserTypeEntity;
+import nguyenkhanh.backend.entity.*;
 import nguyenkhanh.backend.exception.NotFoundException;
 import nguyenkhanh.backend.request.LoginRequest;
 import nguyenkhanh.backend.request.RegisterRequest;
 import nguyenkhanh.backend.response.JwtResponse;
 import nguyenkhanh.backend.response.MessageResponse;
-import nguyenkhanh.backend.services.impl.RegisterLogServiceImpl;
-import nguyenkhanh.backend.services.impl.RoleServiceImpl;
-import nguyenkhanh.backend.services.impl.UserServiceImpl;
-import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
+import nguyenkhanh.backend.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
