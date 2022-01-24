@@ -24,10 +24,7 @@ import nguyenkhanh.backend.services.UserDetailsServiceImpl;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-//    @Autowired
     private final UserDetailsServiceImpl userDetailsServiceImpl;
-
-//    @Autowired
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     public WebSecurityConfiguration(UserDetailsServiceImpl userDetailsServiceImpl, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {

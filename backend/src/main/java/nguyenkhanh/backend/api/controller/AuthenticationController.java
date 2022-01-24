@@ -96,8 +96,7 @@ public class AuthenticationController {
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             // Xác thực username password
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
             // Set thông tin authentication vào Security Context
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -147,7 +146,7 @@ public class AuthenticationController {
     }
 
     @GetMapping(path = "auth/verifyEmail")
-    public ResponseEntity<?> verifyEmail(@RequestParam(required = false) String token) throws TimeoutException {
+    public ResponseEntity<?> verifyEmail(@RequestParam(required = false, value = "") String token) throws TimeoutException {
 
         RegisterLogEntity registerLogEntity = registerLogServiceImpl.getToken(token)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy token"));

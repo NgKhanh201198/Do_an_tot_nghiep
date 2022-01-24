@@ -34,7 +34,6 @@ public class SendEmailService {
 					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
 			helper.setSubject(title);
-//			helper.setFrom("khanhnv.pro@gmail.com");
 			helper.setFrom("MySystem@gmail.com");
 			helper.setTo(to);
 			helper.setText(content, true);

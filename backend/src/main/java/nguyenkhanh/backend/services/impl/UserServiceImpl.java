@@ -35,7 +35,7 @@ public class UserServiceImpl implements IUserService {
 	private SendEmailService sendEmailService;
 
 	@Autowired
-	private UserConverter userConverter;
+	private nguyenkhanh.backend.converter.UserConverter userConverter;
 
 	@Value("${dateExpiedSeconds}")
 	private long DATE_EXPIED;

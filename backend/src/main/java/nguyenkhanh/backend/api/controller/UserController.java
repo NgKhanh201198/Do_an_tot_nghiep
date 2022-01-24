@@ -1,19 +1,17 @@
 package nguyenkhanh.backend.api.controller;
 
-import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.validation.Valid;
-
+import nguyenkhanh.backend.dto.UserAccountDTO;
+import nguyenkhanh.backend.dto.UserCustomerDTO;
+import nguyenkhanh.backend.dto.UserDTO;
+import nguyenkhanh.backend.entity.*;
+import nguyenkhanh.backend.exception.BadRequestException;
+import nguyenkhanh.backend.exception.NotFoundException;
+import nguyenkhanh.backend.response.MessageResponse;
 import nguyenkhanh.backend.services.IRoleService;
 import nguyenkhanh.backend.services.IUserService;
 import nguyenkhanh.backend.services.IUserTypeService;
+import nguyenkhanh.backend.services.UploadFileService;
+import nguyenkhanh.backend.services.impl.RegisterLogServiceImpl;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,35 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import nguyenkhanh.backend.config.security.JwtTokenUtils;
-import nguyenkhanh.backend.dto.UserAccountDTO;
-import nguyenkhanh.backend.dto.UserCustomerDTO;
-import nguyenkhanh.backend.dto.UserDTO;
-import nguyenkhanh.backend.entity.ERoles;
-import nguyenkhanh.backend.entity.EStatus;
-import nguyenkhanh.backend.entity.RegisterLogEntity;
-import nguyenkhanh.backend.entity.RoleEntity;
-import nguyenkhanh.backend.entity.UserEntity;
-import nguyenkhanh.backend.entity.UserTypeEntity;
-import nguyenkhanh.backend.exception.BadRequestException;
-import nguyenkhanh.backend.exception.NotFoundException;
-import nguyenkhanh.backend.response.MessageResponse;
-import nguyenkhanh.backend.services.UploadFileService;
-import nguyenkhanh.backend.services.impl.RegisterLogServiceImpl;
-import nguyenkhanh.backend.services.impl.RoleServiceImpl;
-import nguyenkhanh.backend.services.impl.UserServiceImpl;
-import nguyenkhanh.backend.services.impl.UserTypeServiceImpl;
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -71,9 +47,6 @@ public class UserController {
 
     @Autowired
     private UploadFileService uploadFileService;
-
-    @Autowired
-    private JwtTokenUtils jwtTokenUtils;
 
     @Autowired
     private RegisterLogServiceImpl registerLogServiceImpl;
